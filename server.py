@@ -7,10 +7,11 @@ app = Flask(__name__)
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template('index.html')
+    return render_template('template\htmls\index.html')
 
-@app.route('/OT2transfer')
+@app.route('/OT2protocol')
 def get_finished_protocols():
+    
     ## Arguments past in
     protocol = request.args.get('protocol')
     user = request.args.get('user')
@@ -23,9 +24,9 @@ def get_finished_protocols():
     if protocol == "Library" and not bool(userdata.strip()):
         return "CSV file required for library building"
     
-    ## Setting userdata to 0 for non-library protocols.
-    if not bool(userdata.strip()):
-        userdata = 0
+    ### Setting userdata to 0 for non-library protocols.
+    #if not bool(userdata.strip()):
+    #    userdata = 0
 
     finished_protocols = get_opentrons_script(protocol,user,samplenumber,inputformat,outputformat,userdata)
 
@@ -43,13 +44,13 @@ def get_finished_protocols():
     
     return render_template(
         "OT2transfer.html",
-        title = finished_protocols['user']
+        protocol,user,samplenumber,inputformat,outputformat,
+        finished_protocol1 = finished_protocols[1],
+        finished_protocol2 = finished_protocols[2],
+        finished_protocol3 = finished_protocols[3]
     )
     
-#    get_opentrons_script(name = user, template = "extraction", samples = "96"):
-#    return render_template("")
 
 if __name__ == "__main__":
-    #app.run(host="0.0.0.0",port=8000)
     serve(app, host = "0.0.0.0", port = 8000)
     
