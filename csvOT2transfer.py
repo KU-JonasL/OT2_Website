@@ -12,7 +12,7 @@ from datetime import datetime
 
 load_dotenv()
 
-def get_opentrons_script(protocol = "Extraction", user = "Jonas", samplesnumber = 96, inputformat = "LVLSXS200", outputformat = "LVLSXS200", userdata = "user_data/User_Data.csv"):
+def get_opentrons_script(protocol = "Extraction", user = "Antton", samplesnumber = 96, inputformat = "LVLSXS200", outputformat = "LVLSXS200", userdata = "user_data/User_Data.csv"):
 
     ## Creating a csv from User Inputs
     csv_user_input =pd.DataFrame({'Protocol':[protocol],
@@ -52,6 +52,12 @@ def get_opentrons_script(protocol = "Extraction", user = "Jonas", samplesnumber 
     csv_input_raw_str = csv_input_raw_str.replace(")", "")
 
 
+    ## Setting up empty Protocols
+    Protocol1 = ""
+    Protocol2 = ""
+    Protocol3 = ""
+
+
 
     ###### Read the content of the TEMPLATE.py and loading it in a modified protocol ######
 
@@ -67,7 +73,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Jonas", samplesnumber 
 
         ## Write the modified content back to {naming}.py
         with open(f'output_files/{naming}.py', 'w') as modified_file:
-            modified_file.write(modified_content)
+            Protocol1 = modified_file.write(modified_content)
 
 
 
@@ -84,7 +90,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Jonas", samplesnumber 
 
         ## Write the modified content back to {naming}.py; Covaris
         with open(f'output_files/{naming}_Covaris.py', 'w') as modified_file:
-            modified_file.write(modified_content1)
+            Protocol1 = modified_file.write(modified_content1)
 
 
 
@@ -98,7 +104,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Jonas", samplesnumber 
 
         ## Write the modified content back to {naming}.py; Covaris
         with open(f'output_files/{naming}_BESTLibrary.py', 'w') as modified_file:
-            modified_file.write(modified_content2)
+            Protocol2 = modified_file.write(modified_content2)
 
 
         ## Opening Template; Best Purification
@@ -111,24 +117,25 @@ def get_opentrons_script(protocol = "Extraction", user = "Jonas", samplesnumber 
 
         ## Write the modified content back to {naming}.py; Best Purification
         with open(f'output_files/{naming}_BESTPurification.py', 'w') as modified_file:
-            modified_file.write(modified_content3)
+            Protocol3 = modified_file.write(modified_content3)
 
 
-    elif csv_user_input['Protocol'][0]:
-        with open('template/templates_Protocols/Template_Protocol_DREX-NucleicAcidExtraction_OT2.py','r') as template_file:
+    #### qPCR ####
+    elif csv_user_input['Protocol'][0] == "qPCR":
+        with open('template\templates_Protocols\Template_Protocol_qPCR_OT2.py','r') as template_file:
             template_content = template_file.read()
-        
         
         modified_content = template_content.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
         modified_content = modified_content.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
         ## Write the modified content back to {naming}.py
         with open(f'Advance-OT2-transfer/output_files/{naming}.py', 'w') as modified_file:
-            modified_file.write(modified_content)
+            Protocol1 = modified_file.write(modified_content)
 
 
+    #### Index PCR; PCR ####
     elif csv_user_input['Protocol'][0] == "IndexPCR":
-        #### Index PCR; PCR ####
+        
         ##Opening Template Protocol (Index PCR; PCR)
         with open('template/templates_Protocols/Template_Protocol_IndexPCR_OT2.py','r') as template_file:
             template_content1 = template_file.read()
@@ -139,10 +146,9 @@ def get_opentrons_script(protocol = "Extraction", user = "Jonas", samplesnumber 
 
         ## Write the modified content back to {naming}.py
         with open(f'output_files/{naming}_IndexPCR.py', 'w') as modified_file:
-            modified_file.write(modified_content1)
-            
-        
-        #### Index PCR; Purification ####
+            Protocol1 = modified_file.write(modified_content1)
+
+
         ##Opening Template Protocol (Index PCR; Purification)
         with open('template/templates_Protocols/Template_Protocol_IndexPCR_Purfication_OT2.py','r') as template_file:
             template_content2 = template_file.read()
@@ -153,12 +159,12 @@ def get_opentrons_script(protocol = "Extraction", user = "Jonas", samplesnumber 
 
         ## Write the modified content back to {naming}.py
         with open(f'output_files/{naming}_IndexPurification.py', 'w') as modified_file:
-            modified_file.write(modified_content2)
+            Protocol2 = modified_file.write(modified_content2)
 
     
-    #finished_protocols = "something"
+    finished_protocols = [Protocol1,Protocol2,Protocol3]
 
-    #return finished_protocols
+    return finished_protocols
 
    
 
@@ -167,8 +173,8 @@ def get_opentrons_script(protocol = "Extraction", user = "Jonas", samplesnumber 
 if __name__ == "__main__":
     print("*** Get Alberdi Opentrons Lab Script***")
     
-    protocol = "Extraction"
-    user = "Jonas"
+    protocol = "Library"
+    user = "Antton"
     samplesnumber = 96
     inputformat = "LVLSXS200"
     outputformat = "LVLSXS200"
@@ -176,10 +182,8 @@ if __name__ == "__main__":
 
     finished_protocols = get_opentrons_script(protocol,user,samplesnumber, inputformat,outputformat,userdata)
 
-    
-
-
     pprint(finished_protocols)
+
 
 
 

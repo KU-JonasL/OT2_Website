@@ -27,16 +27,20 @@ def get_finished_protocols():
     if not bool(userdata.strip()):
         userdata = 0
 
-
     finished_protocols = get_opentrons_script(protocol,user,samplenumber,inputformat,outputformat,userdata)
 
-    ## Check for code value
+    if not bool(finished_protocols[1]):
+        finished_protocol1 = finished_protocols[1]
+    if not bool(finished_protocols[2]):
+        finished_protocol2 = finished_protocols[2]
+    if not bool(finished_protocols[3]):
+        finished_protocol3 = finished_protocols[3]
 
+    ## Check for code value (200 is good)
     if not finished_protocols['cod'] == 200:
         return render_template('csv-not-found.html')
         
-
-
+    
     return render_template(
         "OT2transfer.html",
         title = finished_protocols['user']
@@ -47,4 +51,5 @@ def get_finished_protocols():
 
 if __name__ == "__main__":
     #app.run(host="0.0.0.0",port=8000)
-    serve(app, host = 0.0.0.0, port = 8000)
+    serve(app, host = "0.0.0.0", port = 8000)
+    
