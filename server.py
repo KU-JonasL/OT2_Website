@@ -25,8 +25,8 @@ def get_finished_protocols():
     #    return "CSV file required for library building"
     
     ### Setting userdata to 0 for non-library protocols.
-    #if not bool(userdata.strip()):
-    #    userdata = 0
+    if not bool(userdata.strip()):
+        userdata = 0
 
     finished_protocols = get_opentrons_script(protocol,user,samplenumber,inputformat,outputformat,userdata)
 
