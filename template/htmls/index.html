@@ -45,16 +45,16 @@
 
 
             
-            <form action="OT2transfer" method="get">
+            <form action="/OT2transfer" method="POST">
                 <fieldset>
                     <legend>User Data Input</legend>
                 <p>
                     <label for="protocol">Choose a Protocol</label><br>
                     <select id="protocol" name="protocol">
-                        <option value="DNA Extraction">DNA/RNA Extraction</option>
-                        <option value="Library Building">Library Building</option>
-                        <option value="qPCR Setup">qPCR Setup</option>
-                        <option value="Index PCR Setup">Index PCR Setup</option>
+                        <option value="Extraction">Extraction</option>
+                        <option value="Library">Library</option>
+                        <option value="qPCR">qPCR</option>
+                        <option value="IndexPCR">IndexPCR</option>
                     </select>
                 </p>
 
@@ -87,7 +87,7 @@
                      
 
                 <p>
-                    <button type= "submit">Submit</button>
+                    <button type="submit">Submit</button>
                     <button type="reset">Reset</button>
                 </p>
                 </fieldset>
