@@ -9,7 +9,7 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-@app.route('/OT2transfer', method=['POST'])
+@app.route('/OT2transfer', methods=['POST'])
 def get_finished_protocols():
     
     ## Arguments past in
