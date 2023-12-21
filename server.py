@@ -21,8 +21,8 @@ def get_finished_protocols():
     userdata = request.args.get('myFile')
 
     ## Check for no user data input for library protocols
-    if protocol == "Library" and not bool(userdata.strip()):
-        return "CSV file required for library building"
+    #if protocol == "Library" and not bool(userdata.strip()):
+    #    return "CSV file required for library building"
     
     ### Setting userdata to 0 for non-library protocols.
     #if not bool(userdata.strip()):
