@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 from csvOT2transfer import get_opentrons_script
 from waitress import serve
 
-app = Flask(__name__)
+app = Flask(__name__,template_folder="template/htmls")
 
 @app.route('/')
 @app.route('/index')
