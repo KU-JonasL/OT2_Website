@@ -72,7 +72,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplesnumber
         modified_content = modified_content.replace("1# User Data here", f"'''\n{csv_data_raw_str}'''")
 
         ## Write the modified content back to {naming}.py
-        with open(f'output_files/{naming}.py', 'w') as modified_file:
+        with open(f'{naming}.py', 'w') as modified_file:
             Protocol1 = modified_file.write(modified_content)
 
 
@@ -89,7 +89,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplesnumber
         modified_content1 = modified_content1.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
         ## Write the modified content back to {naming}.py; Covaris
-        with open(f'output_files/{naming}_Covaris.py', 'w') as modified_file:
+        with open(f'{naming}_Covaris.py', 'w') as modified_file:
             Protocol1 = modified_file.write(modified_content1)
 
 
@@ -103,7 +103,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplesnumber
         modified_content2 = modified_content2.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
         ## Write the modified content back to {naming}.py; Covaris
-        with open(f'output_files/{naming}_BESTLibrary.py', 'w') as modified_file:
+        with open(f'{naming}_BESTLibrary.py', 'w') as modified_file:
             Protocol2 = modified_file.write(modified_content2)
 
 
@@ -116,7 +116,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplesnumber
         modified_content3 = modified_content3.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
         ## Write the modified content back to {naming}.py; Best Purification
-        with open(f'output_files/{naming}_BESTPurification.py', 'w') as modified_file:
+        with open(f'{naming}_BESTPurification.py', 'w') as modified_file:
             Protocol3 = modified_file.write(modified_content3)
 
 
@@ -129,7 +129,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplesnumber
         modified_content = modified_content.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
         ## Write the modified content back to {naming}.py
-        with open(f'Advance-OT2-transfer/output_files/{naming}.py', 'w') as modified_file:
+        with open(f'{naming}.py', 'w') as modified_file:
             Protocol1 = modified_file.write(modified_content)
 
 
@@ -145,7 +145,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplesnumber
         modified_content1 = modified_content1.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
         ## Write the modified content back to {naming}.py
-        with open(f'output_files/{naming}_IndexPCR.py', 'w') as modified_file:
+        with open(f'{naming}_IndexPCR.py', 'w') as modified_file:
             Protocol1 = modified_file.write(modified_content1)
 
 
@@ -158,7 +158,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplesnumber
         modified_content2 = modified_content2.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
         ## Write the modified content back to {naming}.py
-        with open(f'output_files/{naming}_IndexPurification.py', 'w') as modified_file:
+        with open(f'{naming}_IndexPurification.py', 'w') as modified_file:
             Protocol2 = modified_file.write(modified_content2)
 
     
