@@ -22,7 +22,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplesnumber
     'OutputFormat':[outputformat]})
 
 
-    ##Naming of new template(s) selected (based on dataframe)
+    ##Naming of new template(s) selected (based on)
     protocolselect = csv_user_input['Protocol'][0]
     today = datetime.today().strftime('%Y%m%d')
     user = csv_user_input['User'][0]
@@ -191,6 +191,8 @@ if __name__ == "__main__":
     userdata = "user_data/User_Data.csv"
 
     finished_protocols = get_opentrons_script(protocol,user,samplesnumber, inputformat,outputformat,userdata)
+
+    #print(naming)
 
     pprint(finished_protocols)
 

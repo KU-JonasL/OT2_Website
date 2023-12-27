@@ -7,19 +7,33 @@ app = Flask(__name__,template_folder="template/htmls")
 @app.route('/')
 @app.route('/index', methods=['POST'])
 def index():
-    return render_template('index.html')
+    if 'myFile' not in request.files:
+        return "No file part"
+
+    file = request.files['myFile']
+
+    if file.filename == '':
+        return "No selected file"
+
+    # Save the uploaded file to a location
+    csvlocation = file.save("uploads/" + file.filename)
+    
+    
+    return render_template()
 
 @app.route('/OT2transfer', methods=['POST'])
 def get_OT2transfer():
-    
+    import pandas as pd
+
     ## Arguments past in
     protocol = request.form.get('protocol')
     user = request.form.get('user')
     samplenumber = request.form.get('samples')
     inputformat = request.form.get('inputformat') 
     outputformat = request.form.get('outputformat') 
-    userdata = request.form.get('myFile')
-
+    csvfile = request.files['myFile'].filename
+    
+    userdata = pd.read_csv(csvfile)
     ## Check for no user data input for library protocols
     #if protocol == "Library" and not bool(userdata.strip()):
     #    return "CSV file required for library building"
