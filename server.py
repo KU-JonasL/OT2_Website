@@ -10,15 +10,15 @@ def index():
     return render_template('index.html')
 
 @app.route('/OT2transfer', methods=['POST'])
-def OT2transfer():
+def get_OT2transfer():
     
     ## Arguments past in
-    protocol = request.args.get('protocol')
-    user = request.args.get('user')
-    samplenumber = request.args.get('samples')
-    inputformat = request.args.get('inputformat') 
-    outputformat = request.args.get('outputformat') 
-    userdata = request.args.get('myFile')
+    protocol = request.form.get('protocol')
+    user = request.form.get('user')
+    samplenumber = request.form.get('samples')
+    inputformat = request.form.get('inputformat') 
+    outputformat = request.form.get('outputformat') 
+    userdata = request.form.get('myFile')
 
     ## Check for no user data input for library protocols
     #if protocol == "Library" and not bool(userdata.strip()):
