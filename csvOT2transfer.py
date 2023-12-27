@@ -12,7 +12,7 @@ from datetime import datetime
 
 load_dotenv()
 
-def get_opentrons_script(protocol = "Extraction", user = "Antton", samplesnumber = 96, inputformat = "LVLSXS200", outputformat = "LVLSXS200", userdata = "user_data/User_Data.csv"):
+def get_opentrons_script(protocol = "Extraction", user = "Antton", samplesnumber = 96, inputformat = "LVLSXS200", outputformat = "LVLSXS200", userdata = 0):
 
     ## Creating a csv from User Inputs
     csv_user_input =pd.DataFrame({'Protocol':[protocol],
@@ -22,34 +22,44 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplesnumber
     'OutputFormat':[outputformat]})
 
 
-    ## Read data from User_Data.csv 
-    csv_user_data = pd.read_csv(userdata, header=0)
-    
-    
-    
-    ##Naming of new template(s) selected
+    ##Naming of new template(s) selected (based on dataframe)
     protocolselect = csv_user_input['Protocol'][0]
     today = datetime.today().strftime('%Y%m%d')
     user = csv_user_input['User'][0]
     naming = user+"_"+protocolselect+"_"+today
+    
 
 
-    ## Prepare the data types for transfer
-    csv_data_values = "\n".join([f"({', '.join(map(str, row))})" for row in csv_user_data.values])
-    csv_data_raw_str = f"{', '.join(csv_user_data.columns)}\n{csv_data_values}"
-
+    
+    
+    ## Prepare the inputs types for transfer
     csv_input_values = "\n".join([f"({', '.join(map(str, row))})" for row in csv_user_input.values])
     csv_input_raw_str = f"{', '.join(csv_user_input.columns)}\n{csv_input_values}"
 
-
-    ## Cleaning up the data before merge
-    csv_data_raw_str = csv_data_raw_str.replace("nan", "")
-    csv_data_raw_str = csv_data_raw_str.replace("(", "")
-    csv_data_raw_str = csv_data_raw_str.replace(")", "")
-
+    ## Cleaning up the inputs before merge
     csv_input_raw_str = csv_input_raw_str.replace("nan", "")
     csv_input_raw_str = csv_input_raw_str.replace("(", "")
     csv_input_raw_str = csv_input_raw_str.replace(")", "")
+
+
+    ## Read data from User_Data.csv if available
+    if userdata != 0:
+        csv_user_data = pd.read_csv(userdata, header=0)
+
+        ## Prepare the data types for transfer
+        csv_data_values = "\n".join([f"({', '.join(map(str, row))})" for row in csv_user_data.values])
+        csv_data_raw_str = f"{', '.join(csv_user_data.columns)}\n{csv_data_values}"
+
+        ## Cleaning up the data before merge
+        csv_data_raw_str = csv_data_raw_str.replace("nan", "")
+        csv_data_raw_str = csv_data_raw_str.replace("(", "")
+        csv_data_raw_str = csv_data_raw_str.replace(")", "")
+    
+    
+    
+    
+
+    
 
 
     ## Setting up empty Protocols

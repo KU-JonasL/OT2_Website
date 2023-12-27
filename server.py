@@ -10,7 +10,7 @@ def index():
     return render_template('index.html')
 
 @app.route('/OT2transfer', methods=['POST'])
-def get_finished_protocols():
+def OT2transfer():
     
     ## Arguments past in
     protocol = request.args.get('protocol')
