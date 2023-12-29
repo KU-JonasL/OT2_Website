@@ -9,17 +9,7 @@ app = Flask(__name__,template_folder="template/htmls")
 @app.route('/index', methods=['POST'])
 def index():
 
-    file = request.files['myFile'] # Replace this with the actual filename used during upload
-
-    if file.filename == '':
-        return "No selected file"
-
-    # Save the uploaded file to a location
-    file.save("uploads/" + file.filename)
-    
-    csv_data = pd.read_csv("uploads/" + file.filename)
-
-    return render_template('csv_template.html', csv_data=csv_data)
+    return render_template()
 
 
 @app.route('/OT2transfer', methods=['POST'])
@@ -33,7 +23,9 @@ def get_OT2transfer():
     inputformat = request.form.get('inputformat') 
     outputformat = request.form.get('outputformat') 
     
-    userdata = pd.read_csv("uploads/User_Data.csv")
+    userdata = request.form.get('myFile')
+    
+    #pd.read_csv("uploads/User_Data.csv")
     
     #csvfile = request.files['myFile'].filename
     
@@ -42,9 +34,9 @@ def get_OT2transfer():
     #if protocol == "Library" and not bool(userdata.strip()):
     #    return "CSV file required for library building"
     
-    ### Setting userdata to 0 for non-library protocols.
-    #if not bool(userdata.strip()):
-    #    userdata = 0
+    ## Setting userdata to 0 for non-library protocols.
+    if not bool(userdata.strip()):
+        userdata = 0
 
     finished_protocols = get_opentrons_script(protocol,user,samplenumber,inputformat,outputformat,userdata)
 
