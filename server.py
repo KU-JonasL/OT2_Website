@@ -24,6 +24,8 @@ def get_temporary_file(file_path):
 @app.route('/index', methods=['POST'])
 def index():
 
+    print("At index")
+
     if request.method == "POST":
 
         if request.files:
@@ -37,6 +39,7 @@ def index():
 
             with tempfile.TemporaryDirectory() as temp_dir:
                 myFile.save(os.path.join(temp_dir,filename))
+                print("Temporary file created")
                           
             
             return redirect(request.url)
@@ -48,6 +51,8 @@ def index():
 @app.route('/OT2transfer/<filename>', methods=['POST'])
 def get_OT2transfer(filename):
     
+    print("At get_OT2transfer")
+
     ## Arguments pasted in
     protocol = request.form.get('protocol')[0]
     user = request.form.get('user')[0]
@@ -66,6 +71,7 @@ def get_OT2transfer(filename):
     
     try:
         ## Folder for user csv data files
+        print("Trying the transferred file")
         
         with tempfile.TemporaryDirectory() as temp_dir:
             file = os.path.join(temp_dir,filename)
@@ -113,6 +119,7 @@ def get_OT2transfer(filename):
         )
     
     except FileNotFoundError:
+        print("Did not find a csv file")
         abort(404)
     
 #def download_temporary_file(file_path):
