@@ -29,17 +29,6 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
     user = csv_user_input['User'][0]
     naming = user+"_"+protocolselect+"_"+today
     
-
-
-
-
-
-    
-    
-
-
-
-    ########
     
     ## Prepare the inputs types for transfer
     csv_input_values = "\n".join([f"({', '.join(map(str, row))})" for row in csv_user_input.values])
@@ -52,7 +41,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
 
 
     ## Read data from User_Data.csv if available
-    if userdata != 0:
+    if not userdata.empty:
         csv_user_data = pd.read_csv(userdata, header=0)
 
         ## Prepare the data types for transfer
@@ -64,18 +53,6 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
         csv_data_raw_str = csv_data_raw_str.replace("(", "")
         csv_data_raw_str = csv_data_raw_str.replace(")", "")
     
-    
-    
-    
-
-    
-
-
-    ## Setting up empty Protocols
-    Protocol1 = ""
-    Protocol2 = ""
-    Protocol3 = ""
-
 
 
     ###### Read the content of the TEMPLATE.py and loading it in a modified protocol ######
