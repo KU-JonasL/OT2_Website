@@ -14,8 +14,7 @@ def index():
 
 @app.route('/OT2transfer', methods=['POST'])
 def get_OT2transfer():
-    import pandas as pd
-
+   
     ## Arguments past in
     protocol = request.form.get('protocol')
     user = request.form.get('user')
@@ -23,13 +22,15 @@ def get_OT2transfer():
     inputformat = request.form.get('inputformat') 
     outputformat = request.form.get('outputformat') 
     
-    userdata = request.form.get('myFile')
+    userinput = pd.DataFrame({'Protocol':[protocol],
+    'User':[user],
+    'SampleNumber':[samplenumber],
+    'InputFormat':[inputformat],
+    'OutputFormat':[outputformat]})
+
+    userdata = pd.read_csv(request.form.get('myFile'))
     
-    #pd.read_csv("uploads/User_Data.csv")
-    
-    #csvfile = request.files['myFile'].filename
-    
-    
+        
     ## Check for no user data input for library protocols
     #if protocol == "Library" and not bool(userdata.strip()):
     #    return "CSV file required for library building"
@@ -54,7 +55,11 @@ def get_OT2transfer():
     
     return render_template(
         "OT2transfer.html",
-        protocol,user,samplenumber,inputformat,outputformat,
+        protocol = userinput['Protocol'],
+        user = userinput['User'],
+        samplenumber = userinput['SampleNumber'],
+        inputformat = userinput['InputFormat'],
+        outputformat = userinput['OutputFormat'],
         finished_protocol1 = finished_protocols[1],
         finished_protocol2 = finished_protocols[2],
         finished_protocol3 = finished_protocols[3]

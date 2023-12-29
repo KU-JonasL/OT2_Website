@@ -12,12 +12,12 @@ from datetime import datetime
 
 load_dotenv()
 
-def get_opentrons_script(protocol = "Extraction", user = "Antton", samplesnumber = 96, inputformat = "LVLSXS200", outputformat = "LVLSXS200", userdata = 0):
+def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber = 96, inputformat = "LVLSXS200", outputformat = "LVLSXS200", userdata = 0):
 
     ## Creating a csv from User Inputs
     csv_user_input =pd.DataFrame({'Protocol':[protocol],
     'User':[user],
-    'SampleNumber':[samplesnumber],
+    'SampleNumber':[samplenumber],
     'InputFormat':[inputformat],
     'OutputFormat':[outputformat]})
 
