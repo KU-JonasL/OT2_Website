@@ -9,7 +9,7 @@ app = Flask(__name__,template_folder="template/htmls")
 @app.route('/index', methods=['POST'])
 def index():
 
-    return render_template()
+    return render_template('index.html')
 
 
 @app.route('/OT2transfer', methods=['POST'])
