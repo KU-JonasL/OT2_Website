@@ -42,6 +42,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
 
     ## Read data from User_Data.csv if available
     if not userdata.empty:
+        print(f"UserData: {userdata}")
         csv_user_data = pd.read_csv(userdata, header=0)
 
         ## Prepare the data types for transfer
@@ -74,8 +75,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
                 modified_file.write(modified_content)
 
         ## Storing the temporary files
-        finished_protocols = [
-            os.path.join(temp_dir, f'{naming}.py')]  # Path to the first generated script
+        finished_protocols = [os.path.join(temp_dir, f'{naming}.py')]  # Path to the first generated script
 
         
 
