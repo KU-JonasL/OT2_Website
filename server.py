@@ -50,7 +50,7 @@ def get_OT2transfer():
     ## Getting the user data and incorporates it along the user inputs into the csvOT2transfer function.
     if 'myFile' in request.files:
         file = request.files['myFile']
-        if file.filename != '' or protocol != "Library":
+        if file.filename != '': #or protocol != "Library"
             filename = secure_filename(file.filename)
             file.save(filename) 
             userdata = pd.read_csv(filename)
