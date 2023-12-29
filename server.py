@@ -55,18 +55,16 @@ def get_OT2transfer():
             file.save(filename) 
             userdata = pd.read_csv(filename)
     
-        
-
-    
-            ## Setting userdata to 0 for non-library protocols.
-            if userdata.empty:
-                userdata = 0
-
-
-
+            
             
             finished_protocols = get_opentrons_script(protocol,user,samplenumber,inputformat,outputformat,userdata)
 
+    elif 'myFile' not in request.files and protocol != "Library":
+        userdata = 0
+        finished_protocols = get_opentrons_script(protocol,user,samplenumber,inputformat,outputformat,userdata)
+
+    elif 'myFile' not in request.files and protocol == "Library":
+        return 'Library protocols needs csv data' 
 
     if bool(finished_protocols[1]):
         finished_protocol1 = finished_protocols[1]
