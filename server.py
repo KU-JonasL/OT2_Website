@@ -42,7 +42,7 @@ def index():
                 print("Temporary file created")
                           
             
-            return redirect(request.url)
+            return redirect(f'/OT2transfer/{filename}')
 
     return render_template('index.html')
 
@@ -51,7 +51,7 @@ def index():
 @app.route('/OT2transfer/<filename>', methods=['POST'])
 def get_OT2transfer(filename):
     
-    print("At get_OT2transfer")
+    print(f"At get_OT2transfer. Filename is {filename}")
 
     ## Arguments pasted in
     protocol = request.form.get('protocol')[0]
