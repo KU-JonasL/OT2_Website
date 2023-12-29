@@ -59,7 +59,7 @@ def get_OT2transfer():
 
     
             ## Setting userdata to 0 for non-library protocols.
-            if not bool(userdata.strip()):
+            if userdata.empty:
                 userdata = 0
 
 
