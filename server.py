@@ -25,14 +25,6 @@ def index():
     return render_template('index.html')
 
 
-# Assuming you have a route to serve temporary files
-@app.route('/get_temporary_file/<path:file_path>')
-def get_temporary_file(file_path):
-    # Construct the full path to the file
-    # Ensure file_path is secure to prevent directory traversal attacks
-    # Return the file using send_file
-    return send_file(file_path, as_attachment=True)
-
 
 @app.route('/OT2transfer', methods=['POST'])
 def get_OT2transfer():
