@@ -4,6 +4,7 @@
 from dotenv import load_dotenv
 from pprint import pprint
 import requests
+import tempfile
 import os
 
 import pandas as pd
@@ -30,7 +31,15 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
     
 
 
+
+
+
     
+    
+
+
+
+    ########
     
     ## Prepare the inputs types for transfer
     csv_input_values = "\n".join([f"({', '.join(map(str, row))})" for row in csv_user_input.values])
@@ -80,10 +89,18 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
         ## Modifying Template 
         modified_content = template_content.replace("1# User Input here", f"'''\n{csv_input_raw_str}\n'''")
         modified_content = modified_content.replace("1# User Data here", f"'''\n{csv_data_raw_str}'''")
+        
+        # Create a temporary directory to store the generated Python scripts
+        with tempfile.TemporaryDirectory() as temp_dir:
+        # Write the modified content to temporary Python script files
+            with open(os.path.join(temp_dir, f'{naming}.py'), 'w') as modified_file:
+                modified_file.write(modified_content)
 
-        ## Write the modified content back to {naming}.py
-        with open(f'{naming}.py', 'w') as modified_file:
-            Protocol1 = modified_file.write(modified_content)
+        ## Storing the temporary files
+        finished_protocols = [
+            os.path.join(temp_dir, f'{naming}.py')]  # Path to the first generated script
+
+        
 
 
 
@@ -98,10 +115,13 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
         modified_content1 = template_content1.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
         modified_content1 = modified_content1.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
-        ## Write the modified content back to {naming}.py; Covaris
-        with open(f'{naming}_Covaris.py', 'w') as modified_file:
-            Protocol1 = modified_file.write(modified_content1)
+        # Create a temporary directory to store the generated Python scripts
+        with tempfile.TemporaryDirectory() as temp_dir:
+        # Write the modified content to temporary Python script files
+            with open(os.path.join(temp_dir, f'{naming}_covaris.py'), 'w') as modified_file:
+                modified_file.write(modified_content1)
 
+        
 
 
         ## Opening Template; Best-Library
@@ -112,9 +132,13 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
         modified_content2 = template_content2.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
         modified_content2 = modified_content2.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
-        ## Write the modified content back to {naming}.py; Covaris
-        with open(f'{naming}_BESTLibrary.py', 'w') as modified_file:
-            Protocol2 = modified_file.write(modified_content2)
+        # Create a temporary directory to store the generated Python scripts
+        with tempfile.TemporaryDirectory() as temp_dir:
+        # Write the modified content to temporary Python script files
+            with open(os.path.join(temp_dir, f'{naming}_BESTLibrary.py'), 'w') as modified_file:
+                modified_file.write(modified_content2)
+
+
 
 
         ## Opening Template; Best Purification
@@ -125,9 +149,19 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
         modified_content3 = template_content3.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
         modified_content3 = modified_content3.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
-        ## Write the modified content back to {naming}.py; Best Purification
-        with open(f'{naming}_BESTPurification.py', 'w') as modified_file:
-            Protocol3 = modified_file.write(modified_content3)
+        # Create a temporary directory to store the generated Python scripts
+        with tempfile.TemporaryDirectory() as temp_dir:
+        # Write the modified content to temporary Python script files
+            with open(os.path.join(temp_dir, f'{naming}_BESTPurification.py'), 'w') as modified_file:
+                modified_file.write(modified_content3)
+
+        ## Storing the temporary files
+        finished_protocols = [
+            os.path.join(temp_dir, f'{naming}_covaris.py'),
+            os.path.join(temp_dir, f'{naming}_BESTLibrary.py'),
+            os.path.join(temp_dir, f'{naming}_BESTPurification.py'),
+            ]
+
 
 
     #### qPCR ####
@@ -138,9 +172,16 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
         modified_content = template_content.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
         modified_content = modified_content.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
-        ## Write the modified content back to {naming}.py
-        with open(f'{naming}.py', 'w') as modified_file:
-            Protocol1 = modified_file.write(modified_content)
+        # Create a temporary directory to store the generated Python scripts
+        with tempfile.TemporaryDirectory() as temp_dir:
+        # Write the modified content to temporary Python script files
+            with open(os.path.join(temp_dir, f'{naming}.py'), 'w') as modified_file:
+                modified_file.write(modified_content)
+
+        ## Storing the temporary files
+        finished_protocols = [
+            os.path.join(temp_dir, f'{naming}.py')
+            ]
 
 
     #### Index PCR; PCR ####
@@ -154,9 +195,11 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
         modified_content1 = template_content1.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
         modified_content1 = modified_content1.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
-        ## Write the modified content back to {naming}.py
-        with open(f'{naming}_IndexPCR.py', 'w') as modified_file:
-            Protocol1 = modified_file.write(modified_content1)
+        # Create a temporary directory to store the generated Python scripts
+        with tempfile.TemporaryDirectory() as temp_dir:
+        # Write the modified content to temporary Python script files
+            with open(os.path.join(temp_dir, f'{naming}_IndexPCR.py'), 'w') as modified_file:
+                modified_file.write(modified_content1)
 
 
         ##Opening Template Protocol (Index PCR; Purification)
@@ -167,12 +210,20 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
         modified_content2 = template_content2.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
         modified_content2 = modified_content2.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
-        ## Write the modified content back to {naming}.py
-        with open(f'{naming}_IndexPurification.py', 'w') as modified_file:
-            Protocol2 = modified_file.write(modified_content2)
+        # Create a temporary directory to store the generated Python scripts
+        with tempfile.TemporaryDirectory() as temp_dir:
+        # Write the modified content to temporary Python script files
+            with open(os.path.join(temp_dir, f'{naming}_IndexPurification.py'), 'w') as modified_file:
+                modified_file.write(modified_content2)
+
+        ## Storing the temporary files
+        finished_protocols = [
+            os.path.join(temp_dir, f'{naming}_IndexPCR.py'),
+            os.path.join(temp_dir, f'{naming}_IndexPurification.py')
+            ]
 
     
-    finished_protocols = [Protocol1,Protocol2,Protocol3]
+
 
     return finished_protocols
 

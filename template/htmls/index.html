@@ -46,7 +46,7 @@
 
 
             
-            <form action="/OT2transfer" method="POST">
+            <form action="/OT2transfer" method="POST" enctype="multipart/form-data">
                 <fieldset>
                     <legend>User Data Input</legend>
                 <p>
@@ -151,7 +151,8 @@
                     <input type="file" id="myFile" name="myFile" accept=".csv" data-show-if="protocol:Library Building" >
                     <p><em>The file upload is required for Library protocols</em></Label><br></p>
                 </p>
-                     
+
+
 
                 <p>
                     <button type="submit">Submit</button>
