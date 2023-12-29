@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 from csvOT2transfer import get_opentrons_script
 from waitress import serve
+from werkzeug.utils import secure_filename
 import pandas as pd
 
 app = Flask(__name__,template_folder="template/htmls")
@@ -22,35 +23,41 @@ def get_OT2transfer():
     inputformat = request.form.get('inputformat') 
     outputformat = request.form.get('outputformat') 
     
-    userinput = pd.DataFrame({'Protocol':[protocol],
-    'User':[user],
-    'SampleNumber':[samplenumber],
-    'InputFormat':[inputformat],
-    'OutputFormat':[outputformat]})
+    ## Arguments in a dataframe 
+    userinput = pd.DataFrame({'Protocol':[protocol],'User':[user],'SampleNumber':[samplenumber],'InputFormat':[inputformat],'OutputFormat':[outputformat]})
 
-    userdata = pd.read_csv(request.form.get('myFile'))
+    ## Setting default values for the finished protocols
+    finished_protocol1 = 0
+    finished_protocol2 = 0
+    finished_protocol3 = 0
+    
+    ## Getting the user data and incorporates it along the user inputs into the csvOT2transfer function.
+    if 'myFile' in request.files:
+        file = request.files['myFile']
+        if file.filename != '' or protocol != "Library":
+            filename = secure_filename(file.filename)
+            file.save(filename)
+            userdata = pd.read_csv(filename)
     
         
-    ## Check for no user data input for library protocols
-    #if protocol == "Library" and not bool(userdata.strip()):
-    #    return "CSV file required for library building"
+
     
-    ## Setting userdata to 0 for non-library protocols.
-    if not bool(userdata.strip()):
-        userdata = 0
+            ## Setting userdata to 0 for non-library protocols.
+            if not bool(userdata.strip()):
+                userdata = 0
 
-    finished_protocols = get_opentrons_script(protocol,user,samplenumber,inputformat,outputformat,userdata)
+            finished_protocols = get_opentrons_script(protocol,user,samplenumber,inputformat,outputformat,userdata)
 
-    if bool(finished_protocols[1]):
-        finished_protocol1 = finished_protocols[1]
-    if bool(finished_protocols[2]):
-        finished_protocol2 = finished_protocols[2]
-    if bool(finished_protocols[3]):
-        finished_protocol3 = finished_protocols[3]
+            if bool(finished_protocols[1]):
+                finished_protocol1 = finished_protocols[1]
+            if bool(finished_protocols[2]):
+                finished_protocol2 = finished_protocols[2]
+            if bool(finished_protocols[3]):
+                finished_protocol3 = finished_protocols[3]
 
-    ## Check for code value (200 is good)
-    #if not finished_protocols['cod'] == 200:
-    #    return render_template('csv-not-found.html')
+            ## Check for code value (200 is good)
+            #if not finished_protocols['cod'] == 200:
+            #    return render_template('csv-not-found.html')
         
     
     return render_template(
@@ -60,9 +67,9 @@ def get_OT2transfer():
         samplenumber = userinput['SampleNumber'],
         inputformat = userinput['InputFormat'],
         outputformat = userinput['OutputFormat'],
-        finished_protocol1 = finished_protocols[1],
-        finished_protocol2 = finished_protocols[2],
-        finished_protocol3 = finished_protocols[3]
+        finished_protocol1 = finished_protocol1,
+        finished_protocol2 = finished_protocol2,
+        finished_protocol3 = finished_protocol3
     )
     
 
