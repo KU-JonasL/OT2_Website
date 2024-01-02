@@ -77,8 +77,7 @@ def get_OT2transfer():
     naming = user+"_"+protocol+"_"+today
 
     ## Exporting user inputs
-    df = pd.read_csv(userinput)
-    df.to_csv(f'static/client/csv/{naming}_userinput.csv', index=False)
+    userinput.to_csv(f'static/client/csv/{naming}_userinput.csv', index=False)
     
     #with open(f'static/client/csv/{naming}_userinput.csv','w') as modified_csv:
     #    modified_csv.write(userinput)
