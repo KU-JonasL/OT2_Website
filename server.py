@@ -11,8 +11,8 @@ app = Flask(__name__,template_folder="template/htmls")
 
 
 ## App Config folders
-app.config["Client_CSV"] = "static\client\csv"
-app.config["Client_Scripts"] = "static\client\scripts"
+app.config["Client_CSV"] = "static/client/csv"
+app.config["Client_Scripts"] = "static/client/scripts"
 
 
 
@@ -43,8 +43,8 @@ def index():
                 return redirect(request.url)
 
             else:
-                with open(f'static\client\csv/{naming}','w') as modified_csv:
-                    new_csv = os.path.join(f'static\client\csv/{naming}', filename)
+                with open(f'static/client/csv/{naming}','w') as modified_csv:
+                    new_csv = os.path.join(f'static/client/csv/{naming}', filename)
                     modified_csv.write(new_csv)
                             
             
@@ -74,7 +74,7 @@ def get_OT2transfer():
     naming = user+"_"+protocol+"_"+today
 
     ## Exporting uer inputs
-    with open(f'static\client\csv/{naming}_userinput.csv','w') as modified_csv:
+    with open(f'static/client/csv/{naming}_userinput.csv','w') as modified_csv:
         modified_csv.write(userinput)
 
 
@@ -121,7 +121,7 @@ def get_OT2transfer():
         
         
         return render_template(
-            "/OT2transfer/<filename>",
+            "/OT2transfer",
             protocol = userinput['Protocol'],
             user = userinput['User'],
             samplenumber = userinput['SampleNumber'],
@@ -136,14 +136,14 @@ def get_OT2transfer():
         print("Did not find a csv file")
         abort(404)
 
-app.route("static\client\csv/<path:path>")
+app.route("static/client/csv/<path:path>")
 def get_csv(name):
     try:
         return send_from_directory(app.config["Client_CSV"],filename = name, as_attachment=True)
     except FileNotFoundError:
         abort(404)
 
-app.route("static\client\scripts/<path:path>")
+app.route("static/client/scripts/<path:path>")
 def get_OT2_script(name):
     try:
         return send_from_directory(app.config["Client_Scripts"],filename = name, as_attachment=True)

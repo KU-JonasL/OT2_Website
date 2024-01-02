@@ -69,7 +69,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
         modified_content = modified_content.replace("1# User Data here", f"'''\n{csv_data_raw_str}'''")
         
         # Write the modified content to a Python script files
-        with open(f'static\client/scripts/{naming}_Extraction.py', 'w') as modified_file:
+        with open(f'static/client/scripts/{naming}_Extraction.py', 'w') as modified_file:
             modified_file.write(modified_content)
         
 
@@ -86,7 +86,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
         modified_content1 = modified_content1.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
         # Write the modified content to temporary Python script files
-        with open(f'static\client/scripts/{naming}_covaris.py', 'w') as modified_file:
+        with open(f'static/client/scripts/{naming}_covaris.py', 'w') as modified_file:
             modified_file.write(modified_content1)
 
         
@@ -101,7 +101,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
         modified_content2 = modified_content2.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
         # Write the modified content to temporary Python script files
-        with open(f'static\client/scripts/{naming}_BESTLibrary.py', 'w') as modified_file:
+        with open(f'static/client/scripts/{naming}_BESTLibrary.py', 'w') as modified_file:
             modified_file.write(modified_content2)
 
 
@@ -116,21 +116,21 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
         modified_content3 = modified_content3.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
         # Write the modified content to temporary Python script files
-        with open(f'static\client/scripts/{naming}_BESTPurification.py', 'w') as modified_file:
+        with open(f'static/client/scripts/{naming}_BESTPurification.py', 'w') as modified_file:
             modified_file.write(modified_content3)
 
         
 
     #### qPCR ####
     elif csv_user_input['Protocol'][0] == "qPCR":
-        with open('template\templates_Protocols\Template_Protocol_qPCR_OT2.py','r') as template_file:
+        with open('template/templates_Protocols/Template_Protocol_qPCR_OT2.py','r') as template_file:
             template_content = template_file.read()
         
         modified_content = template_content.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
         modified_content = modified_content.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
         # Write the modified content to temporary Python script files
-        with open(f'static\client/scripts/{naming}_qPCR', 'w') as modified_file:
+        with open(f'static/client/scripts/{naming}_qPCR', 'w') as modified_file:
             modified_file.write(modified_content)
 
 
@@ -147,7 +147,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
         modified_content1 = modified_content1.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
         # Write the modified content to temporary Python script files
-        with open(f'static\client/scripts/{naming}_IndexPCR', 'w') as modified_file:
+        with open(f'static/client/scripts/{naming}_IndexPCR', 'w') as modified_file:
             modified_file.write(modified_content1)
 
 
@@ -160,7 +160,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
         modified_content2 = modified_content2.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
         # Write the modified content to temporary Python script files
-        with open(f'static\client/scripts/{naming}_IndexPurification.py', 'w') as modified_file:
+        with open(f'static/client/scripts/{naming}_IndexPurification.py', 'w') as modified_file:
             modified_file.write(modified_content2)
 
         
