@@ -34,10 +34,10 @@ def index():
 def get_OT2transfer():
     
     ## Arguments pasted in
-    protocol = request.form.get('protocol')["Name"]
-    user = request.form.get('user')["Name"]
-    samplenumber = request.form.get('samples')   
-    inputformat = request.form.get('inputformat')["Name"]
+    protocol = request.form.get('protocol')[0]["Name"]
+    user = request.form.get('user')[0]["Name"]
+    samplenumber = request.form.get('samples')[0]   
+    inputformat = request.form.get('inputformat')[0]["Name"]
     outputformat = request.form.get('outputformat')[0]["Name"]
         
     ## User Data redirect into a dataframe 
