@@ -4,7 +4,7 @@ from waitress import serve
 from werkzeug.utils import secure_filename
 from datetime import datetime
 import pandas as pd
-import tempfile
+import tempfile 
 import os
 
 app = Flask(__name__,template_folder="template/htmls")
@@ -161,18 +161,19 @@ def get_OT2transfer():
 @app.route("/get-csv/<path:name>")
 def get_csv(name):
     try:
-        return send_from_directory(app.config["Client_CSV"],filename = name, as_attachment=True)
+        return send_from_directory(app.config["Client_CSV"], path= name, as_attachment=True)
     except FileNotFoundError:
         abort(404)
 
 @app.route("/get-script/<path:name>")
 def get_OT2_script(name):
     try:
-        return send_from_directory(app.config["Client_Scripts"],filename = name, as_attachment=True)
+        return send_from_directory(app.config["Client_Scripts"], path = name, as_attachment=True)
     except FileNotFoundError:
         abort(404)
 
 
+send_from_directory()
 
 ## Script check
 if __name__ == "__main__":
