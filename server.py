@@ -16,6 +16,8 @@ app.config["Client_Scripts"] = "static/client/scripts"
 
 
 
+
+
 # A route to serve temporary files
 
 @app.route('/')
@@ -23,6 +25,12 @@ app.config["Client_Scripts"] = "static/client/scripts"
 def index():
 
     print("At index")
+
+    ## Creating a client directory if not existing
+    directory = 'static/client/csv'
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
 
     if request.method == "POST":
         
@@ -60,6 +68,10 @@ def index():
 @app.route('/OT2transfer', methods=['POST'])
 def get_OT2transfer():
     
+    ## Creating a client directory if not existing
+    directory = 'static/client/csv'
+    if not os.path.exists(directory):
+        os.makedirs(directory)
                 
     ## Arguments pasted in
     protocol = request.form.get('protocol')[0]
