@@ -11,13 +11,13 @@ app = Flask(__name__,template_folder="template/htmls")
 
 
 ## App Config folders
-directory1 = '/template/client/'
-directory2 = '/template/client/csv/'
-directory3 = '/template/client/pythonscripts/'
-if not os.path.exists(directory1) or not os.path.exists(directory2):
-    os.makedirs(directory1,exist_ok=True)
-    os.makedirs(directory2,exist_ok=True)
-    os.makedirs(directory3,exist_ok=True)
+#directory1 = '/template/client/'
+#directory2 = '/template/client/csv/'
+#directory3 = '/template/client/pythonscripts/'
+#if not os.path.exists(directory1) or not os.path.exists(directory2):
+    #os.makedirs(directory1,exist_ok=True)
+    #os.makedirs(directory2,exist_ok=True)
+    #os.makedirs(directory3,exist_ok=True)
     
 
 
