@@ -11,9 +11,9 @@ app = Flask(__name__,template_folder="template/htmls")
 
 
 ## App Config folders
-directory1 = '/static/client/'
-directory2 = '/static/client/csv/'
-directory3 = '/static/client/pythonscripts/'
+directory1 = '/template/client/'
+directory2 = '/template/client/csv/'
+directory3 = '/template/client/pythonscripts/'
 if not os.path.exists(directory1) or not os.path.exists(directory2):
     os.makedirs(directory1)
     os.makedirs(directory2)
@@ -21,8 +21,8 @@ if not os.path.exists(directory1) or not os.path.exists(directory2):
     
 
 
-app.config["Client_CSV"] = "/static/client/csv"
-app.config["Client_Scripts"] = "/static/client/pythonscripts"
+app.config["Client_CSV"] = "/template/client/csv"
+app.config["Client_Scripts"] = "/template/client/pythonscripts"
 
 
 
@@ -37,7 +37,7 @@ def index():
     print("At index")
 
     ## Creating a client directory if not existing
-    directory = 'static/client/csv'
+    directory = 'template/client/csv'
     if not os.path.exists(directory):
         os.makedirs(directory)
 
@@ -62,10 +62,10 @@ def index():
 
             else:
                 df = pd.read_csv(myFile)
-                df.to_csv(f'static/client/csv/{naming}_userinput.csv', index=False)
+                df.to_csv(f'template/client/csv/{naming}_userinput.csv', index=False)
                 
-                #with open(f'static/client/csv/{naming}.csv','w') as modified_csv:
-                #    new_csv = os.path.join(f'static/client/csv/{naming}', filename)
+                #with open(f'template/client/csv/{naming}.csv','w') as modified_csv:
+                #    new_csv = os.path.join(f'template/client/csv/{naming}', filename)
                 #    modified_csv.write(new_csv)
                             
             
@@ -79,7 +79,7 @@ def index():
 def get_OT2transfer():
     
     ## Creating a client directory if not existing
-    directory = 'static/client/csv'
+    directory = 'template/client/csv'
     if not os.path.exists(directory):
         os.makedirs(directory)
                 
@@ -99,9 +99,9 @@ def get_OT2transfer():
     naming = user+"_"+protocol+"_"+today
 
     ## Exporting user inputs
-    userinput.to_csv(f'static/client/csv/{naming}_userinput.csv', index=False)
+    userinput.to_csv(f'template/client/csv/{naming}_userinput.csv', index=False)
     
-    #with open(f'static/client/csv/{naming}_userinput.csv','w') as modified_csv:
+    #with open(f'template/client/csv/{naming}_userinput.csv','w') as modified_csv:
     #    modified_csv.write(userinput)
 
 
