@@ -11,13 +11,18 @@ app = Flask(__name__,template_folder="template/htmls")
 
 
 ## App Config folders
-directory = 'static/client/csv'
-if not os.path.exists(directory):
-    os.makedirs(directory)
+directory1 = '/static/client/'
+directory2 = '/static/client/csv/'
+directory3 = '/static/client/pythonscripts/'
+if not os.path.exists(directory1) or not os.path.exists(directory2):
+    os.makedirs(directory1)
+    os.makedirs(directory2)
+    os.makedirs(directory3)
+    
 
 
-app.config["Client_CSV"] = "static/client/csv"
-app.config["Client_Scripts"] = "static/client/scripts"
+app.config["Client_CSV"] = "/static/client/csv"
+app.config["Client_Scripts"] = "/static/client/pythonscripts"
 
 
 
