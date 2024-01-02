@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, send_file, send_fro
 from csvOT2transfer import get_opentrons_script
 from waitress import serve
 from werkzeug.utils import secure_filename
+from datetime import datetime
 import pandas as pd
 import tempfile
 import os
@@ -9,16 +10,13 @@ import os
 app = Flask(__name__,template_folder="template/htmls")
 
 
+## App Config folders
+app.config["Client_CSV"] = "static\client\csv"
+app.config["Client_Scripts"] = "static\client\scripts"
+
+
 
 # A route to serve temporary files
-@app.route('/get_temporary_file/<path:file_path>')
-def get_temporary_file(file_path):
-    # Construct the full path to the file
-    # Ensure file_path is secure to prevent directory traversal attacks
-    # Return the file using send_file
-    return send_file(file_path, as_attachment=True)
-
-
 
 @app.route('/')
 @app.route('/index', methods=['POST'])
@@ -27,6 +25,13 @@ def index():
     print("At index")
 
     if request.method == "POST":
+        
+        ##Naming of new template(s) selected (based on)
+        protocolselect = request.form.get('protocol')[0]
+        user = request.form.get('user')[0]
+        today = datetime.today().strftime('%Y%m%d')
+        naming = user+"_"+protocolselect+"_"+today+".csv"
+
 
         if request.files:
             
@@ -37,22 +42,22 @@ def index():
             if myFile.filename == "":
                 return redirect(request.url)
 
-            with tempfile.TemporaryDirectory() as temp_dir:
-                myFile.save(os.path.join(temp_dir,filename))
-                print("Temporary file created")
-                          
+            else:
+                with open(f'static\client\csv/{naming}','w') as modified_csv:
+                    new_csv = os.path.join(f'static\client\csv/{naming}', filename)
+                    modified_csv.write(new_csv)
+                            
             
-            return redirect(f'/OT2transfer/{filename}')
+            return send_from_directory
 
     return render_template('index.html')
 
 
 
-@app.route('/OT2transfer/<filename>', methods=['POST'])
-def get_OT2transfer(filename):
+@app.route('/OT2transfer/', methods=['POST'])
+def get_OT2transfer():
     
-    print(f"At get_OT2transfer. Filename is {filename}")
-
+                
     ## Arguments pasted in
     protocol = request.form.get('protocol')[0]
     user = request.form.get('user')[0]
@@ -60,54 +65,63 @@ def get_OT2transfer(filename):
     inputformat = request.form.get('inputformat')[0] 
     outputformat = request.form.get('outputformat')[0]
     
+
     ## User Data redirect into a dataframe 
     userinput = pd.DataFrame({'Protocol':[protocol],'User':[user],'SampleNumber':[samplenumber],'InputFormat':[inputformat],'OutputFormat':[outputformat]})
 
-    ## Setting default values for the finished protocols
-    finished_protocol1 = 0
-    finished_protocol2 = 0
-    finished_protocol3 = 0
-    
-    
+    ##Naming of new template(s) selected (based on)
+    today = datetime.today().strftime('%Y%m%d')
+    naming = user+"_"+protocol+"_"+today
+
+    ## Exporting uer inputs
+    with open(f'static\client\csv/{naming}_userinput.csv','w') as modified_csv:
+        modified_csv.write(userinput)
+
+
+
+    ## Downloading csv data
+    file = get_csv(naming)
+        
+
     try:
         ## Folder for user csv data files
         print("Trying the transferred file")
         
-        with tempfile.TemporaryDirectory() as temp_dir:
-            file = os.path.join(temp_dir,filename)
-            userdata = pd.read_csv(file)
+        userdata = pd.read_csv(file)
         
 
         ## Incorprate user data and input into the csvOT2transfer function.
         if file != '':
-                userdata = pd.read_csv(file)
-                finished_protocols = get_opentrons_script(protocol,user,samplenumber,inputformat,outputformat,userdata)
+                get_opentrons_script(protocol,user,samplenumber,inputformat,outputformat,userdata)
 
         elif file == '' and protocol != "Library":
                 userdata = pd.read_csv(file)
-                finished_protocols = get_opentrons_script(protocol,user,samplenumber,inputformat,outputformat,userdata)
+                get_opentrons_script(protocol,user,samplenumber,inputformat,outputformat,userdata = 0 )
 
         elif file == '' and protocol == "Library":
             return render_template('/index.html')
 
-        
-        if bool(finished_protocols[1]):
-            finished_protocol1 = finished_protocols[1]
-            #download_temporary_file(finished_protocol1)  # Trigger download for protocol 1
-        if bool(finished_protocols[2]):
-            finished_protocol2 = finished_protocols[2]
-            #download_temporary_file(finished_protocol2)  # Trigger download for protocol 2
-        if bool(finished_protocols[3]):
-            finished_protocol3 = finished_protocols[3]
-            #download_temporary_file(finished_protocol3)  # Trigger download for protocol 3
+        finished_protocols = [0,0,0]
 
-                ## Check for code value (200 is good)
-                #if not finished_protocols['cod'] == 200:
-                #    return render_template('csv-not-found.html')
+        if protocol == "Extraction":
+            finished_protocols[0] = get_opentrons_script(f'{naming}_Extraction.py')
+
+        elif protocol == "Library":
+            finished_protocols[0] = get_opentrons_script(f'{naming}_covaris.py')
+            finished_protocols[1] = get_opentrons_script(f'{naming}_BESTLibrary.py')
+            finished_protocols[2] = get_opentrons_script(f'{naming}_BESTPurification.py')
+
+        elif protocol == "qPCR":
+            finished_protocols[0] = get_opentrons_script(f'{naming}_qPCR.py')
+
+        elif protocol == "IndexPCR":
+            finished_protocols[0] = get_opentrons_script(f'{naming}_IndexPCR.py')
+            finished_protocols[1] = get_opentrons_script(f'{naming}_IndexPurification.py')
+        
         
         
         return render_template(
-            "OT2transfer.html",
+            "/OT2transfer/<filename>",
             protocol = userinput['Protocol'],
             user = userinput['User'],
             samplenumber = userinput['SampleNumber'],
@@ -121,12 +135,21 @@ def get_OT2transfer(filename):
     except FileNotFoundError:
         print("Did not find a csv file")
         abort(404)
-    
-#def download_temporary_file(file_path):
-    # Make an AJAX request to your Flask server
-    #response = send_file(f'http://127.0.0.1:8000/get_temporary_file/{file_path}', as_attachment=True)
-    # Handle the response to initiate file download
-    #return response
+
+app.route("static\client\csv/<path:path>")
+def get_csv(name):
+    try:
+        return send_from_directory(app.config["Client_CSV"],filename = name, as_attachment=True)
+    except FileNotFoundError:
+        abort(404)
+
+app.route("static\client\scripts/<path:path>")
+def get_OT2_script(name):
+    try:
+        return send_from_directory(app.config["Client_Scripts"],filename = name, as_attachment=True)
+    except FileNotFoundError:
+        abort(404)
+
 
 
 ## Script check
