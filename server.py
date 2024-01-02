@@ -178,8 +178,6 @@ def get_OT2_script(name):
         abort(404)
 
 
-send_from_directory()
-
 ## Script check
 if __name__ == "__main__":
     serve(app, host = "0.0.0.0", port = 8000)
