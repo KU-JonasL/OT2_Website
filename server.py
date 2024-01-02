@@ -161,14 +161,14 @@ def get_OT2transfer():
 @app.route("/get-csv/<path:name>")
 def get_csv(name):
     try:
-        return send_from_directory(app.config["Client_CSV"], path= name, as_attachment=True)
+        return send_from_directory(directory=app.config["Client_CSV"], path= name, as_attachment=True)
     except FileNotFoundError:
         abort(404)
 
 @app.route("/get-script/<path:name>")
 def get_OT2_script(name):
     try:
-        return send_from_directory(app.config["Client_Scripts"], path = name, as_attachment=True)
+        return send_from_directory(directory=app.config["Client_Scripts"], path = name, as_attachment=True)
     except FileNotFoundError:
         abort(404)
 
