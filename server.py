@@ -10,14 +10,6 @@ import os
 app = Flask(__name__,template_folder="template/htmls")
 
 
-## App Config folders
-#directory1 = '/template/client/'
-#directory2 = '/template/client/csv/'
-#directory3 = '/template/client/pythonscripts/'
-#if not os.path.exists(directory1) or not os.path.exists(directory2):
-#    os.makedirs(directory1,exist_ok=True)
-#    os.makedirs(directory2,exist_ok=True)
-#    os.makedirs(directory3,exist_ok=True)
     
 
 
@@ -42,11 +34,11 @@ def index():
 def get_OT2transfer():
     
     ## Arguments pasted in
-    protocol = request.form.get('protocol')[0]
-    user = request.form.get('user')[0]
-    samplenumber = request.form.get('samples')[0]
-    inputformat = request.form.get('inputformat')[0] 
-    outputformat = request.form.get('outputformat')[0]
+    protocol = request.form.get('protocol')["Name"]
+    user = request.form.get('user')["Name"]
+    samplenumber = request.form.get('samples')   
+    inputformat = request.form.get('inputformat')["Name"]
+    outputformat = request.form.get('outputformat')[0]["Name"]
         
     ## User Data redirect into a dataframe 
     userinput = pd.DataFrame({'Protocol':[protocol],'User':[user],'SampleNumber':[samplenumber],'InputFormat':[inputformat],'OutputFormat':[outputformat]})
