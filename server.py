@@ -30,7 +30,7 @@ def index():
         protocolselect = request.form.get('protocol')[0]
         user = request.form.get('user')[0]
         today = datetime.today().strftime('%Y%m%d')
-        naming = user+"_"+protocolselect+"_"+today+".csv"
+        naming = user+"_"+protocolselect+"_"+today
 
 
         if request.files:
@@ -43,18 +43,21 @@ def index():
                 return redirect(request.url)
 
             else:
-                with open(f'static/client/csv/{naming}','w') as modified_csv:
-                    new_csv = os.path.join(f'static/client/csv/{naming}', filename)
-                    modified_csv.write(new_csv)
+                df = pd.read_csv(myFile)
+                df.to_csv(f'static/client/csv/{naming}_userinput.csv', index=False)
+                
+                #with open(f'static/client/csv/{naming}.csv','w') as modified_csv:
+                #    new_csv = os.path.join(f'static/client/csv/{naming}', filename)
+                #    modified_csv.write(new_csv)
                             
             
-            return send_from_directory
+            return render_template('/OT2transfer')
 
-    return render_template('index.html')
+    return render_template('/index.html')
 
 
 
-@app.route('/OT2transfer/', methods=['POST'])
+@app.route('/OT2transfer', methods=['POST'])
 def get_OT2transfer():
     
                 
@@ -73,14 +76,17 @@ def get_OT2transfer():
     today = datetime.today().strftime('%Y%m%d')
     naming = user+"_"+protocol+"_"+today
 
-    ## Exporting uer inputs
-    with open(f'static/client/csv/{naming}_userinput.csv','w') as modified_csv:
-        modified_csv.write(userinput)
+    ## Exporting user inputs
+    df = pd.read_csv(userinput)
+    df.to_csv(f'static/client/csv/{naming}_userinput.csv', index=False)
+    
+    #with open(f'static/client/csv/{naming}_userinput.csv','w') as modified_csv:
+    #    modified_csv.write(userinput)
 
 
 
     ## Downloading csv data
-    file = get_csv(naming)
+    file = get_csv(f'{naming}.csv')
         
 
     try:
@@ -136,14 +142,14 @@ def get_OT2transfer():
         print("Did not find a csv file")
         abort(404)
 
-app.route("static/client/csv/<path:path>")
+@app.route("/get-csv/<path:path>")
 def get_csv(name):
     try:
         return send_from_directory(app.config["Client_CSV"],filename = name, as_attachment=True)
     except FileNotFoundError:
         abort(404)
 
-app.route("static/client/scripts/<path:path>")
+@app.route("/get-script/<path:path>")
 def get_OT2_script(name):
     try:
         return send_from_directory(app.config["Client_Scripts"],filename = name, as_attachment=True)
