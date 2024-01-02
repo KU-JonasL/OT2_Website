@@ -21,8 +21,8 @@ app = Flask(__name__,template_folder="template/htmls")
     
 
 
-app.config["Client_CSV"] = "/template/client/csv"
-app.config["Client_Scripts"] = "/template/client/pythonscripts"
+app.config["Client_CSV"] = os.path.join(app.root_path, 'template', 'client', 'csv')
+app.config["Client_Scripts"] = os.path.join(app.root_path, 'template', 'client', 'pythonscripts')
 
 
 
@@ -69,7 +69,7 @@ def index():
                 #    modified_csv.write(new_csv)
                             
             
-            return render_template('/OT2transfer')
+            return redirect('/OT2transfer.html')
 
     return render_template('/index.html')
 
@@ -148,7 +148,7 @@ def get_OT2transfer():
         
         
         return render_template(
-            "/OT2transfer",
+            "/OT2transfer.html",
             protocol = userinput['Protocol'],
             user = userinput['User'],
             samplenumber = userinput['SampleNumber'],
@@ -161,7 +161,7 @@ def get_OT2transfer():
     
     except FileNotFoundError:
         print("Did not find a csv file")
-        #abort(404)
+        abort(404)
 
 @app.route("/get-csv/<path:name>")
 def get_csv(name):
@@ -169,7 +169,7 @@ def get_csv(name):
         return send_from_directory(app.config["Client_CSV"], name, as_attachment=True)
     except FileNotFoundError:
         print("Did not find csv file")
-        #abort(404)
+        abort(404)
 
 @app.route("/get-script/<path:name>")
 def get_OT2_script(name):
@@ -177,7 +177,7 @@ def get_OT2_script(name):
         return send_from_directory(app.config["Client_Scripts"], name, as_attachment=True)
     except FileNotFoundError:
         print("Did not find csv file")
-        #abort(404)
+        abort(404)
 
 
 ## Script check
