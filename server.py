@@ -149,8 +149,8 @@ def get_OT2transfer():
             
             
             
-            return redirect(
-                url_for("/OT2transfer.html"),
+            return render_template(
+                "/OT2transfer.html",
                 protocol = userinput['Protocol'],
                 user = userinput['User'],
                 samplenumber = userinput['SampleNumber'],
@@ -158,8 +158,7 @@ def get_OT2transfer():
                 outputformat = userinput['OutputFormat'],
                 finished_protocol1=finished_protocols[1],
                 finished_protocol2=finished_protocols[2],
-                finished_protocol3=finished_protocols[3]
-            )
+                finished_protocol3=finished_protocols[3])
         
         except FileNotFoundError:
             print("Did not find a csv file")
