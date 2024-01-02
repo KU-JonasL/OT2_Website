@@ -15,9 +15,9 @@ directory1 = '/template/client/'
 directory2 = '/template/client/csv/'
 directory3 = '/template/client/pythonscripts/'
 if not os.path.exists(directory1) or not os.path.exists(directory2):
-    os.makedirs(directory1)
-    os.makedirs(directory2)
-    os.makedirs(directory3)
+    os.makedirs(directory1,exist_ok=True)
+    os.makedirs(directory2,exist_ok=True)
+    os.makedirs(directory3,exist_ok=True)
     
 
 
