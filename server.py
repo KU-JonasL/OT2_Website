@@ -11,6 +11,11 @@ app = Flask(__name__,template_folder="template/htmls")
 
 
 ## App Config folders
+directory = 'static/client/csv'
+if not os.path.exists(directory):
+    os.makedirs(directory)
+
+
 app.config["Client_CSV"] = "static/client/csv"
 app.config["Client_Scripts"] = "static/client/scripts"
 
@@ -153,17 +158,17 @@ def get_OT2transfer():
         print("Did not find a csv file")
         abort(404)
 
-@app.route("/get-csv/<path:path>")
-def get_csv(path):
+@app.route("/get-csv/<path:name>")
+def get_csv(name):
     try:
-        return send_from_directory(app.config["Client_CSV"],filename = path, as_attachment=True)
+        return send_from_directory(app.config["Client_CSV"],filename = name, as_attachment=True)
     except FileNotFoundError:
         abort(404)
 
-@app.route("/get-script/<path:path>")
-def get_OT2_script(path):
+@app.route("/get-script/<path:name>")
+def get_OT2_script(name):
     try:
-        return send_from_directory(app.config["Client_Scripts"],filename = path, as_attachment=True)
+        return send_from_directory(app.config["Client_Scripts"],filename = name, as_attachment=True)
     except FileNotFoundError:
         abort(404)
 
