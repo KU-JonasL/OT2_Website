@@ -120,167 +120,106 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
     ## Cleaning up the data before merge
     csv_data_raw_str = csv_data_raw_str.replace("nan", "").replace("(", "").replace(")", "")
     
-
+    zip_data = io.BytesIO()
 
     ###### Read the content of the TEMPLATE.py and loading it in a modified protocol ######
 
     #### DNA Extraction
     if csv_user_input['Protocol'] == "Extraction":
         ## Opening Template Extraction
-        with open(f'template/templates_Protocols/Template_Protocol_DREX-NucleicAcidExtraction_OT2.py','r') as template_file:
-            template_content = template_file.read()
-        
-        ## Modifying Template 
+        template_content = open(f'template/templates_Protocols/Template_Protocol_DREX-NucleicAcidExtraction_OT2.py','r').read()
         modified_content = template_content.replace("1# User Input here", f"'''\n{csv_input_raw_str}\n'''")
         modified_content = modified_content.replace("1# User Data here", f"'''\n{csv_data_raw_str}'''")
         
-        # Write the modified content to a Python script files
-
-        with tempfile.NamedTemporaryFile(mode='w', delete=True) as temp_file:
-            temp_filename1 = temp_file.name
-            temp_file.write(modified_content)
-            
-
-        zip_data = io.BytesIO()
+        # Write the modified content to temporary Python script files
         with zipfile.ZipFile(zip_data, mode="w") as zipf:
-            # Add temporary files to the ZIP archive
-            zipf.write(temp_filename1, arcname='finished_protocol1.py')
-
+            zipf.writestr('finished_protocol1.py', modified_content)
+            
         # Move to the beginning of the ZIP data stream
         zip_data.seek(0)
 
-        # Return the ZIP file as an attachment
-        return send_file(zip_data,as_attachment=True,download_name='opentrons_scripts.zip',mimetype='application/zip')
-        
-
-
+    
     #### Library Building
     elif csv_user_input['Protocol'] == "Library":
         
         ## Opening Template; Covaris
-        with open('template/templates_Protocols/Template_Protocol_CovarisSetup_OT2.py','r') as template_file:
-            template_content1 = template_file.read()
+        template_content1 =  open('template/templates_Protocols/Template_Protocol_CovarisSetup_OT2.py','r').read()
         
         ## Modifying Template; Covaris
         modified_content1 = template_content1.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
         modified_content1 = modified_content1.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
         # Write the modified content to temporary Python script files
-        with tempfile.NamedTemporaryFile(mode='w', delete=True) as temp_file:
-            temp_filename1 = temp_file.name
-            temp_file.write(modified_content1)
+        # Write the modified content to temporary Python script files
+        with zipfile.ZipFile(zip_data, mode="w") as zipf:
+            zipf.writestr('finished_protocol1.py', modified_content1)
             
 
         ## Opening Template; Best-Library
-        with open('template/templates_Protocols/Template_Protocol_BEST-Library_OT2.py','r') as template_file:
-            template_content2 = template_file.read()
-        
-        ## Modifying Template; Best-Library
+        template_content2 = open('template/templates_Protocols/Template_Protocol_BEST-Library_OT2.py','r').read()
         modified_content2 = template_content2.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
         modified_content2 = modified_content2.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
         # Write the modified content to temporary Python script files
-        with tempfile.NamedTemporaryFile(mode='w', delete=True) as temp_file:
-            temp_filename2 = temp_file.name
-            temp_file.write(modified_content2)
+        with zipfile.ZipFile(zip_data, mode="w") as zipf:
+            zipf.writestr('finished_protocol2.py', modified_content2)
             
 
 
         ## Opening Template; Best Purification
-        with open('template/templates_Protocols/Template_Protocol_BEST-Purification_OT2.py','r') as template_file:
-            template_content3 = template_file.read()
-        
-        ## Modifying Template; Best Purification
+        template_content3 =  open('template/templates_Protocols/Template_Protocol_BEST-Purification_OT2.py','r').read()
         modified_content3 = template_content3.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
         modified_content3 = modified_content3.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
         # Write the modified content to temporary Python script files
-        with tempfile.NamedTemporaryFile(mode='w', delete=True) as temp_file:
-            temp_filename3 = temp_file.name
-            temp_file.write(modified_content3)
+        with zipfile.ZipFile(zip_data, mode="w") as zipf:
+            zipf.writestr('finished_protocol3.py', modified_content3)
             
         
-        zip_data = io.BytesIO()
-        with zipfile.ZipFile(zip_data, mode="w") as zipf:
-            # Add temporary files to the ZIP archive
-            zipf.write(temp_filename1, arcname='finished_protocol1.py')
-            zipf.write(temp_filename2, arcname='finished_protocol2.py')
-            zipf.write(temp_filename3, arcname='finished_protocol3.py')
 
-        # Move to the beginning of the ZIP data stream
-        zip_data.seek(0)
-
-        # Return the ZIP file as an attachment
-        return send_file(zip_data,as_attachment=True,download_name='opentrons_scripts.zip',mimetype='application/zip')
         
 
     #### qPCR ####
     elif csv_user_input['Protocol'] == "qPCR":
-        with open('template/templates_Protocols/Template_Protocol_qPCR_OT2.py','r') as template_file:
-            template_content = template_file.read()
-        
+        template_content = open('template/templates_Protocols/Template_Protocol_qPCR_OT2.py','r').read()
         modified_content = template_content.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
         modified_content = modified_content.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
-
-        # Write the modified content to temporary Python script files
-        with tempfile.NamedTemporaryFile(mode='w', delete=True) as temp_file:
-            temp_filename1 = temp_file.name
-            temp_file.write(modified_content)
-            
         
-        zip_data = io.BytesIO()
+        # Write the modified content to temporary Python script files
         with zipfile.ZipFile(zip_data, mode="w") as zipf:
-            # Add temporary files to the ZIP archive
-            zipf.write(temp_filename1, arcname='finished_protocol1.py')
-            
-                # Move to the beginning of the ZIP data stream
-        zip_data.seek(0)
-
+            zipf.writestr('finished_protocol1.py', modified_content)
+        
 
 
     #### Index PCR; PCR ####
     elif csv_user_input['Protocol'] == "IndexPCR":
         
         ##Opening Template Protocol (Index PCR; PCR)
-        with open('template/templates_Protocols/Template_Protocol_IndexPCR_OT2.py','r') as template_file:
-            template_content1 = template_file.read()
-        
-        ## Modifying Template (Index PCR; PCR)
+        template_content1 = open('template/templates_Protocols/Template_Protocol_IndexPCR_OT2.py','r').read()
         modified_content1 = template_content1.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
         modified_content1 = modified_content1.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
         # Write the modified content to temporary Python script files
-        with tempfile.NamedTemporaryFile(mode='w', delete=True) as temp_file:
-            temp_filename1 = temp_file.name
-            temp_file.write(modified_content1)
+        with zipfile.ZipFile(zip_data, mode="w") as zipf:
+            zipf.writestr('finished_protocol1.py', modified_content1)
             
 
 
         ##Opening Template Protocol (Index PCR; Purification)
-        with open('template/templates_Protocols/Template_Protocol_IndexPCR_Purfication_OT2.py','r') as template_file:
-            template_content2 = template_file.read()
-        
-        ## Modifying Template (Index PCR; Purification)
+        template_content2 = open('template/templates_Protocols/Template_Protocol_IndexPCR_Purfication_OT2.py','r').read()
         modified_content2 = template_content2.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
         modified_content2 = modified_content2.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
         # Write the modified content to temporary Python script files
-        with tempfile.NamedTemporaryFile(mode='w', delete=True) as temp_file:
-            temp_filename2 = temp_file.name
-            temp_file.write(modified_content2)
-            
-
-        zip_data = io.BytesIO()
         with zipfile.ZipFile(zip_data, mode="w") as zipf:
-            # Add temporary files to the ZIP archive
-            zipf.write(temp_filename1, arcname='finished_protocol1.py')
-            zipf.write(temp_filename2, arcname='finished_protocol2.py')
+            zipf.writestr('finished_protocol1.py', modified_content2)
             
-        # Move to the beginning of the ZIP data stream
-        zip_data.seek(0)
+            
+    # Move to the beginning of the ZIP data stream
+    zip_data.seek(0)
 
-        # Return the ZIP file as an attachment
-        return send_file(zip_data,as_attachment=True,download_name='opentrons_scripts.zip',mimetype='application/zip')
+    # Return the ZIP file as an attachment
+    return send_file(zip_data,as_attachment=True,download_name='opentrons_scripts.zip',mimetype='application/zip')
     
     
 
