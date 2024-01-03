@@ -56,7 +56,7 @@ def get_OT2transfer():
                 #get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat, userdata = userdata)
 
 
-                zip_scripts_url = url_for('get_opentrons_script', protocol = protocol, user = user, samplenumber = samplenumber, inputformat = inputformat, outputformat = outputformat, userdata = userdata, _external=True)
+                zip_scripts_url = url_for('get_opentrons_script', protocol=protocol, user=user, samplenumber=samplenumber, inputformat=inputformat, outputformat=outputformat, userdata=userdata, _external=True)
     
 
             elif request.files["myFile"] == "" and protocol == "Library":
@@ -65,7 +65,7 @@ def get_OT2transfer():
             elif request.files["myFile"] == "":
                 userdata = ""
                 #get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat, userdata = userdata)
-                zip_scripts_url = url_for('get_opentrons_script', protocol = protocol, user = user, samplenumber = samplenumber, inputformat = inputformat, outputformat = outputformat, userdata = userdata, _external=True)
+                zip_scripts_url = url_for('get_opentrons_script', protocol=protocol, user=user, samplenumber=samplenumber, inputformat=inputformat, outputformat=outputformat, userdata=userdata, _external=True)
     
 
             ## Creating the python files
