@@ -62,32 +62,57 @@ def get_OT2transfer():
 
             ## Creating the python files
             if protocol == "Extraction":
-                finished_protocol1 = get_OT2_script(f'{naming}_Extraction.py')
-                
+                return render_template(
+                    "/OT2transfer.html",
+                    protocol = userinput['Protocol'],
+                    user = userinput['User'],
+                    samplenumber = userinput['SampleNumber'],
+                    inputformat = userinput['InputFormat'],
+                    outputformat = userinput['OutputFormat'],
+                    finished_protocol1 = get_OT2_script(f'{naming}_Extraction.py'),
+                    finished_protocol2 = "",
+                    finished_protocol3 = "")
+                    
 
             elif protocol == "Library":
-                finished_protocol1 = get_OT2_script(f'{naming}_covaris.py')
-                finished_protocol2 = get_OT2_script(f'{naming}_BESTLibrary.py')
-                finished_protocol3 = get_OT2_script(f'{naming}_BESTPurification.py')
+                
+                return render_template(
+                    "/OT2transfer.html",
+                    protocol = userinput['Protocol'],
+                    user = userinput['User'],
+                    samplenumber = userinput['SampleNumber'],
+                    inputformat = userinput['InputFormat'],
+                    outputformat = userinput['OutputFormat'],
+                    finished_protocol1 = get_OT2_script(f'{naming}_covaris.py'),
+                    finished_protocol2 = get_OT2_script(f'{naming}_BESTLibrary.py'),
+                    finished_protocol3 = get_OT2_script(f'{naming}_BESTPurification.py'))
 
             elif protocol == "qPCR":
-                finished_protocols1 = get_OT2_script(f'{naming}_qPCR.py')
+                
+                return render_template(
+                    "/OT2transfer.html",
+                    protocol = userinput['Protocol'],
+                    user = userinput['User'],
+                    samplenumber = userinput['SampleNumber'],
+                    inputformat = userinput['InputFormat'],
+                    outputformat = userinput['OutputFormat'],
+                    finished_protocols1 = get_OT2_script(f'{naming}_qPCR.py'),
+                    finished_protocol2 = "",
+                    finished_protocol3 = "")
 
             elif protocol == "IndexPCR":
-                finished_protocols1 = get_OT2_script(f'{naming}_IndexPCR.py')
-                finished_protocols2 = get_OT2_script(f'{naming}_IndexPurification.py')
+                
+                return render_template(
+                    "/OT2transfer.html",
+                    protocol = userinput['Protocol'],
+                    user = userinput['User'],
+                    samplenumber = userinput['SampleNumber'],
+                    inputformat = userinput['InputFormat'],
+                    outputformat = userinput['OutputFormat'],
+                    finished_protocols1 = get_OT2_script(f'{naming}_IndexPCR.py'),
+                    finished_protocols2 = get_OT2_script(f'{naming}_IndexPurification.py'),
+                    finished_protocol3 = "")
             
-
-            return render_template(
-            "/OT2transfer.html",
-            protocol = userinput['Protocol'],
-            user = userinput['User'],
-            samplenumber = userinput['SampleNumber'],
-            inputformat = userinput['InputFormat'],
-            outputformat = userinput['OutputFormat'],
-            finished_protocol1 = finished_protocol1,
-            finished_protocol2 = finished_protocol2,
-            finished_protocol3 = finished_protocol3)
         
         except:
             return render_template("/index")
