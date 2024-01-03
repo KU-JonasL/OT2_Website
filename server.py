@@ -121,27 +121,27 @@ def get_OT2transfer():
 
 
 ## Finished protocols
-@app.route("/finished_protocol1/<naming>")
+@app.route("/finished_protocol1/<path:naming>")
 def finished_protocol1(naming):
     if naming != "":
         script_filename = f'template/client/pythonscripts/{naming}.py'
-        return send_file(script_filename, as_attachment=True)
+        return send_from_directory(app.config["Client_Scripts"],script_filename, as_attachment=True)
     else: 
         return
 
-@app.route("/finished_protocol2/<naming>")
+@app.route("/finished_protocol2/<path:naming>")
 def finished_protocol2(naming):
     if naming != "":
         script_filename = f'template/client/pythonscripts/{naming}.py'
-        return send_file(script_filename, as_attachment=True)
+        return send_from_directory(app.config["Client_Scripts"],script_filename, as_attachment=True)
     else:
         return
 
-@app.route("/finished_protocol3/<naming>")
+@app.route("/finished_protocol3/<path:naming>")
 def finished_protocol3(naming):
     if naming != "":
         script_filename = f'template/client/pythonscripts/{naming}.py'
-        return send_file(script_filename, as_attachment=True)
+        return send_from_directory(app.config["Client_Scripts"],script_filename, as_attachment=True)
     else:
         return
 
