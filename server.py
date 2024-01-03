@@ -125,7 +125,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
     ###### Read the content of the TEMPLATE.py and loading it in a modified protocol ######
 
     #### DNA Extraction
-    if csv_user_input['Protocol'][0] == "Extraction":
+    if csv_user_input['Protocol'] == "Extraction":
         ## Opening Template Extraction
         with open(f'template/templates_Protocols/Template_Protocol_DREX-NucleicAcidExtraction_OT2.py','r') as template_file:
             template_content = template_file.read()
@@ -137,8 +137,9 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
         # Write the modified content to a Python script files
 
         with tempfile.NamedTemporaryFile(mode='w', delete=True) as temp_file:
-            temp_file.write(modified_content)
             temp_filename1 = temp_file.name
+            temp_file.write(modified_content)
+            
 
         zip_data = io.BytesIO()
         with zipfile.ZipFile(zip_data, mode="w") as zipf:
@@ -154,7 +155,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
 
 
     #### Library Building
-    elif csv_user_input['Protocol'][0] == "Library":
+    elif csv_user_input['Protocol'] == "Library":
         
         ## Opening Template; Covaris
         with open('template/templates_Protocols/Template_Protocol_CovarisSetup_OT2.py','r') as template_file:
@@ -166,9 +167,9 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
 
         # Write the modified content to temporary Python script files
         with tempfile.NamedTemporaryFile(mode='w', delete=True) as temp_file:
-            temp_file.write(modified_content1)
             temp_filename1 = temp_file.name
-
+            temp_file.write(modified_content1)
+            
 
         ## Opening Template; Best-Library
         with open('template/templates_Protocols/Template_Protocol_BEST-Library_OT2.py','r') as template_file:
@@ -180,8 +181,9 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
 
         # Write the modified content to temporary Python script files
         with tempfile.NamedTemporaryFile(mode='w', delete=True) as temp_file:
-            temp_file.write(modified_content2)
             temp_filename2 = temp_file.name
+            temp_file.write(modified_content2)
+            
 
 
         ## Opening Template; Best Purification
@@ -194,8 +196,9 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
 
         # Write the modified content to temporary Python script files
         with tempfile.NamedTemporaryFile(mode='w', delete=True) as temp_file:
-            temp_file.write(modified_content3)
             temp_filename3 = temp_file.name
+            temp_file.write(modified_content3)
+            
         
         zip_data = io.BytesIO()
         with zipfile.ZipFile(zip_data, mode="w") as zipf:
@@ -212,7 +215,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
         
 
     #### qPCR ####
-    elif csv_user_input['Protocol'][0] == "qPCR":
+    elif csv_user_input['Protocol'] == "qPCR":
         with open('template/templates_Protocols/Template_Protocol_qPCR_OT2.py','r') as template_file:
             template_content = template_file.read()
         
@@ -221,8 +224,9 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
 
         # Write the modified content to temporary Python script files
         with tempfile.NamedTemporaryFile(mode='w', delete=True) as temp_file:
-            temp_file.write(modified_content)
             temp_filename1 = temp_file.name
+            temp_file.write(modified_content)
+            
         
         zip_data = io.BytesIO()
         with zipfile.ZipFile(zip_data, mode="w") as zipf:
@@ -235,7 +239,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
 
 
     #### Index PCR; PCR ####
-    elif csv_user_input['Protocol'][0] == "IndexPCR":
+    elif csv_user_input['Protocol'] == "IndexPCR":
         
         ##Opening Template Protocol (Index PCR; PCR)
         with open('template/templates_Protocols/Template_Protocol_IndexPCR_OT2.py','r') as template_file:
@@ -247,8 +251,9 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
 
         # Write the modified content to temporary Python script files
         with tempfile.NamedTemporaryFile(mode='w', delete=True) as temp_file:
-            temp_file.write(modified_content1)
             temp_filename1 = temp_file.name
+            temp_file.write(modified_content1)
+            
 
 
         ##Opening Template Protocol (Index PCR; Purification)
@@ -261,8 +266,9 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
 
         # Write the modified content to temporary Python script files
         with tempfile.NamedTemporaryFile(mode='w', delete=True) as temp_file:
-            temp_file.write(modified_content2)
             temp_filename2 = temp_file.name
+            temp_file.write(modified_content2)
+            
 
         zip_data = io.BytesIO()
         with zipfile.ZipFile(zip_data, mode="w") as zipf:
