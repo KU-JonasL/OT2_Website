@@ -69,7 +69,7 @@ def get_OT2transfer():
                     samplenumber = userinput['SampleNumber'],
                     inputformat = userinput['InputFormat'],
                     outputformat = userinput['OutputFormat'],
-                    finished_protocol1 = get_OT2_script(f'{naming}_Extraction.py'),
+                    finished_protocol1 = url_for('finished_protocol1', naming =f'{naming}_Extraction.py'),
                     finished_protocol2 = "",
                     finished_protocol3 = "")
                     
@@ -82,9 +82,9 @@ def get_OT2transfer():
                     samplenumber = userinput['SampleNumber'],
                     inputformat = userinput['InputFormat'],
                     outputformat = userinput['OutputFormat'],
-                    finished_protocol1 = get_OT2_script(f'{naming}_covaris.py'),
-                    finished_protocol2 = get_OT2_script(f'{naming}_BESTLibrary.py'),
-                    finished_protocol3 = get_OT2_script(f'{naming}_BESTPurification.py'))
+                    finished_protocol1 = url_for('finished_protocol1', naming = f'{naming}_covaris.py'),
+                    finished_protocol2 = url_for('finished_protocol2', naming = f'{naming}_BESTLibrary.py'),
+                    finished_protocol3 = url_for('finished_protocol3', naming = f'{naming}_BESTPurification.py'))
 
             elif protocol == "qPCR":
                 return render_template(
@@ -94,9 +94,9 @@ def get_OT2transfer():
                     samplenumber = userinput['SampleNumber'],
                     inputformat = userinput['InputFormat'],
                     outputformat = userinput['OutputFormat'],
-                    finished_protocols1 = get_OT2_script(f'{naming}_qPCR.py'),
-                    finished_protocol2 = "",
-                    finished_protocol3 = "")
+                    fp_url1 = url_for('finished_protocol1', naming = f'{naming}_qPCR.py'),
+                    fp_url1 = "",
+                    fp_url1 = "")
 
             elif protocol == "IndexPCR":
                 return render_template(
@@ -106,22 +106,49 @@ def get_OT2transfer():
                     samplenumber = userinput['SampleNumber'],
                     inputformat = userinput['InputFormat'],
                     outputformat = userinput['OutputFormat'],
-                    finished_protocols1 = get_OT2_script(f'{naming}_IndexPCR.py'),
-                    finished_protocols2 = get_OT2_script(f'{naming}_IndexPurification.py'),
+                    finished_protocol1 = url_for('finished_protocol1', naming = f'{naming}_IndexPCR.py'),
+                    finished_protocol2 = url_for('finished_protocol2', naming = f'{naming}_IndexPurification.py'),
                     finished_protocol3 = "")
+                                                 
             
         
         except FileNotFoundError:
             return render_template("/index.html")
-
-
-        
+      
     
     else:
         return render_template("/index.html")
-        
 
 
+## Finished protocols
+@app.route("/finished_protocol1/<naming>")
+def finished_protocol1(naming):
+    if naming != "":
+        script_filename = f'template/client/pythonscripts/{naming}.py'
+        return send_file(script_filename, as_attachment=True)
+    else: 
+        return
+
+@app.route("/finished_protocol2/<naming>")
+def finished_protocol2(naming):
+    if naming != "":
+        script_filename = f'template/client/pythonscripts/{naming}.py'
+        return send_file(script_filename, as_attachment=True)
+    else:
+        return
+
+@app.route("/finished_protocol3/<naming>")
+def finished_protocol3(naming):
+    if naming != "":
+        script_filename = f'template/client/pythonscripts/{naming}.py'
+        return send_file(script_filename, as_attachment=True)
+    else:
+        return
+
+
+
+
+## csv / script download
 @app.route("/get-csv/<path:name>")
 def get_csv(name):
     try:
