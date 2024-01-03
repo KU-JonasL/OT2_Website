@@ -115,13 +115,13 @@ def get_OT2transfer():
             
         
         except:
-            return render_template("/index")
+            return render_template("/index.html")
 
 
         
     
     else:
-        return render_template("/index")
+        return render_template("/index.html")
         
 
 
