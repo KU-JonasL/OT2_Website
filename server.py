@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, send_from_directory, abort,url_for
+from flask import Flask, render_template, request, redirect, send_file, send_from_directory, abort,url_for
 from csvOT2transfer import get_opentrons_script
 from waitress import serve
 from werkzeug.utils import secure_filename
@@ -32,11 +32,11 @@ def get_OT2transfer():
     if request.method == "POST":
 
         ## Arguments pasted in
-        protocol = request.form['protocol'][0]
-        user = request.form['user'][0]
-        samplenumber = request.form['samples'][0]   
-        inputformat = request.form['inputformat'][0]
-        outputformat = request.form['outputformat'][0]
+        protocol = request.form['protocol']
+        user = request.form['user']
+        samplenumber = request.form['samples']
+        inputformat = request.form['inputformat']
+        outputformat = request.form['outputformat']
 
         ## Naming
         today = datetime.today().strftime('%Y%m%d')
@@ -61,22 +61,21 @@ def get_OT2transfer():
                 get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat, userdata = userdata)
 
             ## Creating the python files
-            finished_protocols = ["","",""]
             if protocol == "Extraction":
-                finished_protocols[0] = get_OT2_script(f'{naming}_Extraction.py')
+                finished_protocol1 = get_OT2_script(f'{naming}_Extraction.py')
                 
 
             elif protocol == "Library":
-                finished_protocols[0] = get_OT2_script(f'{naming}_covaris.py')
-                finished_protocols[1] = get_OT2_script(f'{naming}_BESTLibrary.py')
-                finished_protocols[2] = get_OT2_script(f'{naming}_BESTPurification.py')
+                finished_protocol1 = get_OT2_script(f'{naming}_covaris.py')
+                finished_protocol2 = get_OT2_script(f'{naming}_BESTLibrary.py')
+                finished_protocol3 = get_OT2_script(f'{naming}_BESTPurification.py')
 
             elif protocol == "qPCR":
-                        finished_protocols[0] = get_OT2_script(f'{naming}_qPCR.py')
+                finished_protocols1 = get_OT2_script(f'{naming}_qPCR.py')
 
             elif protocol == "IndexPCR":
-                        finished_protocols[0] = get_OT2_script(f'{naming}_IndexPCR.py')
-                        finished_protocols[1] = get_OT2_script(f'{naming}_IndexPurification.py')
+                finished_protocols1 = get_OT2_script(f'{naming}_IndexPCR.py')
+                finished_protocols2 = get_OT2_script(f'{naming}_IndexPurification.py')
             
 
             return render_template(
@@ -86,9 +85,9 @@ def get_OT2transfer():
             samplenumber = userinput['SampleNumber'],
             inputformat = userinput['InputFormat'],
             outputformat = userinput['OutputFormat'],
-            finished_protocol1 = finished_protocols[0],
-            finished_protocol2 = finished_protocols[1],
-            finished_protocol3 = finished_protocols[2])
+            finished_protocol1 = finished_protocol1,
+            finished_protocol2 = finished_protocol2,
+            finished_protocol3 = finished_protocol3)
         
         except:
             return render_template("/index")

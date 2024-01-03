@@ -10,7 +10,7 @@
 
 
 <body>
-    <h1>{{ user }} Opentrons Scripts</h1>
+    <h1>{ user } Opentrons Scripts</h1>
     
     <p>Welcome! Here are your Alberdi script(s) for the Opentrons OT-2. Good Luck</p>
 
@@ -25,6 +25,9 @@
     
     <p>
         Here are your protocol(s). <br><br>
+        <a href="{{ url_for('finished_protocol1') }}">Download Protocol 1</a><br><br>
+        <a href="{{ url_for('finished_protocol2') }}">Download Protocol 2</a><br><br>
+        <a href="{{ url_for('finished_protocol3') }}">Download Protocol 3</a><br><br>
         {{finished_protocol1}}<br><br>
         {{finished_protocol2}}<br><br>
         {{finished_protocol3}}<br><br>
