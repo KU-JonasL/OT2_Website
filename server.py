@@ -48,9 +48,9 @@ def get_OT2transfer():
         ## Looking for csv file contents.
         try:
             if request.files['myFile'] != "":
-                userfile = request.files['myFile']
-                userfile.filename = secure_filename(userfile.filename)
-                userdata = pd.read_csv(userfile,header=0)
+                userdata = request.files['myFile']
+                userdata.filename = secure_filename(userdata.filename)
+                #userdata = pd.read_csv(userfile,header=0)
                 get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat, userdata = userdata)
 
             elif request.files['myFile'] == "" and protocol == "Library":
