@@ -94,9 +94,9 @@ def get_OT2transfer():
                     samplenumber = userinput['SampleNumber'],
                     inputformat = userinput['InputFormat'],
                     outputformat = userinput['OutputFormat'],
-                    fp_url1 = url_for('finished_protocol1', naming = f'{naming}_qPCR.py'),
-                    fp_url1 = "",
-                    fp_url1 = "")
+                    finished_protocol1 = url_for('finished_protocol1', naming = f'{naming}_qPCR.py'),
+                    finished_protocol2 = "",
+                    finished_protocol3 = "")
 
             elif protocol == "IndexPCR":
                 return render_template(
