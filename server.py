@@ -18,10 +18,6 @@ app.config["Client_Scripts"] = os.path.join(app.root_path, 'template', 'client',
 
 
 
-
-
-# A route to serve temporary files
-
 @app.route('/')
 @app.route('/index', methods=['POST', 'GET'])
 def index():
@@ -33,24 +29,75 @@ def index():
 @app.route('/OT2transfer', methods=['POST', 'GET'])
 def get_OT2transfer():
     
-    ## Arguments pasted in
-    protocol = request.form.get('protocol')[0]["Name"]
-    user = request.form.get('user')[0]["Name"]
-    samplenumber = request.form.get('samples')[0]   
-    inputformat = request.form.get('inputformat')[0]["Name"]
-    outputformat = request.form.get('outputformat')[0]["Name"]
-        
-    ## User Data redirect into a dataframe 
-    userinput = pd.DataFrame({'Protocol':[protocol],'User':[user],'SampleNumber':[samplenumber],'InputFormat':[inputformat],'OutputFormat':[outputformat]})
+    if request.method == "POST":
 
-    return render_template(
-    "/OT2transfer.html",
-    protocol = userinput['Protocol'],
-    user = userinput['User'],
-    samplenumber = userinput['SampleNumber'],
-    inputformat = userinput['InputFormat'],
-    outputformat = userinput['OutputFormat'],
-    )
+        ## Arguments pasted in
+        protocol = request.form['protocol']
+        user = request.form['user']
+        samplenumber = request.form['samples']   
+        inputformat = request.form['inputformat']
+        outputformat = request.form['outputformat']
+
+        ## Naming
+        today = datetime.today().strftime('%Y%m%d')
+        naming = user+"_"+protocol+"_"+today 
+
+        ## User Data redirect into a dataframe 
+        userinput = pd.DataFrame({'Protocol':[protocol],'User':[user],'SampleNumber':[samplenumber],'InputFormat':[inputformat],'OutputFormat':[outputformat]})
+
+        ## Looking for csv file contents.
+        try:
+            if request.files['myFile'] != "":
+                userfile = request.files['myFile']
+                userfile.filename = secure_filename(userfile.filename)
+                userdata = pd.read_csv(userfile,header=0)
+                get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat, userdata = userdata)
+
+            elif request.files['myFile'] == "" and protocol == "Library":
+                return render_template("/index")
+
+            elif request.files['myFile'] == "":
+                userdata = ""
+                get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat, userdata = userdata)
+
+            ## Creating the python files
+            finished_protocols = ["","",""]
+            if protocol == "Extraction":
+                finished_protocols[0] = get_OT2_script(f'{naming}_Extraction.py')
+                
+
+            elif protocol == "Library":
+                finished_protocols[0] = get_OT2_script(f'{naming}_covaris.py')
+                finished_protocols[1] = get_OT2_script(f'{naming}_BESTLibrary.py')
+                finished_protocols[2] = get_OT2_script(f'{naming}_BESTPurification.py')
+
+            elif protocol == "qPCR":
+                        finished_protocols[0] = get_OT2_script(f'{naming}_qPCR.py')
+
+            elif protocol == "IndexPCR":
+                        finished_protocols[0] = get_OT2_script(f'{naming}_IndexPCR.py')
+                        finished_protocols[1] = get_OT2_script(f'{naming}_IndexPurification.py')
+            
+
+            return render_template(
+            "/OT2transfer.html",
+            protocol = userinput['Protocol'],
+            user = userinput['User'],
+            samplenumber = userinput['SampleNumber'],
+            inputformat = userinput['InputFormat'],
+            outputformat = userinput['OutputFormat'],
+            finished_protocol1 = finished_protocols[0],
+            finished_protocol2 = finished_protocols[1],
+            finished_protocol3 = finished_protocols[2])
+        
+        except:
+            return render_template("/index")
+
+
+        
+    
+    else:
+        return render_template("/index")
         
 
 
