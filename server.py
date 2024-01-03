@@ -32,11 +32,11 @@ def get_OT2transfer():
     if request.method == "POST":
 
         ## Arguments pasted in
-        protocol = request.form['protocol']
-        user = request.form['user']
-        samplenumber = request.form['samples']
-        inputformat = request.form['inputformat']
-        outputformat = request.form['outputformat']
+        protocol = request.form["protocol"]
+        user = request.form["user"]
+        samplenumber = request.form["samples"]
+        inputformat = request.form["inputformat"]
+        outputformat = request.form["outputformat"]
 
         ## Naming
         today = datetime.today().strftime('%Y%m%d')
@@ -47,16 +47,16 @@ def get_OT2transfer():
 
         ## Looking for csv file contents.
         try:
-            if request.files['myFile'] != "":
-                userdata = request.files['myFile']
+            if request.files["myFile"] != "":
+                userdata = request.files["myFile"]
                 userdata.filename = secure_filename(userdata.filename)
                 #userdata = pd.read_csv(userfile,header=0)
                 get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat, userdata = userdata)
 
-            elif request.files['myFile'] == "" and protocol == "Library":
-                return render_template("/index")
+            elif request.files["myFile"] == "" and protocol == "Library":
+                return render_template("/csv-not-found")
 
-            elif request.files['myFile'] == "":
+            elif request.files["myFile"] == "":
                 userdata = ""
                 get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat, userdata = userdata)
 
@@ -75,9 +75,8 @@ def get_OT2transfer():
                     
 
             elif protocol == "Library":
-                
                 return render_template(
-                    "/OT2transfer.html",
+                    "/OT2transfer",
                     protocol = userinput['Protocol'],
                     user = userinput['User'],
                     samplenumber = userinput['SampleNumber'],
@@ -88,7 +87,6 @@ def get_OT2transfer():
                     finished_protocol3 = get_OT2_script(f'{naming}_BESTPurification.py'))
 
             elif protocol == "qPCR":
-                
                 return render_template(
                     "/OT2transfer.html",
                     protocol = userinput['Protocol'],
@@ -101,7 +99,6 @@ def get_OT2transfer():
                     finished_protocol3 = "")
 
             elif protocol == "IndexPCR":
-                
                 return render_template(
                     "/OT2transfer.html",
                     protocol = userinput['Protocol'],
@@ -114,7 +111,7 @@ def get_OT2transfer():
                     finished_protocol3 = "")
             
         
-        except:
+        except FileNotFoundError:
             return render_template("/index.html")
 
 
