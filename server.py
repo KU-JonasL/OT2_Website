@@ -63,7 +63,7 @@ def get_OT2transfer():
                 return render_template("/index.html")
 
             elif request.files["myFile"] == "":
-                userdata = ""
+                userdata = "1"
                 #get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat, userdata = userdata)
                 zip_scripts_url = url_for('get_opentrons_script', protocol=protocol, user=user, samplenumber=samplenumber, inputformat=inputformat, outputformat=outputformat, userdata=userdata, _external=True)
     
@@ -76,6 +76,7 @@ def get_OT2transfer():
                 samplenumber = userinput['SampleNumber'],
                 inputformat = userinput['InputFormat'],
                 outputformat = userinput['OutputFormat'],
+                datafile = userdata,
                 get_opentrons_script = zip_scripts_url)
 
         except FileNotFoundError:
