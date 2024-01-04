@@ -35,11 +35,11 @@ def get_OT2transfer():
     if request.method == "POST":
 
         ## Arguments pasted in
-        protocol = request.form.get("protocol").text
-        user = request.form.get("user").json()
-        samplenumber = request.form.get("samples")
-        inputformat = request.form.get("inputformat")
-        outputformat = request.form.get("outputformat")
+        protocol = request.form.get('protocol').text
+        user = request.form.get('user').json()
+        samplenumber = request.form.get('samples')
+        inputformat = request.form.get('inputformat')
+        outputformat = request.form.get('outputformat')
 
         ## Naming
         today = datetime.today().strftime('%Y%m%d')
@@ -50,8 +50,8 @@ def get_OT2transfer():
 
         ## Looking for csv file contents.
         try:
-            if request.files.get("myFile") != "":
-                userdata = request.files.get("myFile")
+            if request.files['myFile'] != "":
+                userdata = request.files['myFile']
                 userdata.filename = secure_filename(userdata.filename)
                 #userdata = pd.read_csv(userfile,header=0)
                 #get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat, userdata = userdata)
@@ -60,10 +60,10 @@ def get_OT2transfer():
                 zip_scripts_url = url_for('get_opentrons_script', protocol=protocol, user=user, samplenumber=samplenumber, inputformat=inputformat, outputformat=outputformat, userdata=userdata, _external=True)
     
 
-            elif request.files.get("myFile") == "" and protocol == "Library":
+            elif request.files['myFile'] == "" and protocol == "Library":
                 return render_template("/index.html")
 
-            elif request.files.get("myFile") == "":
+            elif request.files['myFile'] == "":
                 userdata = "1"
                 #get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat, userdata = userdata)
                 zip_scripts_url = url_for('get_opentrons_script', protocol=protocol, user=user, samplenumber=samplenumber, inputformat=inputformat, outputformat=outputformat, userdata=userdata, _external=True)
