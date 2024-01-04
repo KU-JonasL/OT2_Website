@@ -1,11 +1,8 @@
 from flask import Flask, render_template, request, redirect, send_file, send_from_directory, abort, url_for
-#from csvOT2transfer import get_opentrons_script
-import requests
 from waitress import serve
 from werkzeug.utils import secure_filename
 from datetime import datetime
 import pandas as pd
-import tempfile 
 import os
 import io
 import zipfile
@@ -72,7 +69,7 @@ def get_OT2transfer():
             ## Creating the python files
             return render_template(
                 "/OT2transfer.html",
-                protocol = userinput['Protocol'],
+                protocol = print(userinput['Protocol']),
                 user = userinput['User'],
                 samplenumber = userinput['SampleNumber'],
                 inputformat = userinput['InputFormat'],
