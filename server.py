@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, send_file, send_from_directory, abort, url_for
 #from csvOT2transfer import get_opentrons_script
+import requests
 from waitress import serve
 from werkzeug.utils import secure_filename
 from datetime import datetime
@@ -34,11 +35,11 @@ def get_OT2transfer():
     if request.method == "POST":
 
         ## Arguments pasted in
-        protocol = request.form["protocol"]
-        user = request.form["user"]
-        samplenumber = request.form["samples"]
-        inputformat = request.form["inputformat"]
-        outputformat = request.form["outputformat"]
+        protocol = request.form.get("protocol").text
+        user = request.form.get("user").json()
+        samplenumber = request.form.get("samples")
+        inputformat = request.form.get("inputformat")
+        outputformat = request.form.get("outputformat")
 
         ## Naming
         today = datetime.today().strftime('%Y%m%d')
@@ -49,8 +50,8 @@ def get_OT2transfer():
 
         ## Looking for csv file contents.
         try:
-            if request.files["myFile"] != "":
-                userdata = request.files["myFile"]
+            if request.files.get("myFile") != "":
+                userdata = request.files.get("myFile")
                 userdata.filename = secure_filename(userdata.filename)
                 #userdata = pd.read_csv(userfile,header=0)
                 #get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat, userdata = userdata)
@@ -59,10 +60,10 @@ def get_OT2transfer():
                 zip_scripts_url = url_for('get_opentrons_script', protocol=protocol, user=user, samplenumber=samplenumber, inputformat=inputformat, outputformat=outputformat, userdata=userdata, _external=True)
     
 
-            elif request.files["myFile"] == "" and protocol == "Library":
+            elif request.files.get("myFile") == "" and protocol == "Library":
                 return render_template("/index.html")
 
-            elif request.files["myFile"] == "":
+            elif request.files.get("myFile") == "":
                 userdata = "1"
                 #get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat, userdata = userdata)
                 zip_scripts_url = url_for('get_opentrons_script', protocol=protocol, user=user, samplenumber=samplenumber, inputformat=inputformat, outputformat=outputformat, userdata=userdata, _external=True)
