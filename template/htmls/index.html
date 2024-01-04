@@ -48,7 +48,7 @@
                 </p>
     
     
-                <form action="https://httpbin.org/post" method="POST" > 
+                <form action="https://httpbin.org/post" method="POST" enctype="multipart/form-data"> 
                     <fieldset>
                         <legend>User Data Input</legend>
                     <p>
@@ -141,7 +141,7 @@
                         
                     <p>
                         <Label for="myFile">Excel or CSV data for normalisation and library building. <a href="/template/Template_CSV_LibraryInput.xlsx">Excel Template</a><br>
-                        <input type="file" id="myFile" name="myFile" accept=".csv">
+                        <input type="file" id="myFile" name="myFile">
                         <p><em>The file upload is required for Library protocols</em></Label><br></p>
                     </p>
     
