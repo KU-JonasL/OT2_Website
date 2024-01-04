@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, send_file, send_from_directory, abort,url_for
+from flask import Flask, render_template, request, redirect, send_file, send_from_directory, abort, url_for
 #from csvOT2transfer import get_opentrons_script
 from waitress import serve
 from werkzeug.utils import secure_filename
@@ -77,22 +77,16 @@ def get_OT2transfer():
                 inputformat = userinput['InputFormat'],
                 outputformat = userinput['OutputFormat'],
                 get_opentrons_script = zip_scripts_url)
-                    
 
-                                                 
-            
-        
         except FileNotFoundError:
             return render_template("/index.html")
-      
-    
     else:
         return render_template("/index.html")
 
 
 
 
-@app.route("/get_OT2_scripts")
+@app.route("/get_OT2_scripts/<path:zipdata>")
 def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber = 96, inputformat = "LVLSXS200", outputformat = "LVLSXS200", userdata = 0):
 
     ## Creating a csv from User Inputs
@@ -105,8 +99,6 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
     ## Prepare the inputs types for transfer
     csv_input_values = "\n".join([f"({', '.join(map(str, row))})" for row in csv_user_input.values])
     csv_input_raw_str = f"{', '.join(csv_user_input.columns)}\n{csv_input_values}"
-
-    ## Cleaning up the inputs before merge
     csv_input_raw_str = csv_input_raw_str.replace("nan", "").replace("(", "").replace(")", "")
 
 
@@ -116,9 +108,8 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
     ## Prepare the data types for transfer
     csv_data_values = "\n".join([f"({', '.join(map(str, row))})" for row in csv_user_data.values])
     csv_data_raw_str = f"{', '.join(csv_user_data.columns)}\n{csv_data_values}"
-
-    ## Cleaning up the data before merge
     csv_data_raw_str = csv_data_raw_str.replace("nan", "").replace("(", "").replace(")", "")
+    
     
     zip_data = io.BytesIO()
 
@@ -126,7 +117,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
 
     #### DNA Extraction
     if csv_user_input['Protocol'] == "Extraction":
-        ## Opening Template Extraction
+        ## Opening and Modifying Template Extraction
         template_content = open(f'template/templates_Protocols/Template_Protocol_DREX-NucleicAcidExtraction_OT2.py','r').read()
         modified_content = template_content.replace("1# User Input here", f"'''\n{csv_input_raw_str}\n'''")
         modified_content = modified_content.replace("1# User Data here", f"'''\n{csv_data_raw_str}'''")
@@ -142,20 +133,17 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
     #### Library Building
     elif csv_user_input['Protocol'] == "Library":
         
-        ## Opening Template; Covaris
+        ## Opening and Modifying Template; Covaris
         template_content1 =  open('template/templates_Protocols/Template_Protocol_CovarisSetup_OT2.py','r').read()
-        
-        ## Modifying Template; Covaris
         modified_content1 = template_content1.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
         modified_content1 = modified_content1.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
-        # Write the modified content to temporary Python script files
         # Write the modified content to temporary Python script files
         with zipfile.ZipFile(zip_data, mode="w") as zipf:
             zipf.writestr('finished_protocol1.py', modified_content1)
             
 
-        ## Opening Template; Best-Library
+        ## Opening and Modifying Template; Best-Library
         template_content2 = open('template/templates_Protocols/Template_Protocol_BEST-Library_OT2.py','r').read()
         modified_content2 = template_content2.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
         modified_content2 = modified_content2.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
@@ -166,7 +154,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
             
 
 
-        ## Opening Template; Best Purification
+        ## Opening and Modifying Template; Best Purification
         template_content3 =  open('template/templates_Protocols/Template_Protocol_BEST-Purification_OT2.py','r').read()
         modified_content3 = template_content3.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
         modified_content3 = modified_content3.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
@@ -194,7 +182,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
     #### Index PCR; PCR ####
     elif csv_user_input['Protocol'] == "IndexPCR":
         
-        ##Opening Template Protocol (Index PCR; PCR)
+        ##Opening and Modifying Template Protocol (Index PCR; PCR)
         template_content1 = open('template/templates_Protocols/Template_Protocol_IndexPCR_OT2.py','r').read()
         modified_content1 = template_content1.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
         modified_content1 = modified_content1.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
@@ -205,14 +193,14 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
             
 
 
-        ##Opening Template Protocol (Index PCR; Purification)
+        ##Opening and Modifying Template Protocol (Index PCR; Purification)
         template_content2 = open('template/templates_Protocols/Template_Protocol_IndexPCR_Purfication_OT2.py','r').read()
         modified_content2 = template_content2.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
         modified_content2 = modified_content2.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
         # Write the modified content to temporary Python script files
         with zipfile.ZipFile(zip_data, mode="w") as zipf:
-            zipf.writestr('finished_protocol1.py', modified_content2)
+            zipf.writestr('finished_protocol2.py', modified_content2)
             
             
     # Move to the beginning of the ZIP data stream
