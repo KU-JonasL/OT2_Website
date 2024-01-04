@@ -60,7 +60,7 @@ def get_OT2transfer():
     
 
             elif request.files["myFile"] == "" and protocol == "Library":
-                return render_template("/csv-not-found")
+                return render_template("/index.html")
 
             elif request.files["myFile"] == "":
                 userdata = ""
@@ -86,7 +86,7 @@ def get_OT2transfer():
 
 
 
-@app.route("/get_OT2_scripts/<path:zipdata>")
+@app.route("/get_OT2_scripts/")
 def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber = 96, inputformat = "LVLSXS200", outputformat = "LVLSXS200", userdata = 0):
 
     ## Creating a csv from User Inputs
@@ -110,7 +110,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
     csv_data_raw_str = f"{', '.join(csv_user_data.columns)}\n{csv_data_values}"
     csv_data_raw_str = csv_data_raw_str.replace("nan", "").replace("(", "").replace(")", "")
     
-    
+
     zip_data = io.BytesIO()
 
     ###### Read the content of the TEMPLATE.py and loading it in a modified protocol ######
