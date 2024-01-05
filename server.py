@@ -25,7 +25,7 @@ def index():
 
 
 
-@app.route('/OT2transfer/<path:naming>', methods = ["GET","POST"])
+@app.route('/OT2transfer', methods = ["GET","POST"])
 def get_OT2transfer():
     
     if request.method == "POST":
