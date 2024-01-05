@@ -57,7 +57,7 @@ def get_OT2transfer():
     
 
             elif request.files['myFile'] == "" and protocol == "Library":
-                return render_template("/index.html")
+                return render_template("/csv-not-found.html")
 
             elif request.files['myFile'] == "":
                 userdata = "1"
@@ -85,15 +85,15 @@ def get_OT2transfer():
 
 
 #/<path:user>/<path:protocol>/<path:samples>/<path:inputformat>/<path:outputformat
-@app.route("/get_OT2_scripts>", methods = ["GET","POST"])
+@app.route("/get_OT2_scripts", methods = ["GET","POST"])
 def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber = 96, inputformat = "LVLSXS200", outputformat = "LVLSXS200", userdata = 0):
 
-    ## Creating a csv from User Inputs
-    csv_user_input =pd.DataFrame({'Protocol':[protocol],
-    'User':[user],
-    'SampleNumber':[samplenumber],
-    'InputFormat':[inputformat],
-    'OutputFormat':[outputformat]})
+    ## Creating a dictionary from User Inputs
+    csv_user_input =pd.DataFrame({'Protocol':protocol,
+    'User':user,
+    'SampleNumber':samplenumber,
+    'InputFormat':inputformat,
+    'OutputFormat':outputformat})
 
     ## Prepare the inputs types for transfer
     csv_input_values = "\n".join([f"({', '.join(map(str, row))})" for row in csv_user_input.values])
@@ -200,10 +200,14 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
         # Write the modified content to temporary Python script files
         with zipfile.ZipFile(zip_data, mode="w") as zipf:
             zipf.writestr('finished_protocol2.py', modified_content2)
-            
+    
+      
             
     # Move to the beginning of the ZIP data stream
     zip_data.seek(0)
+
+    if not bool(zip_data):
+        return abort(404)
 
     # Return the ZIP file as an attachment
     return send_file(zip_data,as_attachment=True,download_name='opentrons_scripts.zip',mimetype='application/zip')
