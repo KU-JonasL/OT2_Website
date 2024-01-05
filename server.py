@@ -13,20 +13,19 @@ app = Flask(__name__,template_folder="template/htmls")
     
 
 
-app.config["Client_CSV"] = os.path.join(app.root_path, 'template', 'client', 'csv')
-app.config["Client_Scripts"] = os.path.join(app.root_path, 'template', 'client', 'pythonscripts')
 
 
 
-@app.route('/')
-@app.route('/index', methods=['POST', 'GET'])
+
+@app.route('/', methods = ["GET","POST"])
+@app.route('/index', methods = ["GET","POST"])
 def index():
 
     return render_template('/index.html')
 
 
 
-@app.route('/OT2transfer', methods=['POST', 'GET'])
+@app.route('/OT2transfer', methods = ["GET","POST"])
 def get_OT2transfer():
     
     if request.method == "POST":
@@ -67,8 +66,7 @@ def get_OT2transfer():
     
 
             ## Creating the python files
-            return render_template(
-                "/OT2transfer.html",
+            return redirect(request.url,
                 protocol = print(userinput['Protocol']),
                 user = userinput['User'],
                 samplenumber = userinput['SampleNumber'],
@@ -85,7 +83,7 @@ def get_OT2transfer():
 
 
 
-@app.route("/get_OT2_scripts/<path:user>")
+@app.route("/get_OT2_scripts/<path:user>", methods = ["GET","POST"])
 def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber = 96, inputformat = "LVLSXS200", outputformat = "LVLSXS200", userdata = 0):
 
     ## Creating a csv from User Inputs
@@ -211,40 +209,9 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
     
 
 
-    
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ## Finished protocols
-@app.route("/finished_protocol1/<path:naming>")
+@app.route("/finished_protocol1/<path:naming>", methods = ["GET","POST"])
 def finished_protocol1(naming):
     if naming != "":
         script_filename = f'template/client/pythonscripts/{naming}.py'
@@ -252,7 +219,7 @@ def finished_protocol1(naming):
     else: 
         return
 
-@app.route("/finished_protocol2/<path:naming>")
+@app.route("/finished_protocol2/<path:naming>", methods = ["GET","POST"])
 def finished_protocol2(naming):
     if naming != "":
         script_filename = f'template/client/pythonscripts/{naming}.py'
@@ -260,7 +227,7 @@ def finished_protocol2(naming):
     else:
         return
 
-@app.route("/finished_protocol3/<path:naming>")
+@app.route("/finished_protocol3/<path:naming>", methods = ["GET","POST"])
 def finished_protocol3(naming):
     if naming != "":
         script_filename = f'template/client/pythonscripts/{naming}.py'
@@ -269,10 +236,11 @@ def finished_protocol3(naming):
         return
 
 
-
+app.config["Client_CSV"] = os.path.join(app.root_path, 'template', 'client', 'csv')
+app.config["Client_Scripts"] = os.path.join(app.root_path, 'template', 'client', 'pythonscripts')
 
 ## csv / script download
-@app.route("/get-csv/<path:name>")
+@app.route("/get-csv/<path:name>", methods = ["GET","POST"])
 def get_csv(name):
     try:
         return send_from_directory(app.config["Client_CSV"], name, as_attachment=True)
@@ -280,7 +248,7 @@ def get_csv(name):
         print("Did not find csv file")
         abort(404)
 
-@app.route("/get-script/<path:name>")
+@app.route("/get-script/<path:name>", methods = ["GET","POST"])
 def get_OT2_script(name):
     try:
         return send_from_directory(app.config["Client_Scripts"], name, as_attachment=True)
