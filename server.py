@@ -7,7 +7,7 @@ import os
 import io
 import zipfile
 
-app = Flask(__name__,template_folder="template/htmls")
+app = Flask(__name__,template_folder="template")
 
 
     
@@ -84,7 +84,7 @@ def get_OT2transfer():
 
 
 
-@app.route("/get_OT2_scripts/<path:user>", methods = ["GET","POST"])
+@app.route("/get_OT2_scripts/<str:user>/<str:protocol>/<int:samples>/<str:inputformat>/<path:outputformat>", methods = ["GET","POST"])
 def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber = 96, inputformat = "LVLSXS200", outputformat = "LVLSXS200", userdata = 0):
 
     ## Creating a csv from User Inputs
@@ -116,7 +116,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
     #### DNA Extraction
     if csv_user_input['Protocol'] == "Extraction":
         ## Opening and Modifying Template Extraction
-        template_content = open(f'template/templates_Protocols/Template_Protocol_DREX-NucleicAcidExtraction_OT2.py','r').read()
+        template_content = open(f'static/OT2_protocols/Template_Protocol_DREX-NucleicAcidExtraction_OT2.py','r').read()
         modified_content = template_content.replace("1# User Input here", f"'''\n{csv_input_raw_str}\n'''")
         modified_content = modified_content.replace("1# User Data here", f"'''\n{csv_data_raw_str}'''")
         
@@ -132,7 +132,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
     elif csv_user_input['Protocol'] == "Library":
         
         ## Opening and Modifying Template; Covaris
-        template_content1 =  open('template/templates_Protocols/Template_Protocol_CovarisSetup_OT2.py','r').read()
+        template_content1 =  open('static/OT2_protocols/Template_Protocol_CovarisSetup_OT2.py','r').read()
         modified_content1 = template_content1.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
         modified_content1 = modified_content1.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
@@ -142,7 +142,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
             
 
         ## Opening and Modifying Template; Best-Library
-        template_content2 = open('template/templates_Protocols/Template_Protocol_BEST-Library_OT2.py','r').read()
+        template_content2 = open('static/OT2_protocols/Template_Protocol_BEST-Library_OT2.py','r').read()
         modified_content2 = template_content2.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
         modified_content2 = modified_content2.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
@@ -153,7 +153,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
 
 
         ## Opening and Modifying Template; Best Purification
-        template_content3 =  open('template/templates_Protocols/Template_Protocol_BEST-Purification_OT2.py','r').read()
+        template_content3 =  open('static/OT2_protocols/Template_Protocol_BEST-Purification_OT2.py','r').read()
         modified_content3 = template_content3.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
         modified_content3 = modified_content3.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
@@ -167,7 +167,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
 
     #### qPCR ####
     elif csv_user_input['Protocol'] == "qPCR":
-        template_content = open('template/templates_Protocols/Template_Protocol_qPCR_OT2.py','r').read()
+        template_content = open('static/OT2_protocols/Template_Protocol_qPCR_OT2.py','r').read()
         modified_content = template_content.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
         modified_content = modified_content.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
         
@@ -181,7 +181,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
     elif csv_user_input['Protocol'] == "IndexPCR":
         
         ##Opening and Modifying Template Protocol (Index PCR; PCR)
-        template_content1 = open('template/templates_Protocols/Template_Protocol_IndexPCR_OT2.py','r').read()
+        template_content1 = open('static/OT2_protocols/Template_Protocol_IndexPCR_OT2.py','r').read()
         modified_content1 = template_content1.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
         modified_content1 = modified_content1.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
@@ -192,7 +192,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
 
 
         ##Opening and Modifying Template Protocol (Index PCR; Purification)
-        template_content2 = open('template/templates_Protocols/Template_Protocol_IndexPCR_Purfication_OT2.py','r').read()
+        template_content2 = open('static/OT2_protocols/Template_Protocol_IndexPCR_Purfication_OT2.py','r').read()
         modified_content2 = template_content2.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
         modified_content2 = modified_content2.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
