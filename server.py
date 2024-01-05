@@ -25,7 +25,7 @@ def index():
 
 
 
-@app.route('/OT2transfer', methods = ["GET","POST"])
+@app.route('/OT2transfer.html', methods = ["GET","POST"])
 def get_OT2transfer():
     
     if request.method == "POST":
@@ -83,8 +83,8 @@ def get_OT2transfer():
 
 
 
-
-@app.route("/get_OT2_scripts/<path:user>/<path:protocol>/<path:samples>/<path:inputformat>/<path:outputformat>", methods = ["GET","POST"])
+#/<path:user>/<path:protocol>/<path:samples>/<path:inputformat>/<path:outputformat
+@app.route("/get_OT2_scripts>", methods = ["GET","POST"])
 def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber = 96, inputformat = "LVLSXS200", outputformat = "LVLSXS200", userdata = 0):
 
     ## Creating a csv from User Inputs
