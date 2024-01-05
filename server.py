@@ -84,7 +84,7 @@ def get_OT2transfer():
 
 
 
-@app.route("/get_OT2_scripts/<str:user>/<str:protocol>/<int:samples>/<str:inputformat>/<path:outputformat>", methods = ["GET","POST"])
+@app.route("/get_OT2_scripts/<path:user>/<path:protocol>/<path:samples>/<path:inputformat>/<path:outputformat>", methods = ["GET","POST"])
 def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber = 96, inputformat = "LVLSXS200", outputformat = "LVLSXS200", userdata = 0):
 
     ## Creating a csv from User Inputs
