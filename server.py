@@ -31,11 +31,17 @@ def get_OT2transfer():
     if request.method == "POST":
 
         ## Arguments pasted in
-        protocol = request.form.get('protocol')
-        user = request.form.get('user')
-        samplenumber = request.form.get('samples')
-        inputformat = request.form.get('inputformat')
-        outputformat = request.form.get('outputformat')
+        req = request.get_json['form']
+        protocol = req('protocol')
+        user = req('user')
+        samplenumber = req('samples')
+        inputformat = req('inputformat')
+        outputformat = req('outputformat')
+        #protocol = request.form.get('protocol')
+        #user = request.form.get('user')
+        #samplenumber = request.form.get('samples')
+        #inputformat = request.form.get('inputformat')
+        #outputformat = request.form.get('outputformat')
 
         ## Naming
         today = datetime.today().strftime('%Y%m%d')
@@ -46,7 +52,7 @@ def get_OT2transfer():
 
         ## Looking for csv file contents.
         try:
-            if request.files['myFile'] != "":
+            if request.getfiles['myFile'] != "":
                 userdata = request.files['myFile']
                 userdata.filename = secure_filename(userdata.filename)
                 #userdata = pd.read_csv(userfile,header=0)
@@ -101,7 +107,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
 
 
     ## Read data from User_Data.csv if available
-    csv_user_data = pd.read_csv(userdata, header=0)
+    csv_user_data = pd.read_json(userdata, header=0)
 
     ## Prepare the data types for transfer
     csv_data_values = "\n".join([f"({', '.join(map(str, row))})" for row in csv_user_data.values])
