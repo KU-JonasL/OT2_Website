@@ -103,6 +103,8 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
 
     ## Read data from User_Data if available
     csv_user_data = pd.read_json(userdata, header=0)
+    if not bool(csv_user_data):
+        return abort(404)
 
     ## Prepare the data types for transfer
     csv_data_values = "\n".join([f"({', '.join(map(str, row))})" for row in csv_user_data.values])
