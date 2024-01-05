@@ -48,7 +48,7 @@ def get_OT2transfer():
         try:
             if request.files['myFile'] != "":
                 userdata = request.files['myFile']
-                userdata.filename = secure_filename(userdata.filename)
+                #userdata.filename = secure_filename(userdata.filename)
                 #userdata = pd.read_csv(userfile,header=0)
                 #get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat, userdata = userdata)
 
@@ -75,6 +75,7 @@ def get_OT2transfer():
                 outputformat = userinput['OutputFormat'],
                 datafile = userdata,
                 get_opentrons_script = zip_scripts_url)
+                #get_opentrons_script = opentrons_scripts.zip)
 
         except FileNotFoundError:
             return render_template("/index.html")
