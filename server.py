@@ -201,6 +201,8 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
         with zipfile.ZipFile(zip_data, mode="w") as zipf:
             zipf.writestr('finished_protocol2.py', modified_content2)
     
+    else: 
+        return abort(404) 
       
             
     # Move to the beginning of the ZIP data stream
