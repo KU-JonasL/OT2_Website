@@ -25,12 +25,12 @@
     
     <p>
         Here are your protocol(s). <br><br>
-        <a href="{{ 'get_opentrons_script'[0] }}" download="opentrons_scripts.zip">Download Scripts</a>
+        <a href="{{ 'get_opentrons_script' }}" download="opentrons_scripts.zip">Download Scripts</a>
     </p>
     
 
     <p>
-        Here should the datafile be: {{datafile}}
+        Here should the datafile be: {{datafile['FileStorage']}}
     </p>
 
     <a href="/index.html">Return to Main page</a>
