@@ -66,7 +66,7 @@ def get_OT2transfer():
     
 
             ## Creating the python files
-            return redirect(request.url)
+            return redirect("/OT2transfer.html")
 
                 #protocol = userinput['Protocol'],
                 #user = userinput['User'],
