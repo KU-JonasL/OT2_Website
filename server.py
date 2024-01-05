@@ -124,7 +124,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
             modified_content = modified_content.replace("1# User Data here", f"'''\n{csv_data_raw_str}'''")
             
             # Write the modified content to temporary Python script files
-            zipf.writestr('finished_protocol1.py', modified_content)
+            zipf.writestr('finished_protocol1.py', modified_content.encode())
 
         
         #### Library Building
@@ -146,9 +146,9 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
             modified_content3 = modified_content3.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
             # Write the modified content to temporary Python script files
-            zipf.writestr('finished_protocol1.py', modified_content1)
-            zipf.writestr('finished_protocol2.py', modified_content2)
-            zipf.writestr('finished_protocol3.py', modified_content3)
+            zipf.writestr('finished_protocol1.py', modified_content1.encode())
+            zipf.writestr('finished_protocol2.py', modified_content2.encode())
+            zipf.writestr('finished_protocol3.py', modified_content3.encode())
                 
 
         #### qPCR ####
@@ -158,7 +158,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
             modified_content = modified_content.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
             
             # Write the modified content to temporary Python script files
-            zipf.writestr('finished_protocol1.py', modified_content)
+            zipf.writestr('finished_protocol1.py', modified_content.encode())
 
 
         #### Index PCR; PCR ####
@@ -176,15 +176,15 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
 
 
             # Write the modified content to temporary Python script files
-            zipf.writestr('finished_protocol1.py', modified_content1)
-            zipf.writestr('finished_protocol2.py', modified_content2)
+            zipf.writestr('finished_protocol1.py', modified_content1.encode())
+            zipf.writestr('finished_protocol2.py', modified_content2.encode())
         
         else: 
             return abort(404) 
       
             
     # Move to the beginning of the ZIP data stream
-    zip_data.seek(0)
+    #zip_data.seek(0)
 
     if not bool(zip_data):
         return abort(404)
