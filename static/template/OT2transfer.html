@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ user }}'s Opentrons Scripts</title>
+    <link href = "{{url_for('static', filename='styles/style.css')}}" rel = "stylesheet" />
+</head>
+
+
+
+<body>
+    <h1>{{ user[0] }} Opentrons Scripts</h1>
+    
+    <p>Welcome! Here are your Alberdi script(s) for the Opentrons OT-2. Good Luck</p>
+
+    <p>
+        You chose: <br>
+        Protocol: {{protocol}} <br>
+        User: {{user}} <br>
+        Number of Samples: {{samplenumber}} <br>
+        Input Format: {{inputformat}} <br>
+        Output Format: {{outputformat}} <br>
+    </p>
+    
+    <p>
+        Here are your protocol(s). <br><br>
+        <a href="{{ 'get_opentrons_script' }}" download="opentrons_scripts.zip">Download Scripts</a>
+    </p>
+    
+
+    <p>
+        Here should the datafile be: {{datafile}}
+    </p>
+
+    <a href="/index.html">Return to Main page</a>
+
+
+
+
+</body>
+</html>
