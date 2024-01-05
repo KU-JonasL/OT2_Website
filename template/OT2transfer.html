@@ -10,22 +10,22 @@
 
 
 <body>
-    <h1>{{ user[0] }} Opentrons Scripts</h1>
+    <h1>{{ user[0] }}'s Opentrons Scripts</h1>
     
     <p>Welcome! Here are your Alberdi script(s) for the Opentrons OT-2. Good Luck</p>
 
     <p>
         You chose: <br>
-        Protocol: {{protocol}} <br>
-        User: {{user}} <br>
-        Number of Samples: {{samplenumber}} <br>
-        Input Format: {{inputformat}} <br>
-        Output Format: {{outputformat}} <br>
+        Protocol: {{protocol[0]}} <br>
+        User: {{user[0]}} <br>
+        Number of Samples: {{samplenumber[0]}} <br>
+        Input Format: {{inputformat[0]}} <br>
+        Output Format: {{outputformat[0]}} <br>
     </p>
     
     <p>
         Here are your protocol(s). <br><br>
-        <a href="{{ 'get_opentrons_script' }}" download="opentrons_scripts.zip">Download Scripts</a>
+        <a href="{{ 'get_opentrons_script'[0] }}" download="opentrons_scripts.zip">Download Scripts</a>
     </p>
     
 
