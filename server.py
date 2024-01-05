@@ -66,14 +66,17 @@ def get_OT2transfer():
     
 
             ## Creating the python files
-            return redirect(request.url,
-                protocol = print(userinput['Protocol']),
-                user = userinput['User'],
-                samplenumber = userinput['SampleNumber'],
-                inputformat = userinput['InputFormat'],
-                outputformat = userinput['OutputFormat'],
-                datafile = userdata,
-                get_opentrons_script = zip_scripts_url)
+            return redirect(request.url)
+
+                #protocol = userinput['Protocol'],
+                #user = userinput['User'],
+                #samplenumber = userinput['SampleNumber'],
+                #inputformat = userinput['InputFormat'],
+                #outputformat = userinput['OutputFormat'],
+                #datafile = userdata,
+                #get_opentrons_script = zip_scripts_url)
+
+
 
         except FileNotFoundError:
             return render_template("/index.html")
