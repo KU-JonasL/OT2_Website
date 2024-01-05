@@ -46,7 +46,7 @@ def get_OT2transfer():
 
         ## Looking for csv file contents.
         try:
-            if request.getfiles['myFile'] != "":
+            if request.files['myFile'] != "":
                 userdata = request.files['myFile']
                 userdata.filename = secure_filename(userdata.filename)
                 #userdata = pd.read_csv(userfile,header=0)
@@ -100,7 +100,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
     csv_input_raw_str = csv_input_raw_str.replace("nan", "").replace("(", "").replace(")", "")
 
 
-    ## Read data from User_Data.csv if available
+    ## Read data from User_Data if available
     csv_user_data = pd.read_json(userdata, header=0)
 
     ## Prepare the data types for transfer
