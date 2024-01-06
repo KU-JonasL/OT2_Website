@@ -112,7 +112,10 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
     csv_data_raw_str = f"{', '.join(csv_user_data.columns)}\n{csv_data_values}"
     csv_data_raw_str = csv_data_raw_str.replace("nan", "").replace("(", "").replace(")", "")
     
+
+    
     temp_dir = tempfile.mkdtemp()
+    os.chmod(temp_dir, 0o777)
     zip_data = os.path.join(temp_dir, "temp_folder.zip")
     with zipfile.ZipFile(zip_data, mode="w") as zipf:
     ###### Read the content of the TEMPLATE.py and loading it in a modified protocol ######
