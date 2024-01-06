@@ -5,6 +5,7 @@ from datetime import datetime
 import pandas as pd
 import os
 import io
+import tempfile
 import zipfile
 
 app = Flask(__name__,template_folder="template")
@@ -111,8 +112,8 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
     csv_data_raw_str = f"{', '.join(csv_user_data.columns)}\n{csv_data_values}"
     csv_data_raw_str = csv_data_raw_str.replace("nan", "").replace("(", "").replace(")", "")
     
-
-    zip_data = io.BytesIO()
+    temp_dir = tempfile.mkdtemp()
+    zip_data = os.path.join(temp_dir, "temp_folder.zip")
     with zipfile.ZipFile(zip_data, mode="w") as zipf:
     ###### Read the content of the TEMPLATE.py and loading it in a modified protocol ######
 
