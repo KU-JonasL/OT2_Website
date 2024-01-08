@@ -5,25 +5,16 @@ from datetime import datetime
 import pandas as pd
 import os
 import io
-import tempfile
+#import tempfile
 import zipfile
 
 app = Flask(__name__,template_folder="template")
 
 
-    
-
-
-
-
-
-
 @app.route('/', methods = ["GET","POST"])
 @app.route('/index.html', methods = ["GET","POST"])
 def index():
-
     return render_template('/index.html')
-
 
 
 @app.route('/OT2transfer.html', methods = ["GET","POST"])
@@ -32,7 +23,7 @@ def get_OT2transfer():
     if request.method == "POST":
 
         ## Arguments pasted in
-        protocol = request.form.get('protocol')
+        protocol = request.form.get('protocol')['name']
         user = request.form.get('user')
         samplenumber = request.form.get('samples')
         inputformat = request.form.get('inputformat')
