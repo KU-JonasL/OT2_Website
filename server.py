@@ -137,6 +137,9 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
             # Write the modified content to temporary Python script files
             zipf.writestr('finished_protocol1.py', modified_content.encode())
             zipf.writestr('Test_sop.txt', test_file.encode())
+            if not bool(zipf):
+                abort(404)
+
 
         
         #### Library Building
