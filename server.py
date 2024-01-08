@@ -32,11 +32,11 @@ def get_OT2transfer():
     if request.method == "POST":
 
         ## Arguments pasted in
-        protocol = request.form.get('protocol')
-        user = request.form.get('user')
-        samplenumber = request.form.get('samples')
-        inputformat = request.form.get('inputformat')
-        outputformat = request.form.get('outputformat')
+        protocol = request.form.get('protocol')['0']
+        user = request.form.get('user')['0']
+        samplenumber = request.form.get('samples')['0']
+        inputformat = request.form.get('inputformat')['0']
+        outputformat = request.form.get('outputformat')['0']
 
         ## Naming
         today = datetime.today().strftime('%Y%m%d')
@@ -124,8 +124,6 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
         #### DNA Extraction
         if csv_user_input['Protocol'] == "Extraction":
             ## Opening and Modifying Template Extraction
-
-            abort(404)
 
             template_content = open(f'static/OT2_protocols/Template_Protocol_DREX-NucleicAcidExtraction_OT2.py','r').read()
             if not bool(template_content):
