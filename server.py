@@ -23,15 +23,15 @@ def get_OT2transfer():
     if request.method == "POST":
 
         ## Arguments pasted in
-        protocol = request.form.get('protocol')['name']
+        protocol = request.form.get('protocol')
         user = request.form.get('user')
-        samplenumber = request.form.get('samples')
+        samplenumber = int(request.form.get('samples'))
         inputformat = request.form.get('inputformat')
         outputformat = request.form.get('outputformat')
 
         ## Naming
-        today = datetime.today().strftime('%Y%m%d')
-        naming = user+"_"+protocol+"_"+today 
+        #today = datetime.today().strftime('%Y%m%d')
+        #naming = user+"_"+protocol+"_"+today 
 
         ## User Data redirect into a dataframe 
         userinput = pd.DataFrame({'Protocol':[protocol],'User':[user],'SampleNumber':[samplenumber],'InputFormat':[inputformat],'OutputFormat':[outputformat]})
