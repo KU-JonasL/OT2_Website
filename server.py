@@ -32,11 +32,11 @@ def get_OT2transfer():
     if request.method == "POST":
 
         ## Arguments pasted in
-        protocol = request.form.get('protocol')[0]
-        user = request.form.get('user')[0]
-        samplenumber = request.form.get('samples')[0]
-        inputformat = request.form.get('inputformat')[0]
-        outputformat = request.form.get('outputformat')[0]
+        protocol = request.form.get('protocol')
+        user = request.form.get('user')
+        samplenumber = request.form.get('samples')
+        inputformat = request.form.get('inputformat')
+        outputformat = request.form.get('outputformat')
 
         ## Naming
         today = datetime.today().strftime('%Y%m%d')
