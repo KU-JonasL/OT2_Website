@@ -135,8 +135,8 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
             test_file = open("requirements.txt",'r').read()
             
             # Write the modified content to temporary Python script files
-            zipf.writestr('finished_protocol1.py', modified_content.encode())
-            zipf.writestr('Test_sop.txt', test_file.encode())
+            zipf.writepy('finished_protocol1.py', modified_content.encode())
+            zipf.writepy('Test_sop.txt', test_file.encode())
             if not bool(zipf):
                 abort(404)
 
@@ -161,9 +161,9 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
             modified_content3 = modified_content3.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
             # Write the modified content to temporary Python script files
-            zipf.writestr('finished_protocol1.py', modified_content1.encode())
-            zipf.writestr('finished_protocol2.py', modified_content2.encode())
-            zipf.writestr('finished_protocol3.py', modified_content3.encode())
+            zipf.writepy('finished_protocol1.py', modified_content1.encode())
+            zipf.writepy('finished_protocol2.py', modified_content2.encode())
+            zipf.writepy('finished_protocol3.py', modified_content3.encode())
                 
 
         #### qPCR ####
@@ -173,7 +173,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
             modified_content = modified_content.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
             
             # Write the modified content to temporary Python script files
-            zipf.writestr('finished_protocol1.py', modified_content.encode())
+            zipf.writepy('finished_protocol1.py', modified_content.encode())
 
 
         #### Index PCR; PCR ####
@@ -191,8 +191,8 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
 
 
             # Write the modified content to temporary Python script files
-            zipf.writestr('finished_protocol1.py', modified_content1.encode())
-            zipf.writestr('finished_protocol2.py', modified_content2.encode())
+            zipf.writepy('finished_protocol1.py', modified_content1.encode())
+            zipf.writepy('finished_protocol2.py', modified_content2.encode())
 
         
         else: 
