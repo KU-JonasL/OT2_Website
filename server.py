@@ -19,7 +19,7 @@ app = Flask(__name__,template_folder="template")
 
 
 @app.route('/', methods = ["GET","POST"])
-@app.route('/index', methods = ["GET","POST"])
+@app.route('/index.html', methods = ["GET","POST"])
 def index():
 
     return render_template('/index.html')
@@ -76,7 +76,6 @@ def get_OT2transfer():
                 outputformat = userinput['OutputFormat'],
                 datafile = userdata,
                 get_opentrons_script = zip_scripts_url)
-                #get_opentrons_script = opentrons_scripts.zip)
 
         except FileNotFoundError:
             return render_template("/index.html")
@@ -114,9 +113,11 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
     
 
     
-    temp_dir = tempfile.mkdtemp()
-    os.chmod(temp_dir, 0o777)
-    zip_data = os.path.join(temp_dir, "temp_folder.zip")
+    #temp_dir = tempfile.mkdtemp()
+    #os.chmod(temp_dir, 0o777)
+    #zip_data = os.path.join(temp_dir, "temp_folder.zip")
+    zip_data = io.BytesIO()
+
     with zipfile.ZipFile(zip_data, mode="w") as zipf:
     ###### Read the content of the TEMPLATE.py and loading it in a modified protocol ######
 
@@ -126,9 +127,13 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
             template_content = open(f'static/OT2_protocols/Template_Protocol_DREX-NucleicAcidExtraction_OT2.py','r').read()
             modified_content = template_content.replace("1# User Input here", f"'''\n{csv_input_raw_str}\n'''")
             modified_content = modified_content.replace("1# User Data here", f"'''\n{csv_data_raw_str}'''")
+
+            ## Investigation 
+            test_file = open("requirements.txt",'r').read()
             
             # Write the modified content to temporary Python script files
             zipf.writestr('finished_protocol1.py', modified_content.encode())
+            zipf.writestr('Test_sop.txt', test_file)
 
         
         #### Library Building
@@ -182,19 +187,20 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
             # Write the modified content to temporary Python script files
             zipf.writestr('finished_protocol1.py', modified_content1.encode())
             zipf.writestr('finished_protocol2.py', modified_content2.encode())
+
         
         else: 
             return abort(404) 
       
             
     # Move to the beginning of the ZIP data stream
-    #zip_data.seek(0)
+    zip_data.seek(0)
 
     if not bool(zip_data):
         return abort(404)
 
     # Return the ZIP file as an attachment
-    return send_file(zip_data,as_attachment=True,download_name='opentrons_scripts.zip',mimetype='application/zip')
+    return send_file(zip_data,as_attachment=False,download_name='opentrons_scripts.zip',mimetype='application/zip', max_age=1800)
     
     
 
