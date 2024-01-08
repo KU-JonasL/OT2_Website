@@ -125,6 +125,9 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
         if csv_user_input['Protocol'] == "Extraction":
             ## Opening and Modifying Template Extraction
             template_content = open(f'static/OT2_protocols/Template_Protocol_DREX-NucleicAcidExtraction_OT2.py','r').read()
+            if not bool(template_content):
+                abort(404)
+
             modified_content = template_content.replace("1# User Input here", f"'''\n{csv_input_raw_str}\n'''")
             modified_content = modified_content.replace("1# User Data here", f"'''\n{csv_data_raw_str}'''")
 
@@ -133,7 +136,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
             
             # Write the modified content to temporary Python script files
             zipf.writestr('finished_protocol1.py', modified_content.encode())
-            zipf.writestr('Test_sop.txt', test_file)
+            zipf.writestr('Test_sop.txt', test_file.encode())
 
         
         #### Library Building
