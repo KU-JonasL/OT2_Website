@@ -124,6 +124,9 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
         #### DNA Extraction
         if csv_user_input['Protocol'] == "Extraction":
             ## Opening and Modifying Template Extraction
+
+            abort(404)
+
             template_content = open(f'static/OT2_protocols/Template_Protocol_DREX-NucleicAcidExtraction_OT2.py','r').read()
             if not bool(template_content):
                 abort(404)
