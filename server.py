@@ -61,9 +61,11 @@ def get_OT2transfer():
                         uploaded_file.save(temp_file_path)
 
                         # Read the CSV file into a DataFrame
-                        userdata = temp_file_path
-                        #userdata = pd.read_csv(temp_file_path)
-
+                        #userdata = temp_file_path
+                        userdata = pd.read_csv(temp_file_path)
+                        userdata = "\n".join([f"({', '.join(map(str, row))})" for row in userdata.values])
+                        
+                        
                         # Delete the temporary file
                         #os.unlink(temp_file_path)
                 
