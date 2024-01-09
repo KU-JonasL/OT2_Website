@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, send_file, send_from_directory, abort, url_for
+import requests
 from waitress import serve
 from werkzeug.utils import secure_filename
 from datetime import datetime
@@ -23,25 +24,26 @@ def get_OT2transfer():
     if request.method == "POST":
 
         ## Arguments pasted in
+        
+        req = request.form
+        #protocol = req['protocol']
+        #user = req['user']
+        #samplenumber = int(req['samples'])
+        #inputformat = req['inputformat']
+        #outputformat = req['outputformat']
 
-        req = request.get_json()['form']
-        protocol = req['protocol']
-        user = req['user']
-        samplenumber = int(req['samples'])
-        inputformat = req['inputformat']
-        outputformat = req['outputformat']
-        #protocol = request.form.get('protocol')
-        #user = request.form.get('user')
-        #samplenumber = int(request.form.get('samples'))
-        #inputformat = request.form.get('inputformat')
-        #outputformat = request.form.get('outputformat')
+        protocol = request.form.get('protocol')
+        user = request.form.get('user')
+        samplenumber = int(request.form.get('samples'))
+        inputformat = request.form.get('inputformat')
+        outputformat = request.form.get('outputformat')
 
 
 
 
         ## Naming
-        #today = datetime.today().strftime('%Y%m%d')
-        #naming = user+"_"+protocol+"_"+today 
+        today = datetime.today().strftime('%Y%m%d')
+        naming = user+"_"+protocol+"_"+today 
 
         ## User Data redirect into a dataframe 
         userinput = pd.DataFrame({'Protocol':[protocol],'User':[user],'SampleNumber':[samplenumber],'InputFormat':[inputformat],'OutputFormat':[outputformat]})
@@ -76,7 +78,9 @@ def get_OT2transfer():
                 inputformat = userinput['InputFormat'],
                 outputformat = userinput['OutputFormat'],
                 datafile = userdata,
-                get_opentrons_script = zip_scripts_url)
+                naming = naming,
+                get_opentrons_script = zip_scripts_url,
+                req = req)
 
         except FileNotFoundError:
             return render_template("/index.html")
