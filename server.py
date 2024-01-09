@@ -91,11 +91,11 @@ def get_OT2transfer():
 def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber = 96, inputformat = "LVLSXS200", outputformat = "LVLSXS200", userdata = 0):
 
     ## Creating a dictionary from User Inputs
-    csv_user_input =pd.DataFrame({'Protocol':protocol,
-    'User':user,
-    'SampleNumber':samplenumber,
-    'InputFormat':inputformat,
-    'OutputFormat':outputformat},index = 0 )
+    csv_user_input =pd.DataFrame({'Protocol':[protocol],
+    'User':[user],
+    'SampleNumber':[samplenumber],
+    'InputFormat':[inputformat],
+    'OutputFormat':[outputformat]})
 
     ## Prepare the inputs types for transfer
     csv_input_values = "\n".join([f"({', '.join(map(str, row))})" for row in csv_user_input.values])
