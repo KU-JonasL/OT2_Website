@@ -49,7 +49,7 @@ def get_OT2transfer():
         try:
             if request.files['myFile'] != "":
                 userfil = request.files
-                userdata = request.files['myFile']['FileStorage']
+                userdata = request.files['myFile']
                 #userdata.filename = secure_filename(userdata.filename)
                 #userdata = pd.read_csv(userfile,header=0)
                 #get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat, userdata = userdata)
