@@ -47,7 +47,7 @@ def get_OT2transfer():
 
         ## Looking for csv file contents.
         try:
-            if request.files['myFile'] != "":
+            if bool(request.files['myFile']):
                 
                 ####
                 uploaded_file = request.files['myFile']  # Access the file using the key
@@ -121,9 +121,7 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
 
 
     ## Read data from User_Data if available
-    csv_user_data = pd.read_csv(userdata, header=0)
-    if not bool(csv_user_data) and protocol == "Library":
-        return abort(404)
+    csv_user_data = pd.DataFrame(userdata[1:], columns = userdata[0])
 
     ## Prepare the data types for transfer
     csv_data_values = "\n".join([f"({', '.join(map(str, row))})" for row in csv_user_data.values])
