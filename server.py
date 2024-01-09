@@ -52,34 +52,34 @@ def get_OT2transfer():
                 ####
                 uploaded_file = request.files['myFile']  # Access the file using the key
 
-                if uploaded_file.filename != '':
-
-                    uploaded_file.filename = secure_filename(uploaded_file.filename)
-                    # Create a temporary file
-                    with tempfile.NamedTemporaryFile(delete=False, suffix='.csv') as temp_file:
-                        temp_file_path = temp_file.name
-                        uploaded_file.save(temp_file_path)
-
-                        # Make 
-                        temp_csv = pd.read_csv(temp_file_path)
-                        userdata = [tuple(temp_csv.columns.tolist())] + [tuple(row) for row in temp_csv.values]
-                        
-                        # Delete the temporary file
-                        os.unlink(temp_file_path)
                 
-                userfil = request.files
+                #if uploaded_file.filename != '':
 
+                uploaded_file.filename = secure_filename(uploaded_file.filename)
+                # Create a temporary file
+                with tempfile.NamedTemporaryFile(delete=False, suffix='.csv') as temp_file:
+                    temp_file_path = temp_file.name
+                    uploaded_file.save(temp_file_path)
+
+                    # Make 
+                    temp_csv = pd.read_csv(temp_file_path)
+                    userdata = [tuple(temp_csv.columns.tolist())] + [tuple(row) for row in temp_csv.values]
+                        
+                    # Delete the temporary file
+                    os.unlink(temp_file_path)
+                
 
                 zip_scripts_url = url_for('get_opentrons_script', protocol=protocol, user=user, samplenumber=samplenumber, inputformat=inputformat, outputformat=outputformat, userdata=userdata, _external=True)
     
 
-            elif request.files['myFile'] == "" and protocol == "Library":
-                return render_template("/csv-not-found.html")
+            
+            #elif request.files['myFile'] == "" and protocol == "Library":
+            #    return render_template("/csv-not-found.html")
 
-            elif request.files['myFile'] == "":
-                userdata = "1"
-                #get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat, userdata = userdata)
-                zip_scripts_url = url_for('get_opentrons_script', protocol=protocol, user=user, samplenumber=samplenumber, inputformat=inputformat, outputformat=outputformat, userdata=userdata, _external=True)
+            #elif request.files['myFile'] == "":
+            #    userdata = "1"
+            #    get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat, userdata = userdata)
+            #    zip_scripts_url = url_for('get_opentrons_script', protocol=protocol, user=user, samplenumber=samplenumber, inputformat=inputformat, outputformat=outputformat, userdata=userdata, _external=True)
     
 
             ## Creating the python files
