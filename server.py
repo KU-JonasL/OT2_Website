@@ -92,9 +92,9 @@ def get_OT2transfer():
                 outputformat = userinput['OutputFormat'],
                 userdata = userdata,
                 naming = naming,
-                userfil = userfil,
-                #get_opentrons_script = zip_scripts_url,
-                req = req)
+                get_opentrons_script = zip_scripts_url,
+                #req = req
+                )
 
         except FileNotFoundError:
             return render_template("/index.html")
