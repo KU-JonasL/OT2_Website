@@ -38,9 +38,6 @@ def get_OT2transfer():
         inputformat = request.form.get('inputformat')
         outputformat = request.form.get('outputformat')
 
-
-
-
         ## Naming
         today = datetime.today().strftime('%Y%m%d')
         naming = user+"_"+protocol+"_"+today 
@@ -79,7 +76,7 @@ def get_OT2transfer():
                 outputformat = userinput['OutputFormat'],
                 datafile = userdata,
                 naming = naming,
-                get_opentrons_script = zip_scripts_url,
+                #get_opentrons_script = zip_scripts_url,
                 req = req)
 
         except FileNotFoundError:

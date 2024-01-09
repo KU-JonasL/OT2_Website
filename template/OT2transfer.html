@@ -27,7 +27,8 @@
     
     <p>
         Here are your protocol(s). <br><br>
-        <a href="{{ url_for('get_opentrons_script') }}" download="opentrons_scripts.zip">Download Scripts</a>
+        <a href="{{ url_for('get_opentrons_script', protocol=protocol, user=user, samplenumber=samplenumber, inputformat=inputformat, outputformat=outputformat, userdata=userdata, _external=True)
+    }}" download="opentrons_scripts.zip">Download Scripts</a>
     </p>
     
 
