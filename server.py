@@ -62,7 +62,7 @@ def get_OT2transfer():
 
                         # Make 
                         temp_csv = pd.read_csv(temp_file_path)
-                        userdata = [temp_csv.columns.tolist()] + [tuple(row) for row in temp_csv.values]
+                        userdata = [tuple(temp_csv.columns.tolist())] + [tuple(row) for row in temp_csv.values]
                         
                         # Delete the temporary file
                         os.unlink(temp_file_path)
