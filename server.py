@@ -60,13 +60,12 @@ def get_OT2transfer():
                         temp_file_path = temp_file.name
                         uploaded_file.save(temp_file_path)
 
-                        # Read the CSV file into a DataFrame
-                        #userdata = temp_file_path
+                        # Make 
                         temp_csv = pd.read_csv(temp_file_path)
                         userdata = [temp_csv.columns.tolist()] + [tuple(row) for row in temp_csv.values]
                         
                         # Delete the temporary file
-                        #os.unlink(temp_file_path)
+                        os.unlink(temp_file_path)
                 
                 userfil = request.files
 
@@ -106,7 +105,7 @@ def get_OT2transfer():
 
 #/<path:user>/<path:protocol>/<path:samples>/<path:inputformat>/<path:outputformat>/<path:userdata>
 @app.route("/get_OT2_scripts/<user>/<protocol>/<samplenumber>/<inputformat>/<outputformat>/", methods = ["GET","POST"])
-def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber = 96, inputformat = "LVLSXS200", outputformat = "LVLSXS200", userdata = None):
+def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat, userdata):
 
     ## Creating a dictionary from User Inputs
     csv_user_input =pd.DataFrame({'Protocol':[protocol],
