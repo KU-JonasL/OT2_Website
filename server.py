@@ -143,9 +143,6 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
             ## Opening and Modifying Template Extraction
 
             template_content = open(f'static/OT2_protocols/Template_Protocol_DREX-NucleicAcidExtraction_OT2.py','r').read()
-            if not bool(template_content):
-                abort(404)
-
             modified_content = template_content.replace("1# User Input here", f"'''\n{csv_input_raw_str}\n'''")
             modified_content = modified_content.replace("1# User Data here", f"'''\n{csv_data_raw_str}'''")
 
@@ -155,8 +152,7 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
             # Write the modified content to temporary Python script files
             zipf.writepy('finished_protocol1.py', modified_content.encode())
             zipf.writepy('Test_sop.txt', test_file.encode())
-            if not bool(zipf):
-                abort(404)
+            
 
 
         
@@ -213,68 +209,21 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
             zipf.writepy('finished_protocol2.py', modified_content2.encode())
 
         
-        else: 
-            return abort(404) 
+        #else: 
+            #return abort(404) 
       
             
     # Move to the beginning of the ZIP data stream
     zip_data.seek(0)
 
-    if not bool(zip_data):
-        return abort(404)
+    #if not bool(zip_data):
+    #    return abort(404)
 
     # Return the ZIP file as an attachment
     return send_file(zip_data,as_attachment=False,download_name='opentrons_scripts.zip',mimetype='application/zip', max_age=1800)
     
     
 
-
-
-## Finished protocols
-@app.route("/finished_protocol1/<path:naming>", methods = ["GET","POST"])
-def finished_protocol1(naming):
-    if naming != "":
-        script_filename = f'template/client/pythonscripts/{naming}.py'
-        return (send_from_directory(app.config["Client_Scripts"],script_filename, as_attachment=True))
-    else: 
-        return
-
-@app.route("/finished_protocol2/<path:naming>", methods = ["GET","POST"])
-def finished_protocol2(naming):
-    if naming != "":
-        script_filename = f'template/client/pythonscripts/{naming}.py'
-        return (send_from_directory(app.config["Client_Scripts"],script_filename, as_attachment=True))
-    else:
-        return
-
-@app.route("/finished_protocol3/<path:naming>", methods = ["GET","POST"])
-def finished_protocol3(naming):
-    if naming != "":
-        script_filename = f'template/client/pythonscripts/{naming}.py'
-        return send_from_directory(app.config["Client_Scripts"],script_filename, as_attachment=True)
-    else:
-        return
-
-
-app.config["Client_CSV"] = os.path.join(app.root_path, 'template', 'client', 'csv')
-app.config["Client_Scripts"] = os.path.join(app.root_path, 'template', 'client', 'pythonscripts')
-
-## csv / script download
-@app.route("/get-csv/<path:name>", methods = ["GET","POST"])
-def get_csv(name):
-    try:
-        return send_from_directory(app.config["Client_CSV"], name, as_attachment=True)
-    except FileNotFoundError:
-        print("Did not find csv file")
-        abort(404)
-
-@app.route("/get-script/<path:name>", methods = ["GET","POST"])
-def get_OT2_script(name):
-    try:
-        return send_from_directory(app.config["Client_Scripts"], name, as_attachment=True)
-    except FileNotFoundError:
-        print("Did not find csv file")
-        abort(404)
 
 
 ## Script check
