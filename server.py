@@ -6,7 +6,7 @@ from datetime import datetime
 import pandas as pd
 import os
 import io
-#import tempfile
+import tempfile
 import zipfile
 
 app = Flask(__name__,template_folder="template")
@@ -48,11 +48,25 @@ def get_OT2transfer():
         ## Looking for csv file contents.
         try:
             if request.files['myFile'] != "":
+                
+                ####
+                uploaded_file = request.files['myFile']  # Access the file using the key
+
+                if uploaded_file.filename != '':
+
+                    uploaded_file.filename = secure_filename(uploaded_file.filename)
+                    # Create a temporary file
+                    with tempfile.NamedTemporaryFile(delete=False, suffix='.csv') as temp_file:
+                        temp_file_path = temp_file.name
+                        uploaded_file.save(temp_file_path)
+
+                        # Read the CSV file into a DataFrame
+                        userdata = pd.read_csv(temp_file_path)
+
+                        # Delete the temporary file
+                        os.unlink(temp_file_path)
+                
                 userfil = request.files
-                userdata = request.files['myFile']
-                #userdata.filename = secure_filename(userdata.filename)
-                #userdata = pd.read_csv(userfile,header=0)
-                #get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat, userdata = userdata)
 
 
                 zip_scripts_url = url_for('get_opentrons_script', protocol=protocol, user=user, samplenumber=samplenumber, inputformat=inputformat, outputformat=outputformat, userdata=userdata, _external=True)
