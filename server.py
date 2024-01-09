@@ -26,11 +26,11 @@ def get_OT2transfer():
         ## Arguments pasted in
         
         req = request.form
-        #protocol = req['protocol']
-        #user = req['user']
-        #samplenumber = int(req['samples'])
-        #inputformat = req['inputformat']
-        #outputformat = req['outputformat']
+        #protocol = req[0]['protocol']
+        #user = req[0]['user']
+        #samplenumber = int(req[0]['samples'])
+        #inputformat = req[0]['inputformat']
+        #outputformat = req[0]['outputformat']
 
         protocol = request.form.get('protocol')
         user = request.form.get('user')
@@ -74,7 +74,7 @@ def get_OT2transfer():
                 samplenumber = userinput['SampleNumber'],
                 inputformat = userinput['InputFormat'],
                 outputformat = userinput['OutputFormat'],
-                datafile = userdata,
+                userdata = userdata,
                 naming = naming,
                 #get_opentrons_script = zip_scripts_url,
                 req = req)
@@ -95,7 +95,7 @@ def get_opentrons_script(protocol = "Extraction", user = "Antton", samplenumber 
     'User':user,
     'SampleNumber':samplenumber,
     'InputFormat':inputformat,
-    'OutputFormat':outputformat})
+    'OutputFormat':outputformat},index = 0 )
 
     ## Prepare the inputs types for transfer
     csv_input_values = "\n".join([f"({', '.join(map(str, row))})" for row in csv_user_input.values])
