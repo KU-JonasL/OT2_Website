@@ -104,7 +104,7 @@ def get_OT2transfer():
 
 
 #/<path:user>/<path:protocol>/<path:samples>/<path:inputformat>/<path:outputformat>/<path:userdata>
-@app.route("/get_OT2_scripts/<user>/<protocol>/<samplenumber>/<inputformat>/<outputformat>", methods = ["GET","POST"])
+@app.route("/get_OT2_scripts/<user>/<protocol>/<samplenumber>/<inputformat>/<outputformat>/<userdata>", methods = ["GET","POST"])
 def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat, userdata):
 
     ## Creating a dictionary from User Inputs
