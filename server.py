@@ -139,7 +139,7 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
     ###### Read the content of the TEMPLATE.py and loading it in a modified protocol ######
 
         #### DNA Extraction
-        if csv_user_input['Protocol'] == "Extraction":
+        if protocol == "Extraction":
             ## Opening and Modifying Template Extraction
 
             template_content = open(f'static/OT2_protocols/Template_Protocol_DREX-NucleicAcidExtraction_OT2.py','r').read()
@@ -157,7 +157,7 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
 
         
         #### Library Building
-        elif csv_user_input['Protocol'] == "Library":
+        elif protocol == "Library":
             
             ## Opening and Modifying Template; Covaris
             template_content1 =  open('static/OT2_protocols/Template_Protocol_CovarisSetup_OT2.py','r').read()
@@ -181,7 +181,7 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
                 
 
         #### qPCR ####
-        elif csv_user_input['Protocol'] == "qPCR":
+        elif protocol == "qPCR":
             template_content = open('static/OT2_protocols/Template_Protocol_qPCR_OT2.py','r').read()
             modified_content = template_content.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
             modified_content = modified_content.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
@@ -191,7 +191,7 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
 
 
         #### Index PCR; PCR ####
-        elif csv_user_input['Protocol'] == "IndexPCR":
+        elif protocol == "IndexPCR":
             
             ##Opening and Modifying Template Protocol (Index PCR; PCR)
             template_content1 = open('static/OT2_protocols/Template_Protocol_IndexPCR_OT2.py','r').read()
