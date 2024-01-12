@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, send_file, send_from_directory, abort, url_for
+from flask import Flask, render_template, request, redirect, send_file, abort, url_for
 import requests
 from waitress import serve
 from werkzeug.utils import secure_filename
@@ -24,14 +24,6 @@ def get_OT2transfer():
     if request.method == "POST":
 
         ## Arguments pasted in
-        
-        req = request.form
-        #protocol = req[0]['protocol']
-        #user = req[0]['user']
-        #samplenumber = int(req[0]['samples'])
-        #inputformat = req[0]['inputformat']
-        #outputformat = req[0]['outputformat']
-
         protocol = request.form.get('protocol')
         user = request.form.get('user')
         samplenumber = int(request.form.get('samples'))
@@ -47,42 +39,41 @@ def get_OT2transfer():
 
         ## Looking for csv file contents.
         try:
+            ## If there is a csv data file
             if bool(request.files['myFile']):
                 
-                ####
+                ## Set uploaded file and secure name
                 uploaded_file = request.files['myFile']  # Access the file using the key
-
-                
-                #if uploaded_file.filename != '':
-
                 uploaded_file.filename = secure_filename(uploaded_file.filename)
+                
                 # Create a temporary file
                 with tempfile.NamedTemporaryFile(delete=False, suffix='.csv') as temp_file:
                     temp_file_path = temp_file.name
                     uploaded_file.save(temp_file_path)
 
-                    # Make 
+                    # Make the user csv data into tuples for transfer
                     temp_csv = pd.read_csv(temp_file_path)
-                    userdata = [tuple(temp_csv.columns.tolist())] + [tuple(row) for row in temp_csv.values]
+                    userdata = [tuple(temp_csv.columns)] + [tuple(row) for row in temp_csv.values]
                         
                     # Delete the temporary file
                     os.unlink(temp_file_path)
                 
-
+                ## Cre
                 zip_scripts_url = url_for('get_opentrons_script', protocol=protocol, user=user, samplenumber=samplenumber, inputformat=inputformat, outputformat=outputformat, userdata=userdata, _external=True)
     
 
-            
-            #elif request.files['myFile'] == "" and protocol == "Library":
-            #    return render_template("/csv-not-found.html")
+            ## If there is not a csv data file, and the protocol type is library - There need to be a user csv file for library building protocols 
+            elif request.files['myFile'] == "" and protocol == "Library":
+                return render_template("/csv-not-found.html")
 
-            #elif request.files['myFile'] == "":
-            #    userdata = "1"
-            #    get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat, userdata = userdata)
-            #    zip_scripts_url = url_for('get_opentrons_script', protocol=protocol, user=user, samplenumber=samplenumber, inputformat=inputformat, outputformat=outputformat, userdata=userdata, _external=True)
+            ## If there no user csv data file and the protocol is not for library building
+            elif request.files['myFile'] == "" and protocol != "Library":
+                userdata = "1"
+                get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat, userdata = userdata)
+                zip_scripts_url = url_for('get_opentrons_script', protocol=protocol, user=user, samplenumber=samplenumber, inputformat=inputformat, outputformat=outputformat, userdata=userdata, _external=True)
     
 
-            ## Creating the python files
+            ## Render the OT2transfer html page 
             return render_template(
                 "/OT2transfer.html",
                 protocol = userinput['Protocol'],
@@ -93,7 +84,6 @@ def get_OT2transfer():
                 userdata = userdata,
                 naming = naming,
                 get_opentrons_script = zip_scripts_url,
-                #req = req
                 )
 
         except FileNotFoundError:
@@ -107,7 +97,7 @@ def get_OT2transfer():
 @app.route("/get_OT2_scripts/<user>/<protocol>/<samplenumber>/<inputformat>/<outputformat>/<userdata>", methods = ["GET","POST"])
 def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat, userdata):
 
-    ## Creating a dictionary from User Inputs
+    ## Creating a data frame of User Inputs
     csv_user_input =pd.DataFrame({'Protocol':[protocol],
     'User':[user],
     'SampleNumber':[samplenumber],
@@ -120,109 +110,104 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
     csv_input_raw_str = csv_input_raw_str.replace("nan", "").replace("(", "").replace(")", "")
 
 
-    ## Read data from User_Data if available
+    ## Read and Prepare the user data for transfer
     csv_user_data = pd.DataFrame(userdata[1:], columns = userdata[0])
-
-    ## Prepare the data types for transfer
     csv_data_values = "\n".join([f"({', '.join(map(str, row))})" for row in csv_user_data.values])
     csv_data_raw_str = f"{', '.join(csv_user_data.columns)}\n{csv_data_values}"
     csv_data_raw_str = csv_data_raw_str.replace("nan", "").replace("(", "").replace(")", "")
-    
 
-    
-    #temp_dir = tempfile.mkdtemp()
-    #os.chmod(temp_dir, 0o777)
-    #zip_data = os.path.join(temp_dir, "temp_folder.zip")
+
+    ## Naming generation for zipfile and zipfolde
+    today = datetime.today().strftime('%Y%m%d')
+    naming = user+"_"+protocol+"_"+today 
+
+    ## Preparing zip folder generation
     zip_data = io.BytesIO()
-
     with zipfile.ZipFile(zip_data, mode="w") as zipf:
-    ###### Read the content of the TEMPLATE.py and loading it in a modified protocol ######
+    
+    ###### Read the content of the TEMPLATE.py and loading it in a modified OT2 protocol ######
 
         #### DNA Extraction
         if protocol == "Extraction":
+            
             ## Opening and Modifying Template Extraction
-
             template_content = open(f'static/OT2_protocols/Template_Protocol_DREX-NucleicAcidExtraction_OT2.py','r').read()
             modified_content = template_content.replace("1# User Input here", f"'''\n{csv_input_raw_str}\n'''")
             modified_content = modified_content.replace("1# User Data here", f"'''\n{csv_data_raw_str}'''")
 
-            ## Investigation 
-            test_file = open("requirements.txt",'r').read()
-            
             # Write the modified content to temporary Python script files
-            zipf.writepy('finished_protocol1.py', modified_content.encode())
-            zipf.writepy('Test_sop.txt', test_file.encode())
-            
-
+            zipf.writestr(f'{naming}_Extraction.py', modified_content.encode())
 
         
         #### Library Building
         elif protocol == "Library":
             
-            ## Opening and Modifying Template; Covaris
+            ## Opening and Modifying Template Covaris fargmentation
             template_content1 =  open('static/OT2_protocols/Template_Protocol_CovarisSetup_OT2.py','r').read()
             modified_content1 = template_content1.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
             modified_content1 = modified_content1.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
-            ## Opening and Modifying Template; Best-Library
+            ## Opening and Modifying Template Library-Building
             template_content2 = open('static/OT2_protocols/Template_Protocol_BEST-Library_OT2.py','r').read()
             modified_content2 = template_content2.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
             modified_content2 = modified_content2.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
-            ## Opening and Modifying Template; Best Purification
+            ## Opening and Modifying Template Library-Purification
             template_content3 =  open('static/OT2_protocols/Template_Protocol_BEST-Purification_OT2.py','r').read()
             modified_content3 = template_content3.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
             modified_content3 = modified_content3.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
             # Write the modified content to temporary Python script files
-            zipf.writepy('finished_protocol1.py', modified_content1.encode())
-            zipf.writepy('finished_protocol2.py', modified_content2.encode())
-            zipf.writepy('finished_protocol3.py', modified_content3.encode())
+            zipf.writestr(f'{naming}_fragmentation.py', modified_content1.encode())
+            zipf.writestr(f'{naming}_library-building.py', modified_content2.encode())
+            zipf.writestr(f'{naming}_library-purification.py', modified_content3.encode())
                 
 
         #### qPCR ####
         elif protocol == "qPCR":
+            ##Opening and Modifying Template Protocol qPCR
             template_content = open('static/OT2_protocols/Template_Protocol_qPCR_OT2.py','r').read()
             modified_content = template_content.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
             modified_content = modified_content.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
             
             # Write the modified content to temporary Python script files
-            zipf.writepy('finished_protocol1.py', modified_content.encode())
+            zipf.writestr(f'{naming}_qPCR.py', modified_content.encode())
 
 
-        #### Index PCR; PCR ####
+        #### Index PCR ####
         elif protocol == "IndexPCR":
             
-            ##Opening and Modifying Template Protocol (Index PCR; PCR)
+            ##Opening and Modifying Template Protocol Index PCR
             template_content1 = open('static/OT2_protocols/Template_Protocol_IndexPCR_OT2.py','r').read()
             modified_content1 = template_content1.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
             modified_content1 = modified_content1.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
-            ##Opening and Modifying Template Protocol (Index PCR; Purification)
+            ##Opening and Modifying Template Protocol Index PCR Purification
             template_content2 = open('static/OT2_protocols/Template_Protocol_IndexPCR_Purfication_OT2.py','r').read()
             modified_content2 = template_content2.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
             modified_content2 = modified_content2.replace("1# User Data here", f"'''{csv_data_raw_str}'''")
 
-
             # Write the modified content to temporary Python script files
-            zipf.writepy('finished_protocol1.py', modified_content1.encode())
-            zipf.writepy('finished_protocol2.py', modified_content2.encode())
+            zipf.writestr(f'{naming}_IndexPCR.py', modified_content1.encode())
+            zipf.writestr(f'{naming}_Index-Purification.py', modified_content2.encode())
 
-        
-        #else: 
-            #return abort(404) 
-      
-            
+
+        ## If there is no expected protocol selection
+        else: 
+            return abort(404) 
+
+
+
     # Move to the beginning of the ZIP data stream
     zip_data.seek(0)
 
-    #if not bool(zip_data):
-    #    return abort(404)
+    if not bool(zip_data):
+        return abort(404)
+
 
     # Return the ZIP file as an attachment
-    return send_file(zip_data,as_attachment=False,download_name='opentrons_scripts.zip',mimetype='application/zip', max_age=1800)
-    
-    
+    return send_file(zip_data,as_attachment=False,download_name=f'{naming}_opentrons_scripts.zip',mimetype='application/zip', max_age=1800)
+   
 
 
 
