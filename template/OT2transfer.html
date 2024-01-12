@@ -21,22 +21,17 @@
         Number of Samples: {{samplenumber[0]}} <br>
         Input Format: {{inputformat[0]}} <br>
         Output Format: {{outputformat[0]}} <br>
-        Naming: {{naming[0]}} <br>
+        Naming: {{naming}} <br>
     </p>
     
-    <p>
-        Here are your protocol(s). <br><br>
-        <a href="{{ url_for('get_opentrons_script', protocol=protocol, user=user, samplenumber=samplenumber, inputformat=inputformat, outputformat=outputformat, userdata=userdata, _external=True)
-    }}" download="opentrons_scripts.zip">Download Scripts</a>
-    </p>
-    
+
 
     <p>
         Here should the datafile be: {{userdata[0]}}
 
         <br><br><br><br><br>
 
-        <a href="{{get_opentrons_script}}" download="Opentrons Scripts">Download here</a>
+        <a href="{{get_opentrons_script}}" download="Opentrons Scripts"> Download {{naming}} here</a>
 
 
     </p>
