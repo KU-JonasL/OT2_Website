@@ -6,7 +6,7 @@
 
 body {
     padding: 2rem;
-    background-color: #333;
+    background-color: #676768;
     color: whitesmoke;
     min-height: 100vh;
     display: flex;
@@ -20,4 +20,16 @@ input, select, button {
     font-size: 2rem;
     padding: 1rem;
     border-radius: 10px;
+}
+
+a {
+    color: aliceblue;
+}
+
+a:visited {
+    color: lightgray;
+}
+
+a:hover, a:active {
+    color: #eee;
 }
