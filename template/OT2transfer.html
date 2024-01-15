@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ user }}'s Opentrons Scripts</title>
+    <title>Opentrons Scripts for {{naming}} </title>
     <link href = "{{url_for('static', filename='styles/style.css')}}" rel = "stylesheet" />
 </head>
 
@@ -21,13 +21,12 @@
         Number of Samples: {{samplenumber[0]}} <br>
         Input Format: {{inputformat[0]}} <br>
         Output Format: {{outputformat[0]}} <br>
-        Naming: {{naming}} <br>
     </p>
     
 
 
     <p>
-        Here should the datafile be: {{userdata[0]}}
+        Here should the datafile be: {{userdata}}
 
         <br><br><br><br><br>
 

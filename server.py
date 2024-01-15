@@ -111,7 +111,7 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
     ## Prepare the inputs types for transfer
     csv_input_values = "\n".join([f"({', '.join(map(str, row))})" for row in csv_user_input.values])
     csv_input_raw_str = f"{', '.join(csv_user_input.columns)}\n{csv_input_values}"
-    csv_input_raw_str = csv_input_raw_str.replace("nan", "").replace("(", "").replace(")", "").replace(",",".").replace(";",",")
+    csv_input_raw_str = csv_input_raw_str.replace("nan", "").replace(",",".").replace(";",",")#.replace("(", "").replace(")", "")
 
 
     ## Read and Prepare the user data for transfer
