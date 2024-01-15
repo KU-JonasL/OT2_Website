@@ -129,8 +129,13 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
     zip_data = io.BytesIO()
     with zipfile.ZipFile(zip_data, mode="w") as zipf:
     
-    ###### Read the content of the TEMPLATE.py and loading it in a modified OT2 protocol ######
+        #### Adds required custom labware definitions, as needed.
+        ## 
+        if inputformat or outputformat == "LVLSXS200":
+            static_pdf_content = open('static\custom_labware\LVLXSX200_wellplate_200ul.json', 'rb').read()
+            zipf.writestr('LVLXSX200_wellplate_200ul.json', static_pdf_content)
 
+        ###### Read the content of the TEMPLATE.py and loading it in a modified OT2 protocol ######
         #### DNA Extraction
         if protocol == "Extraction":
             
@@ -141,6 +146,11 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
 
             # Write the modified content to temporary Python script files
             zipf.writestr(f'{naming}_Extraction.py', modified_content.encode())
+            
+            ## Add 21mL Deep well plate to zipfolder
+            static_pdf_content = open('static\custom_labware\deepwellreservoir_12channel_21000ul.json', 'rb').read()
+            zipf.writestr('static_pdf.pdf', static_pdf_content)
+
 
         
         #### Library Building
@@ -165,6 +175,18 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
             zipf.writestr(f'{naming}_fragmentation.py', modified_content1.encode())
             zipf.writestr(f'{naming}_library-building.py', modified_content2.encode())
             zipf.writestr(f'{naming}_library-purification.py', modified_content3.encode())
+
+            
+            ## Add 5mL eppendorf in OT2 15 rack to zipfolder
+            static_pdf_content = open('static\custom_labware\opentronsrack_15_tuberack_5000ul.json', 'rb').read()
+            zipf.writestr('static_pdf.pdf', static_pdf_content)
+            ## Add Covaris plate to zipfolder
+            static_pdf_content = open('static\custom_labware\Covaris_96afatubet_wellplate_200ul.json', 'rb').read()
+            zipf.writestr('static_pdf.pdf', static_pdf_content)
+            ## Add 21mL Deep well plate to zipfolder
+            static_pdf_content = open('static\custom_labware\deepwellreservoir_12channel_21000ul.json', 'rb').read()
+            zipf.writestr('static_pdf.pdf', static_pdf_content)
+
                 
 
         #### qPCR ####

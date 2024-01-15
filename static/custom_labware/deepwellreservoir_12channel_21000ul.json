@@ -1,0 +1,219 @@
+{
+    "ordering": [
+        [
+            "A1"
+        ],
+        [
+            "A2"
+        ],
+        [
+            "A3"
+        ],
+        [
+            "A4"
+        ],
+        [
+            "A5"
+        ],
+        [
+            "A6"
+        ],
+        [
+            "A7"
+        ],
+        [
+            "A8"
+        ],
+        [
+            "A9"
+        ],
+        [
+            "A10"
+        ],
+        [
+            "A11"
+        ],
+        [
+            "A12"
+        ]
+    ],
+    "brand": {
+        "brand": "Deep Well Reservoir, 12 Channel",
+        "brandId": [
+            "Analytical Sales and Services",
+            "Inc."
+        ]
+    },
+    "metadata": {
+        "displayName": "Deep Well Reservoir, 12 Channel 12 Reservoir 21000 µL",
+        "displayCategory": "reservoir",
+        "displayVolumeUnits": "µL",
+        "tags": []
+    },
+    "dimensions": {
+        "xDimension": 127.76,
+        "yDimension": 85.47,
+        "zDimension": 44.04
+    },
+    "wells": {
+        "A1": {
+            "depth": 39.22,
+            "totalLiquidVolume": 21000,
+            "shape": "rectangular",
+            "xDimension": 8.23,
+            "yDimension": 71.22,
+            "x": 14.38,
+            "y": 42.74,
+            "z": 4.82
+        },
+        "A2": {
+            "depth": 39.22,
+            "totalLiquidVolume": 21000,
+            "shape": "rectangular",
+            "xDimension": 8.23,
+            "yDimension": 71.22,
+            "x": 23.37,
+            "y": 42.74,
+            "z": 4.82
+        },
+        "A3": {
+            "depth": 39.22,
+            "totalLiquidVolume": 21000,
+            "shape": "rectangular",
+            "xDimension": 8.23,
+            "yDimension": 71.22,
+            "x": 32.36,
+            "y": 42.74,
+            "z": 4.82
+        },
+        "A4": {
+            "depth": 39.22,
+            "totalLiquidVolume": 21000,
+            "shape": "rectangular",
+            "xDimension": 8.23,
+            "yDimension": 71.22,
+            "x": 41.35,
+            "y": 42.74,
+            "z": 4.82
+        },
+        "A5": {
+            "depth": 39.22,
+            "totalLiquidVolume": 21000,
+            "shape": "rectangular",
+            "xDimension": 8.23,
+            "yDimension": 71.22,
+            "x": 50.34,
+            "y": 42.74,
+            "z": 4.82
+        },
+        "A6": {
+            "depth": 39.22,
+            "totalLiquidVolume": 21000,
+            "shape": "rectangular",
+            "xDimension": 8.23,
+            "yDimension": 71.22,
+            "x": 59.33,
+            "y": 42.74,
+            "z": 4.82
+        },
+        "A7": {
+            "depth": 39.22,
+            "totalLiquidVolume": 21000,
+            "shape": "rectangular",
+            "xDimension": 8.23,
+            "yDimension": 71.22,
+            "x": 68.32,
+            "y": 42.74,
+            "z": 4.82
+        },
+        "A8": {
+            "depth": 39.22,
+            "totalLiquidVolume": 21000,
+            "shape": "rectangular",
+            "xDimension": 8.23,
+            "yDimension": 71.22,
+            "x": 77.31,
+            "y": 42.74,
+            "z": 4.82
+        },
+        "A9": {
+            "depth": 39.22,
+            "totalLiquidVolume": 21000,
+            "shape": "rectangular",
+            "xDimension": 8.23,
+            "yDimension": 71.22,
+            "x": 86.3,
+            "y": 42.74,
+            "z": 4.82
+        },
+        "A10": {
+            "depth": 39.22,
+            "totalLiquidVolume": 21000,
+            "shape": "rectangular",
+            "xDimension": 8.23,
+            "yDimension": 71.22,
+            "x": 95.29,
+            "y": 42.74,
+            "z": 4.82
+        },
+        "A11": {
+            "depth": 39.22,
+            "totalLiquidVolume": 21000,
+            "shape": "rectangular",
+            "xDimension": 8.23,
+            "yDimension": 71.22,
+            "x": 104.28,
+            "y": 42.74,
+            "z": 4.82
+        },
+        "A12": {
+            "depth": 39.22,
+            "totalLiquidVolume": 21000,
+            "shape": "rectangular",
+            "xDimension": 8.23,
+            "yDimension": 71.22,
+            "x": 113.27,
+            "y": 42.74,
+            "z": 4.82
+        }
+    },
+    "groups": [
+        {
+            "metadata": {
+                "wellBottomShape": "v"
+            },
+            "wells": [
+                "A1",
+                "A2",
+                "A3",
+                "A4",
+                "A5",
+                "A6",
+                "A7",
+                "A8",
+                "A9",
+                "A10",
+                "A11",
+                "A12"
+            ]
+        }
+    ],
+    "parameters": {
+        "format": "irregular",
+        "quirks": [
+            "centerMultichannelOnWells",
+            "touchTipDisabled"
+        ],
+        "isTiprack": false,
+        "isMagneticModuleCompatible": false,
+        "loadName": "deepwellreservoir12channel_12_reservoir_21000ul"
+    },
+    "namespace": "custom_beta",
+    "version": 1,
+    "schemaVersion": 2,
+    "cornerOffsetFromSlot": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+    }
+}
