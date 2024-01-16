@@ -57,7 +57,8 @@ def get_OT2transfer():
 
                     csv_data_values = "\n".join([f"({', '.join(map(str, row))})" for row in temp_userdata_csv.values])
                     csv_data_raw_str = f"{', '.join(temp_userdata_csv.columns)}\n{csv_data_values}"
-                    userdata = csv_data_raw_str.replace("nan", "").replace("(", "").replace(")", "").replace(";",",").replace(",",".").replace(";",",")
+                    csv_data_raw_str = csv_data_raw_str.replace(",",".")
+                    userdata = csv_data_raw_str.replace("nan", "").replace("(", "").replace(")", "").replace(";",",").replace(",",".")
 
                     # Delete the temporary file
                     #os.unlink(temp_file_path)
