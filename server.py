@@ -57,7 +57,7 @@ def get_OT2transfer():
 
                     csv_data_values = "\n".join([f"({', '.join(map(str, row))})" for row in temp_userdata_csv.values])
                     csv_data_raw_str = f"{', '.join(temp_userdata_csv.columns)}\n{csv_data_values}"
-                    userdata = csv_data_raw_str.replace("nan", "").replace("(", "").replace(")", "").replace(",",".").replace(";",",")
+                    userdata = csv_data_raw_str.replace("nan", "").replace("(", "").replace(")", "").replace(";",",").replace(",",".").replace(";",",")
 
                     # Delete the temporary file
                     #os.unlink(temp_file_path)
@@ -111,14 +111,14 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
     ## Prepare the inputs types for transfer
     csv_input_values = "\n".join([f"({', '.join(map(str, row))})" for row in csv_user_input.values])
     csv_input_raw_str = f"{', '.join(csv_user_input.columns)}\n{csv_input_values}"
-    csv_input_raw_str = csv_input_raw_str.replace("nan", "").replace(",",".").replace(";",",")#.replace("(", "").replace(")", "")
+    csv_input_raw_str = csv_input_raw_str.replace("nan", "").replace(";",",").replace(",",".")#.replace("(", "").replace(")", "")
 
 
     ## Read and Prepare the user data for transfer
     #csv_user_data = pd.DataFrame(userdata[1:], columns = userdata[0])
     #csv_data_values = "\n".join([f"({', '.join(map(str, row))})" for row in csv_user_data.values])
     #csv_data_raw_str = f"{', '.join(csv_user_data.columns)}\n{csv_data_values}"
-    #csv_data_raw_str = csv_data_raw_str.replace("nan", "").replace("(", "").replace(")", "").replace(",",".").replace(";",",")
+    #csv_data_raw_str = csv_data_raw_str.replace("nan", "").replace("(", "").replace(")", "").replace(";",",").replace(",",".")
 
 
     ## Naming generation for zipfile and zipfolde
