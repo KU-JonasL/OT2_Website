@@ -16,7 +16,7 @@ body {
     font-size: 1rem;
 }
 
-input, select, button {
+input, select, button, optgroup {
     font-size: 2rem;
     padding: 1rem;
     border-radius: 10px;
