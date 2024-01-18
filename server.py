@@ -60,9 +60,9 @@ def get_OT2transfer():
                     csv_data_raw_str = csv_data_raw_str.replace("nan", "").replace("(", "").replace(")", "")
                     
                     ## Convert a semi-colon seperated file (',' for '.' [Digits] and ';' for ',' [cell/tab separator])
-                    if csv_data_raw_str.find("Sample Number; Well Position"):
-                        csv_data_raw_str = csv_data_raw_str.replace(",",".")
-                        userdata = csv_data_raw_str.replace(";",",")
+                    #if csv_data_raw_str.find("Sample Number; Well Position"):
+                    #    csv_data_raw_str = csv_data_raw_str.replace(",",".")
+                    #    userdata = csv_data_raw_str.replace(";",",")
 
                     ## Delete the temporary file
                     #os.unlink(temp_file_path)

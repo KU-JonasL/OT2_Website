@@ -23,17 +23,18 @@
         Output Format: {{outputformat[0]}} <br>
     </p>
     
-
+    <hr>
 
     <p>
-        Here should the datafile be: {{userdata}}
-
-        <br><br><br><br><br>
-
-        <a href="{{get_opentrons_script}}" download="Opentrons Scripts"> Download {{naming}} here</a>
-
-
+        Here should the datafile be: <br><br>{{userdata}}
+        <br><br>
+        <a href="{{get_opentrons_script}}" download="Opentrons Scripts"> Download {{naming}}'s zip folder here</a>
+        <br><br>
+        In the Zip folder you will find: Up to 3 sets of opentrons scripts and their respective standard operation procedures (SOPs). The SOP will describe health and safety consideration, labware needed<br>
+        The opentrons OT2 can use a wide variety of labware, however, not all labware has a predefined value in the OT2 system. As such the zipfolder also contain custom labware definitions (.json files) that you will to upload to the OT2 app. See more at the <a href="https://support.opentrons.com/s/article/Import-a-custom-labware-definition">Opentrons Webiste</a>. The custom labware has been verified in our lab, however it is always recommend to run a dry run to examine compatability.
     </p>
+
+    <hr>
 
     <a href="/index">Return to Main page</a>
 
