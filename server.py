@@ -57,12 +57,12 @@ def get_OT2transfer():
 
                     csv_data_values = "\n".join([f"({', '.join(map(str, row))})" for row in temp_userdata_csv.values])
                     csv_data_raw_str = f"{', '.join(temp_userdata_csv.columns)}\n{csv_data_values}"
-                    csv_data_raw_str = csv_data_raw_str.replace("nan", "").replace("(", "").replace(")", "")
+                    userdata = csv_data_raw_str.replace("nan", "").replace("(", "").replace(")", "")
                     
                     ## Convert a semi-colon seperated file (',' for '.' [Digits] and ';' for ',' [cell/tab separator])
-                    #if csv_data_raw_str.find("Sample Number; Well Position"):
-                    #    csv_data_raw_str = csv_data_raw_str.replace(",",".")
-                    #    userdata = csv_data_raw_str.replace(";",",")
+                    #if userdata.find("Sample Number; Well Position"):
+                    #    userdata = userdata.replace(",",".")
+                    #    userdata = userdata.replace(";",",")
 
                     ## Delete the temporary file
                     #os.unlink(temp_file_path)
