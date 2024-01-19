@@ -61,13 +61,13 @@ def get_OT2transfer():
                     os.unlink(temp_file_path)
                 
                 ## Create URL for zipfolder
-                zip_scripts_url = url_for('get_opentrons_script', protocol=protocol, user=user, samplenumber=samplenumber, inputformat=inputformat, outputformat=outputformat, userdata=userdata, _external=True)
+                zip_scripts_url = url_for('get_opentrons_script', protocol=protocol, user=user, samplenumber=samplenumber, inputformat=inputformat, outputformat=outputformat, userdata=userdata, _external=True, _scheme='https')
 
 
             ## If there is no csv data file, but the protocol is not for library building
             elif bool(request.files['myFile']) == False and protocol != "Library":
                 userdata = "1"
-                zip_scripts_url = url_for('get_opentrons_script', protocol=protocol, user=user, samplenumber=samplenumber, inputformat=inputformat, outputformat=outputformat, userdata=userdata, _external=True)
+                zip_scripts_url = url_for('get_opentrons_script', protocol=protocol, user=user, samplenumber=samplenumber, inputformat=inputformat, outputformat=outputformat, userdata=userdata, _external=True, _scheme='https')
 
 
             ## If there is no csv data file, and the protocol type is library - There need to be a user csv file for library building protocols            
@@ -249,7 +249,7 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
 
 
     # Return the ZIP file as an attachment
-    return send_file(zip_data,as_attachment=True,download_name=f'{naming}_opentrons_scripts.zip',mimetype='application/zip',_scheme='https', max_age=1800)
+    return send_file(zip_data, as_attachment=True, download_name=f'{naming}_opentrons_scripts.zip', mimetype='application/zip', _external=True, _scheme='https', max_age=1800)
    
 
 
