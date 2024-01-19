@@ -138,7 +138,7 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
         ## LVL SXS200 plate
         if inputformat == "LVLSXS200" or outputformat == "LVLSXS200":
             ## Open the file using the generated URL
-            file_path = os.path.join('static','custom_labware', 'LVLXSX200_wellplate_200ul.json')
+            file_path = os.path.join(app.root_path,'static','custom_labware', 'LVLXSX200_wellplate_200ul.json')
             #static_url = url_for('static', filename=file_path)
             try:
                static_pdf_content = open(file_path, 'r').read()
@@ -153,7 +153,7 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
         if protocol == "Extraction":
             
             ## Opening and Modifying Template Extraction
-            file_path = os.path.join('static','OT2_protocols', 'Template_Protocol_DREX-NucleicAcidExtraction_OT2.py.json')
+            file_path = os.path.join(app.root_path,'static','OT2_protocols', 'Template_Protocol_DREX-NucleicAcidExtraction_OT2.py.json')
             template_content = open(file_path, 'r').read()
             modified_content = template_content.replace("1# User Input here", f"'''\n{csv_input_raw_str}\n'''")
             modified_content = modified_content.replace("1# User Data here", f"'''\n{userdata}'''")
@@ -162,12 +162,12 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
             zipf.writestr(f'{naming}_Extraction.py', modified_content.encode())
             
             ## Add 21mL Deep well plate to zipfolder
-            file_path = os.path.join('static','custom_labware', 'deepwellreservoir_12channel_21000ul.json')
+            file_path = os.path.join(app.root_path,'static','custom_labware', 'deepwellreservoir_12channel_21000ul.json')
             static_pdf_content = open(file_path, 'r').read()
             zipf.writestr('static_pdf.pdf', static_pdf_content)
 
             ## Add SOP for extraction to zipfolder
-            file_path = os.path.join('static','SOPs', 'SOP_Template_V1.0.0.docx')
+            file_path = os.path.join(app.root_path,'static','SOPs', 'SOP_Template_V1.0.0.docx')
             static_sop_content = open(file_path, 'r').read()
             zipf.writestr('SOP_pdf.pdf', static_sop_content)
 
@@ -177,19 +177,19 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
         elif protocol == "Library":
             
             ## Opening and Modifying Template Covaris fargmentation
-            file_path = os.path.join('static','OT2_protocols', 'Template_Protocol_CovarisSetup_OT2.py')
+            file_path = os.path.join(app.root_path,'static','OT2_protocols', 'Template_Protocol_CovarisSetup_OT2.py')
             template_content1 =  open(file_path,'r').read()
             modified_content1 = template_content1.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
             modified_content1 = modified_content1.replace("1# User Data here", f"'''{userdata}'''")
 
             ## Opening and Modifying Template Library-Building
-            file_path = os.path.join('static','OT2_protocols', 'Template_Protocol_BEST-Library_OT2.py')
+            file_path = os.path.join(app.root_path,'static','OT2_protocols', 'Template_Protocol_BEST-Library_OT2.py')
             template_content2 = open(file_path,'r').read()
             modified_content2 = template_content2.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
             modified_content2 = modified_content2.replace("1# User Data here", f"'''{userdata}'''")
 
             ## Opening and Modifying Template Library-Purification
-            file_path = os.path.join('static','OT2_protocols', 'Template_Protocol_BEST-Purification_OT2.py')
+            file_path = os.path.join(app.root_path,'static','OT2_protocols', 'Template_Protocol_BEST-Purification_OT2.py')
             template_content3 =  open(file_path,'r').read()
             modified_content3 = template_content3.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
             modified_content3 = modified_content3.replace("1# User Data here", f"'''{userdata}'''")
@@ -201,17 +201,17 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
 
             
             ## Add 5mL eppendorf in OT2 15 rack to zipfolder
-            file_path = os.path.join('static','custom_labware', 'opentronsrack_15_tuberack_5000ul.json')
+            file_path = os.path.join(app.root_path,'static','custom_labware', 'opentronsrack_15_tuberack_5000ul.json')
             static_pdf_content = open(file_path, 'r').read()
             zipf.writestr('static_pdf.pdf', static_pdf_content)
 
             ## Add Covaris plate to zipfolder
-            file_path = os.path.join('static','custom_labware', 'Covaris_96afatubet_wellplate_200ul')
+            file_path = os.path.join(app.root_path,'static','custom_labware', 'Covaris_96afatubet_wellplate_200ul')
             static_pdf_content = open(file_path, 'r').read()
             zipf.writestr('static_pdf.pdf', static_pdf_content)
 
             ## Add 21mL Deep well plate to zipfolder
-            file_path = os.path.join('static','custom_labware', 'deepwellreservoir_12channel_21000ul.json')
+            file_path = os.path.join(app.root_path,'static','custom_labware', 'deepwellreservoir_12channel_21000ul.json')
             static_pdf_content = open(file_path, 'r').read()
             zipf.writestr('static_pdf.pdf', static_pdf_content)
 
@@ -220,7 +220,7 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
         #### qPCR ####
         elif protocol == "qPCR":
             ##Opening and Modifying Template Protocol qPCR
-            file_path = os.path.join('static','OT2_protocols', 'Template_Protocol_qPCR_OT2.py')
+            file_path = os.path.join(app.root_path,'static','OT2_protocols', 'Template_Protocol_qPCR_OT2.py')
             template_content = open(file_path,'r').read()
             modified_content = template_content.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
             modified_content = modified_content.replace("1# User Data here", f"'''{userdata}'''")
@@ -233,13 +233,13 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
         elif protocol == "IndexPCR":
             
             ##Opening and Modifying Template Protocol Index PCR
-            file_path = os.path.join('static','OT2_protocols', 'Template_Protocol_IndexPCR_OT2.py')
+            file_path = os.path.join(app.root_path,'static','OT2_protocols', 'Template_Protocol_IndexPCR_OT2.py')
             template_content1 = open(file_path,'r').read()
             modified_content1 = template_content1.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
             modified_content1 = modified_content1.replace("1# User Data here", f"'''{userdata}'''")
 
             ##Opening and Modifying Template Protocol Index PCR Purification
-            file_path = os.path.join('static','OT2_protocols', 'Template_Protocol_IndexPCR_Purfication_OT2.py')
+            file_path = os.path.join(app.root_path,'static','OT2_protocols', 'Template_Protocol_IndexPCR_Purfication_OT2.py')
             template_content2 = open(file_path,'r').read()
             modified_content2 = template_content2.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
             modified_content2 = modified_content2.replace("1# User Data here", f"'''{userdata}'''")
