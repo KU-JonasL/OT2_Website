@@ -136,21 +136,20 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
     
         #### Adds required custom labware definitions, as needed.
         ## LVL SXS200 plate
-        if inputformat or outputformat == "LVLSXS200":
-            ##   
-            #file_path = os.path.join('custom_labware', 'LVLXSX200_wellplate_200ul.json')
-            #static_url = url_for('/static', filename=file_path)
-            #try:
-                # Open the file using the generated URL
-            #    static_pdf_content = open(static_url, 'r').read()
-            #    zipf.writestr('LVLXSX200_wellplate_200ul.json', static_pdf_content)
+        if inputformat == "LVLSXS200" or outputformat == "LVLSXS200":
+            ## Open the file using the generated URL
+            file_path = os.path.join('custom_labware', 'LVLXSX200_wellplate_200ul.json')
+            static_url = url_for('/static', filename=file_path)
+            try:
+               static_pdf_content = open(static_url, 'r').read()
+               zipf.writestr('LVLXSX200_wellplate_200ul.json', static_pdf_content)
 
-            #except FileNotFoundError:
-            #    return "Error: File not found"
+            except FileNotFoundError:
+               return "Error: File not found"
 
 
-            static_pdf_content = open('/static/custom_labware/LVLXSX200_wellplate_200ul.json', 'r').read()
-            zipf.writestr('LVLXSX200_wellplate_200ul.json', static_pdf_content)
+            # static_pdf_content = open('/static/custom_labware/LVLXSX200_wellplate_200ul.json', 'r').read()
+            # zipf.writestr('LVLXSX200_wellplate_200ul.json', static_pdf_content)
 
         ###### Read the content of the TEMPLATE.py and loading it in a modified OT2 protocol ######
         #### DNA Extraction
