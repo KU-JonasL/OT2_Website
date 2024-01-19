@@ -150,7 +150,7 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
             ## Add 21mL Deep well plate to zipfolder
             file_path = os.path.join(app.root_path,'static','custom_labware', 'deepwellreservoir_12channel_21000ul.json')
             static_pdf_content = open(file_path, 'r').read()
-            zipf.writestr('static_pdf.pdf', static_pdf_content)
+            zipf.writestr('deepwellreservoir_12channel_21000ul.json', static_pdf_content)
 
             ## Add SOP for extraction to zipfolder
             # file_path = os.path.join(app.root_path,'static','SOPs', 'SOP_Template_V1.0.0.docx')
@@ -189,17 +189,17 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
             ## Add 5mL eppendorf in OT2 15 rack to zipfolder
             file_path = os.path.join(app.root_path,'static','custom_labware', 'opentronsrack_15_tuberack_5000ul.json')
             static_pdf_content = open(file_path, 'r').read()
-            zipf.writestr('static_pdf.pdf', static_pdf_content)
+            zipf.writestr('opentronsrack_15_tuberack_5000ul.json', static_pdf_content)
 
             ## Add Covaris plate to zipfolder
             file_path = os.path.join(app.root_path,'static','custom_labware', 'Covaris_96afatubet_wellplate_200ul.json')
             static_pdf_content = open(file_path, 'r').read()
-            zipf.writestr('static_pdf.pdf', static_pdf_content)
+            zipf.writestr('Covaris_96afatubet_wellplate_200ul.json', static_pdf_content)
 
             ## Add 21mL Deep well plate to zipfolder
             file_path = os.path.join(app.root_path,'static','custom_labware', 'deepwellreservoir_12channel_21000ul.json')
             static_pdf_content = open(file_path, 'r').read()
-            zipf.writestr('static_pdf.pdf', static_pdf_content)
+            zipf.writestr('deepwellreservoir_12channel_21000ul.json', static_pdf_content)
 
                 
 

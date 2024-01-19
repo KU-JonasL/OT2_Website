@@ -13,7 +13,7 @@ body {
     flex-direction: column;
     align-items: center;
     gap: 2rem;
-    font-size: 1rem;
+    font-size: 14px;
 }
 
 input, select, button, optgroup {
@@ -33,3 +33,8 @@ a:visited {
 a:hover, a:active {
     color: #eee;
 }
+
+.center {
+    text-align: center;
+    border: 3px solid green;
+  }
