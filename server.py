@@ -74,11 +74,11 @@ def get_OT2transfer():
             ## If there is not a csv data file, and the protocol type is library - There need to be a user csv file for library building protocols 
 
             ## If there no user csv data file and the protocol is not for library building
-            elif request.files['myFile'] == "" and protocol != "Library":
+            elif bool(request.files['myFile']) == False and protocol != "Library":
                 userdata = "1"
                 zip_scripts_url = url_for('get_opentrons_script', protocol=protocol, user=user, samplenumber=samplenumber, inputformat=inputformat, outputformat=outputformat, userdata=userdata, _external=True)
     
-            elif request.files['myFile'] == "" and protocol == "Library":
+            elif bool(request.files['myFile']) == False and protocol == "Library":
                 return render_template("/csv-not-found.html")
 
 
