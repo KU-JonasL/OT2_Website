@@ -153,7 +153,7 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
         if protocol == "Extraction":
             
             ## Opening and Modifying Template Extraction
-            file_path = os.path.join(app.root_path,'static','OT2_protocols', 'Template_Protocol_DREX-NucleicAcidExtraction_OT2.py.json')
+            file_path = os.path.join(app.root_path,'static','OT2_protocols', 'Template_Protocol_DREX-NucleicAcidExtraction_OT2.py')
             template_content = open(file_path, 'r').read()
             modified_content = template_content.replace("1# User Input here", f"'''\n{csv_input_raw_str}\n'''")
             modified_content = modified_content.replace("1# User Data here", f"'''\n{userdata}'''")
