@@ -167,9 +167,9 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
             zipf.writestr('static_pdf.pdf', static_pdf_content)
 
             ## Add SOP for extraction to zipfolder
-            file_path = os.path.join(app.root_path,'static','SOPs', 'SOP_Template_V1.0.0.docx')
-            static_sop_content = open(file_path, 'r').read()
-            zipf.writestr('SOP_pdf.pdf', static_sop_content)
+            # file_path = os.path.join(app.root_path,'static','SOPs', 'SOP_Template_V1.0.0.docx')
+            # static_sop_content = open(file_path, 'r').read()
+            # zipf.writestr('SOP_pdf.pdf', static_sop_content)
 
 
         
