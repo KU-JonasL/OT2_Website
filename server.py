@@ -53,31 +53,24 @@ def get_OT2transfer():
 
                     ## Load and cleanup for the userdata
                     temp_userdata_csv = pd.read_csv(temp_file_path)
-                    #userdata = [tuple(temp_userdata_csv.columns)] + [tuple(row) for row in temp_userdata_csv.values]
-
                     csv_data_values = "\n".join([f"({', '.join(map(str, row))})" for row in temp_userdata_csv.values])
                     csv_data_raw_str = f"{', '.join(temp_userdata_csv.columns)}\n{csv_data_values}"
                     userdata = csv_data_raw_str.replace("nan", "").replace("(", "").replace(")", "")
-                    
-                    ## Convert a semi-colon seperated file (',' for '.' [Digits] and ';' for ',' [cell/tab separator])
-                    #if userdata.find("Sample Number; Well Position"):
-                    #    userdata = userdata.replace(",",".")
-                    #    userdata = userdata.replace(";",",")
 
                     ## Delete the temporary file
-                    #os.unlink(temp_file_path)
+                    os.unlink(temp_file_path)
                 
                 ## Create URL for zipfolder
                 zip_scripts_url = url_for('get_opentrons_script', protocol=protocol, user=user, samplenumber=samplenumber, inputformat=inputformat, outputformat=outputformat, userdata=userdata, _external=True)
-    
 
-            ## If there is not a csv data file, and the protocol type is library - There need to be a user csv file for library building protocols 
 
-            ## If there no user csv data file and the protocol is not for library building
+            ## If there is no csv data file, but the protocol is not for library building
             elif bool(request.files['myFile']) == False and protocol != "Library":
                 userdata = "1"
                 zip_scripts_url = url_for('get_opentrons_script', protocol=protocol, user=user, samplenumber=samplenumber, inputformat=inputformat, outputformat=outputformat, userdata=userdata, _external=True)
-    
+
+
+            ## If there is no csv data file, and the protocol type is library - There need to be a user csv file for library building protocols            
             elif bool(request.files['myFile']) == False and protocol == "Library":
                 return render_template("/csv-not-found.html")
 
@@ -256,7 +249,7 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
 
 
     # Return the ZIP file as an attachment
-    return send_file(zip_data,as_attachment=False,download_name=f'{naming}_opentrons_scripts.zip',mimetype='application/zip', max_age=1800)
+    return send_file(zip_data,as_attachment=True,download_name=f'{naming}_opentrons_scripts.zip',mimetype='application/zip', max_age=1800)
    
 
 

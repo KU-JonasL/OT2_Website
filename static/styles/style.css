@@ -17,7 +17,7 @@ body {
 }
 
 input, select, button, optgroup {
-    font-size: 2rem;
+    font-size: 1rem;
     padding: 1rem;
     border-radius: 10px;
 }
