@@ -72,15 +72,15 @@ def get_OT2transfer():
     
 
             ## If there is not a csv data file, and the protocol type is library - There need to be a user csv file for library building protocols 
-            elif request.files['myFile'] == "" and protocol == "Library":
-                return render_template("/csv-not-found.html")
 
             ## If there no user csv data file and the protocol is not for library building
             elif request.files['myFile'] == "" and protocol != "Library":
                 userdata = "1"
-                get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat, userdata = userdata)
                 zip_scripts_url = url_for('get_opentrons_script', protocol=protocol, user=user, samplenumber=samplenumber, inputformat=inputformat, outputformat=outputformat, userdata=userdata, _external=True)
     
+            elif request.files['myFile'] == "" and protocol == "Library":
+                return render_template("/csv-not-found.html")
+
 
             ## Render the OT2transfer html page 
             return render_template(
@@ -117,13 +117,6 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
     csv_input_values = "\n".join([f"({', '.join(map(str, row))})" for row in csv_user_input.values])
     csv_input_raw_str = f"{', '.join(csv_user_input.columns)}\n{csv_input_values}"
     csv_input_raw_str = csv_input_raw_str.replace("nan", "").replace("(", "").replace(")", "")
-
-
-    ## Read and Prepare the user data for transfer
-    #csv_user_data = pd.DataFrame(userdata[1:], columns = userdata[0])
-    #csv_data_values = "\n".join([f"({', '.join(map(str, row))})" for row in csv_user_data.values])
-    #csv_data_raw_str = f"{', '.join(csv_user_data.columns)}\n{csv_data_values}"
-    #csv_data_raw_str = csv_data_raw_str.replace("nan", "").replace("(", "").replace(")", "").replace(";",",").replace(",",".")
 
 
     ## Naming generation for zipfile and zipfolde
