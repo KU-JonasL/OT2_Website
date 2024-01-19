@@ -192,7 +192,7 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
             zipf.writestr('static_pdf.pdf', static_pdf_content)
 
             ## Add Covaris plate to zipfolder
-            file_path = os.path.join(app.root_path,'static','custom_labware', 'Covaris_96afatubet_wellplate_200ul')
+            file_path = os.path.join(app.root_path,'static','custom_labware', 'Covaris_96afatubet_wellplate_200ul.json')
             static_pdf_content = open(file_path, 'r').read()
             zipf.writestr('static_pdf.pdf', static_pdf_content)
 
