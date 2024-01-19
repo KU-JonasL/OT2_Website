@@ -55,7 +55,7 @@ def get_OT2transfer():
                     temp_userdata_csv = pd.read_csv(temp_file_path)
                     csv_data_values = "\n".join([f"({', '.join(map(str, row))})" for row in temp_userdata_csv.values])
                     csv_data_raw_str = f"{', '.join(temp_userdata_csv.columns)}\n{csv_data_values}"
-                    userdata = csv_data_raw_str.replace("nan", "").replace("(", "").replace(")", "")
+                    userdata = csv_data_raw_str.replace("nan", "").replace("(", "").replace(")", "").replace(" ","")
 
                     ## Delete the temporary file
                     os.unlink(temp_file_path)
@@ -249,7 +249,7 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
 
 
     # Return the ZIP file as an attachment
-    return send_file(zip_data,as_attachment=True,download_name=f'{naming}_opentrons_scripts.zip',mimetype='application/zip', max_age=1800)
+    return send_file(zip_data,as_attachment=True,download_name=f'{naming}_opentrons_scripts.zip',mimetype='application/zip',_scheme='https', max_age=1800)
    
 
 
