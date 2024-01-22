@@ -22,7 +22,7 @@
         <section id="Introduction">
             <h1>Online Download of Opentrons Script for the Alberdi lab</h1>
             <br>
-            <p>Welcome! On this website, <a href="https://www.alberdilab.dk/index.html" target="_blank">The Alberdi Lab</a> keep an downloadable version of the opentrons scripts we use. The webiste runs on <a href="https://render.com/">Render</a> using the <a href="https://flask.palletsprojects.com/en/3.0.x/">Flask</a> Python package running the Github repository <a href="https://github.com/KU-JonasL/OT2_Website">KU-JonasL/OT2_Website</a> created by Jonas Greve Lauritsen for the Alberdi Group. </p>
+            <p>Welcome! On this website, <a href="https://www.alberdilab.dk/index.html" target="_blank">The Alberdi Lab</a> download customised version of the opentrons scripts we use. The webiste runs on <a href="https://render.com/">Render</a> using the <a href="https://flask.palletsprojects.com/en/3.0.x/">Flask</a> Python package running the Github repository <a href="https://github.com/KU-JonasL/OT2_Website">KU-JonasL/OT2_Website</a> created by Jonas Greve Lauritsen for the Alberdi Group. </p>
         </section>
     </header>
 
@@ -45,11 +45,10 @@
             <section id="Datasubmission">
                 <h2>Data submission</h2>
                 <br>
-                <p>In the following section you will have to select what protocol you wish to download, and input what  what your run is going to be, and some basic information to rename the file for easier tracking. Below the submission there is a explanation of each submission. 
-                    "/OT2transfer.html" enctype="multipart/form-data" "https://httpbin.org/post"
-                    <br><br>
+                <p>In the following section you will have to select what protocol you wish to download, and input what  what your run is going to be. The inputs will be integrated into the python script. The python script(s) is renamed after user, protocol, and date for easier tracking. Along with each script will be a Standard Operational Procedure (SOP) to guide the user, and the needed custom labware. Below the submission form there is a explanation of each submission. All fields are required to fill out, with the exception of a csv file <strong>must</strong> be uploaded for the library protocol option.
                 </p>
-    
+
+                <br><br>
     
                 <form action="/OT2transfer.html" method="POST" enctype="multipart/form-data"> 
                     <fieldset>
@@ -62,17 +61,17 @@
                             <option value="qPCR">qPCR</option>
                             <option value="IndexPCR">IndexPCR</option>
                         </select>
-                    </p>
+                    </p><br>
     
                     <p>
                         <label for="user">User</label><br>
                         <input type="text" name="user" id="user" placeholder="User/Name/RunID" required>
-                    </p>
+                    </p><br>
     
                     <p>
                         <label for="samples">Number of Samples</label><br>
                         <input type="number" name="samples" id="samples" placeholder="96" min="1" max="96" required>
-                    </p>
+                    </p><br>
     
                     <p>
                         <label for="inputformat">Input Format of Samples</label><br>
@@ -100,7 +99,7 @@
                                 <option value="LVLSXS200">LVL SXS200</option>
                             </optgroup>
                         </select>
-                    </p>
+                    </p><br>
 
                     <p>
                         <label for="outputformat">Output Format of Samples</label><br>
@@ -129,18 +128,18 @@
                             </optgroup>
                             
                         </select>
-                    </p>
+                    </p><br>
                         
                     <p>
                         <Label for="myFile">Excel or CSV data for normalisation and library building. <a href="static\other_templates\Template_CSV_LibraryInput.xlsx">Excel Template</a><br>
                         <input type="file" id="myFile" name="myFile">
                         <p><em>The file upload is required for Library protocols</em></Label><br></p>
-                    </p>
+                    </p><br>
     
                     <p>
                         <button type="submit">Submit</button>
                         <button type="reset">Reset</button>
-                    </p>
+                    </p><br>
                     </fieldset>
                 </form>
             </section>
@@ -154,10 +153,29 @@
             <br>
             <h3>Data Submission explanation</h3>
             <br>
-            <p>The following paragraph is an indepth explanation about what each User Input field is expecting.</p>
-            br
+            <p>The following paragraph is an expanded explanation about what each User Input field is expecting.</p>
+            <br>
             <ol>
-                <li>Explanation 1</li>
+                <li>
+                    <em>Protocol</em>. The protocol list 4 options the user can select from; "Extraction","Library", "qPCR", and "IndexPCR". The Alberdi group has divided their work into 4 sections, however each entail different steps. a. Extraction is a total nucleic extraction, b. Library is Covaris Fragmentation preparation, library building and library purification of extracted samples, c. qPCR is qPCR setup of purified libraries, and d. is Index PCR and following purification of the samples. 
+                    For even more details of the exact methods check out: [Link] .
+                </li>
+
+                <li>
+                    <em>User</em>. This option allow the user to ID their downloaded content to them. In the Alberdi group we often use RUN-specific IDs, however you can name it whatever suits your workflow.  
+                </li>
+
+                <li>
+                    <em>Number of Samples</em>. Here the user select the number of samples (1-96) they have in their run. The number of samples will be overriding by the csv file uploaded data during the protocols related to the Covaris fragmentation and Library Building to ensure parity. OBS: will be changed later to verify if the sample number and csv is equal to avoid unfortunate misalignments.
+                </li>
+
+                <li>
+                    <em>Input- and outputformat</em>. The Input- and outputformats give the user the option to obtain the product from the protocols in a specific container. Each protocol has its specific formats, given how the protocol works. The output of 1 protocol is always a option of the next protocols in line. In the SOPs there will be a material list of specific labware - remember some suppliers might have slightly different dimension between labware options, and it is as such always recommended to check the compatability. 
+                </li>
+
+                <li>
+                    <em>Csv file</em>. The Covaris Fragmentation preparation and Library Building protocols require you, the user, to upload a csv file. The Covaris Fragmentation preparation use the information to normalise samples concentrations (as wished), and the Library Building use it to give either 20 or 10 µM adaptor. In case you are in doubt of the data format, there is a Excel template to for you to download an insert your information in. This ensure the column naming is correct. The web application will attempt to convert the data file into English comma separation and numbers.
+                </li>
             </ol>
         </section>
     </main>

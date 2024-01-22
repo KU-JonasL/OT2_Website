@@ -35,7 +35,7 @@ def get_OT2transfer():
         naming = user+"_"+protocol+"_"+today 
 
         ## User Data redirect into a dataframe 
-        userinput = pd.DataFrame({'Protocol':[protocol],'User':[user],'SampleNumber':[samplenumber],'InputFormat':[inputformat],'OutputFormat':[outputformat]})
+        userinput = pd.DataFrame({'Protocol':[protocol],'User':[user],'SampleNumber':[samplenumber],'InputFormat':[inputformat],'OutputFormat':[outputformat],'Naming':[naming]})
 
         ## Looking for csv file contents.
         try:
@@ -50,12 +50,15 @@ def get_OT2transfer():
                 with tempfile.NamedTemporaryFile(delete=False, suffix='.csv') as temp_file:
                     temp_file_path = temp_file.name
                     uploaded_file.save(temp_file_path)
+                    
+
 
                     ## Load and cleanup for the userdata
                     temp_userdata_csv = pd.read_csv(temp_file_path)
+                    temp_userdata_csv.dropna(subset=['SampleID'], inplace=True)
                     csv_data_values = "\n".join([f"({', '.join(map(str, row))})" for row in temp_userdata_csv.values])
                     csv_data_raw_str = f"{', '.join(temp_userdata_csv.columns)}\n{csv_data_values}"
-                    userdata = csv_data_raw_str.replace("nan", "").replace("(", "").replace(")", "").replace(" ","")
+                    userdata = csv_data_raw_str.replace("nan", "")
 
                     ## Delete the temporary file
                     os.unlink(temp_file_path)
@@ -109,7 +112,7 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
     ## Prepare the inputs types for transfer
     csv_input_values = "\n".join([f"({', '.join(map(str, row))})" for row in csv_user_input.values])
     csv_input_raw_str = f"{', '.join(csv_user_input.columns)}\n{csv_input_values}"
-    csv_input_raw_str = csv_input_raw_str.replace("nan", "").replace("(", "").replace(")", "")
+    csv_input_raw_str = csv_input_raw_str.replace("nan", "")
 
 
     ## Naming generation for zipfile and zipfolde

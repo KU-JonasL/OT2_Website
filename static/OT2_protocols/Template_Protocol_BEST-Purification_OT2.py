@@ -9,8 +9,9 @@
 
 #### Package loading ####
 from opentrons import protocol_api
-from pandas import pd
+import pandas as pd
 from math import *
+from io import StringIO
 
 ## User Input
 
@@ -20,17 +21,26 @@ csv_userinput = 1# User Input here
 csv_userdata = 1# User Data here
 
 
-user_input = pd.read_csv("csv_userinput",header=0)# User Input here
-user = user_input['User'][0]
-Sample_Number=user_input['Sample Number'][0]
+## Reading User Input
+csv_input_temp = StringIO(csv_userinput)
+user_input = pd.read_csv(csv_input_temp)
+
+## Extracting naming
+naming = user_input['Naming'][0]
+
+## Sample number = No here, csv data take priority
+Sample_Number=int(user_input['Sample Number'][0])
 Col_Number = int(ceil(Sample_Number/8))
-Input_Format = user_input['Input_Format'][0]
+
+## Inputformat & Outputformat = No here
+#Input_Format = user_input['Input_Format'][0]
 Output_Format = user_input['Output_Format'][0]
 
-if(bool("template\Template_CSV_LibraryInput.csv")==True): 
-    csv_raw = pd.DataFrame(pd.read_file("template\Template_CSV_LibraryInput.csv"))# Your User Data here
 
-    
+## Reading csv data
+#csv_data_temp = StringIO(csv_userdata)
+#user_data = pd.read_csv(csv_data_temp)
+
 
 
 #############################
@@ -42,7 +52,7 @@ metadata = {
     'protocolName': 'Protocol BEST Library Purification',
     'apiLevel': '2.13',
     'author': 'Jonas Lauritsen <jonas.lauritsen@sund.ku.dk>',
-    'description': 'Automated purification of a BEST library build. The user inputs the number of columns for purification.'}
+    'description': "{naming} Automated purification of a BEST library build. Protocol generated at https://alberdilab-opentronsscripts.onrender.com"}
 
 #### Protocol Script ####
 def run(protocol: protocol_api.ProtocolContext):
@@ -52,10 +62,18 @@ def run(protocol: protocol_api.ProtocolContext):
 
     ## Work plates
     Library_plate = magnet_module.load_labware('biorad_96_wellplate_200ul_pcr') # Input plate
-    Purified_plate = protocol.load_labware('biorad_96_wellplate_200ul_pcr',10) # Output plate
+    
+    ## Output plate decide from user input. Standard format is PCR plate
+    if Output_Format == "PCRstrip":
+        Purified_plate = protocol.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul',10) # Output plate
+    elif Output_Format == "LVLSXS200":
+        Purified_plate = protocol.load_labware('LVLXSX200_wellplate_200ul',10) # Output plate
+    else:
+        Purified_plate = protocol.load_labware('biorad_96_wellplate_200ul_pcr',10) # Output plate
+
 
     ## Purification materials
-    Resevoir = protocol.load_labware('deepwellreservoir12channel_12_reservoir_21000ul',1) # Custom labware definition for the 22 mL reservoir
+    Resevoir = protocol.load_labware('deepwellreservoir_12channel_21000ul',1) # Custom labware definition for the 22 mL reservoir
     Beads = Resevoir['A1']
     Ethanol1 = Resevoir['A3']
     Ethanol2 = Resevoir['A4']
@@ -63,6 +81,7 @@ def run(protocol: protocol_api.ProtocolContext):
     Waste1 = Resevoir['A12'] # Beads supernatant waste
     Waste2 = Resevoir['A11'] # 1st ethanol wash waste
     Waste3 = Resevoir['A10'] # 2nd ethanol wash waste
+
 
     ## Tip racks
     tiprack_10_1 = protocol.load_labware('opentrons_96_filtertiprack_10ul',6)
@@ -72,6 +91,7 @@ def run(protocol: protocol_api.ProtocolContext):
     tiprack_200_4 = protocol.load_labware('opentrons_96_filtertiprack_200ul',3)
     tiprack_200_5 = protocol.load_labware('opentrons_96_filtertiprack_200ul',8)
     tiprack_200_6 = protocol.load_labware('opentrons_96_filtertiprack_200ul',9)
+
 
     #### PIPETTE SETUP ####
     ## Loading pipettes
@@ -85,8 +105,8 @@ def run(protocol: protocol_api.ProtocolContext):
     BeadsTime = BeadsTime[(Col_Number-1)] # Selecting the relevant drying time
 
 
-    #### Reservervoir Ethanol height ####
-    Ethanol_Height = (31.7,28.9,26.0,23.2,20.3,17.5,14.6,11.8,8.9,6.1,3.2,0.7) # Height below the liquid level at different number of column preparations.
+    #### Selecting Reservoir Ethanol height ####
+    Ethanol_Height = (31.7,28.9,26.0,23.2,20.3,17.5,14.6,11.8,8.9,6.1,3.2,0.7) 
     pos = 12-Col_Number
     Ethanol_Height = Ethanol_Height[pos:] # Removes highest, unused heights.
 

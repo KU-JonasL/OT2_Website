@@ -14,9 +14,9 @@
 
 #### Package loading ####
 from opentrons import protocol_api
-from pandas import pd
+import pandas as pd
 from math import *
-
+from io import StringIO
 
 ## User Input
 
@@ -27,15 +27,25 @@ csv_userdata = 1# User Data here
 
 
 
-user_input = pd.read_csv("csv_userinput",header=0)# User Input here
-user = user_input['User'][0]
-Sample_Number=user_input['Sample Number'][0]
+## Reading User Input
+csv_input_temp = StringIO(csv_userinput)
+user_input = pd.read_csv(csv_input_temp)
+
+## Extracting naming
+naming = user_input['Naming'][0]
+
+## Sample number = No here, csv data take priority
+Sample_Number=int(user_input['Sample Number'][0])
 Col_Number = int(ceil(Sample_Number/8))
+
+## Inputformat & Outputformat = No here
 Input_Format = user_input['Input_Format'][0]
 Output_Format = user_input['Output_Format'][0]
 
-if(bool("template\Template_CSV_LibraryInput.csv")==True): 
-    csv_raw = pd.DataFrame(pd.read_file("template\Template_CSV_LibraryInput.csv"))# Your User Data here
+
+## Reading csv data
+csv_data_temp = StringIO(csv_userdata)
+user_data = pd.read_csv(csv_data_temp)
 
 
 
@@ -44,7 +54,7 @@ metadata = {
     'protocolName': 'Purification of Library Build',
     'apiLevel': '2.12',
     'author': 'Jonas Lauritsen <jonas.lauritsen@sund.ku.dk>',
-    'description': 'Automated purification of library builds'}
+    'description': f"{naming}'s Automated purification of library builds. Protocol generated at https://alberdilab-opentronsscripts.onrender.com"}
 
 #### Protocol Script ####
 def run(protocol: protocol_api.ProtocolContext):
@@ -53,8 +63,18 @@ def run(protocol: protocol_api.ProtocolContext):
     magnet_module = protocol.load_module('magnetic_module',9)
 
     ## Work plates
-    Library_plate = magnet_module.load_labware('biorad_96_wellplate_200ul_pcr')
-    Purified_plate = protocol.load_labware('biorad_96_wellplate_200ul_pcr',11)
+    if Input_Format == "PCRstrip":
+        Sample_Plate = protocol.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul',10) # Output plate
+    else:
+        Sample_Plate = protocol.load_labware('biorad_96_wellplate_200ul_pcr',10) # Output plate
+
+    if Output_Format == "PCRstrip":
+        Purified_plate = protocol.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul',10) # Output plate
+    elif Input_Format == "LVLSXS200":
+        Purified_plate = protocol.load_labware('LVLXSX200_wellplate_200ul',10) # Output plate
+    else:
+        Purified_plate = protocol.load_labware('biorad_96_wellplate_200ul_pcr',10) # Output plate
+
 
     ## Purification materials
     Beads = protocol.load_labware('nest_12_reservoir_15ml',6)['A1']
@@ -76,7 +96,7 @@ def run(protocol: protocol_api.ProtocolContext):
     ## Addition of Magnetic beads
     for i in range(Col_Number):
         Column = i*8 #Gives the index of the first well in the column
-        m200.transfer(volume = 75, source = Beads, dest = Library_plate.wells_by_index()[Column], new_tip = 'always', mix_before = (5,100), mix_after = (6,90), blow_out = True, blowout_location = Library_plate[Column])
+        m200.transfer(volume = 75, source = Beads, dest = Sample_Plate.wells_by_index()[Column], new_tip = 'always', mix_before = (5,100), mix_after = (6,90), blow_out = True, blowout_location = Sample_Plate[Column])
     
     ## 5 minutes incubation at room temperature
     protocol.delay(minutes = 5) 
@@ -88,7 +108,7 @@ def run(protocol: protocol_api.ProtocolContext):
     ## Discarding supernatant - to be tested: pipette position.
     for i in range(Col_Number):
         Column = i*8 #Gives the index of the first well in the column
-        m200.transfer(volume = 140, source = Library_plate.wells_by_index()[Column], dest = 'trash', new_tip = 'always')
+        m200.transfer(volume = 140, source = Sample_Plate.wells_by_index()[Column], dest = 'trash', new_tip = 'always')
 
     ## Ethanol washing
     for k in range(2): # Double wash 
@@ -103,16 +123,16 @@ def run(protocol: protocol_api.ProtocolContext):
         for i in range(Col_Number): 
             Column = i*8 #Gives the index for the first well in the column
             m200.pick_up_tip(EtOHTip.wells_by_index()[Column])
-            m200.transfer(volume = 200, source = Ethanol, dest = Library_plate.wells_by_index()[Column], new_tip = 'never')
+            m200.transfer(volume = 200, source = Ethanol, dest = Sample_Plate.wells_by_index()[Column], new_tip = 'never')
             m200.return_tip
 
         ## Removing Ethanol - reusing the tips from above
         for i in range (Col_Number):
             Column = i*8 # Gives the index for the first well in the column
             m200.pick_up_tip(EtOHTip.wells_by_index()[Column])
-            m200.transfer(volume = 220, source = Library_plate.wells_by_index()[Column], dest = 'trash', new_tip = 'never')
+            m200.transfer(volume = 220, source = Sample_Plate.wells_by_index()[Column], dest = 'trash', new_tip = 'never')
             if k == 1: # Extra aspiration to remove residual ethanol
-                m200.transfer(volume = 50, source = Library_plate.wells_by_index()[Column], dest = 'trash', new_tip = 'never')
+                m200.transfer(volume = 50, source = Sample_Plate.wells_by_index()[Column], dest = 'trash', new_tip = 'never')
             m200.return_tip
 
         
@@ -126,7 +146,7 @@ def run(protocol: protocol_api.ProtocolContext):
     ## Adding EBT buffer
     for i in range(Col_Number):
         Column = i*8 #Gives the index for the first well in the column
-        m200.transfer(volume = 40, source = EBT, dest = Library_plate.wells_by_index()[Column], new_tip = 'always',mix_after = (3,35), blow_out=True, blowout_location = Library_plate.wells_by_index()[Column])
+        m200.transfer(volume = 40, source = EBT, dest = Sample_Plate.wells_by_index()[Column], new_tip = 'always',mix_after = (3,35), blow_out=True, blowout_location = Sample_Plate.wells_by_index()[Column])
 
     ## Incubation of library plate
     protocol.pause('Seal library plate and spin it down shortly. Incubate the library plate for 5 min at 55 C*. Press RESUME, when library plate has been replaced (without seal) in the magnet module.')
@@ -138,7 +158,7 @@ def run(protocol: protocol_api.ProtocolContext):
     ## Transferring purified library to a new plate (purified plate)
     for i in range(Col_Number):
         Column = i*8 #Gives the index for the first well in the column
-        m200.transfer(volume = 40, source = Library_plate.wells_by_index()[Column], dest = Purified_plate.wells_by_index()[Column], new_tip = 'always', rate = 0.5)
+        m200.transfer(volume = 40, source = Sample_Plate.wells_by_index()[Column], dest = Purified_plate.wells_by_index()[Column], new_tip = 'always', rate = 0.5)
 
     ## Deactivating magnet module
     magnet_module.deactivate()

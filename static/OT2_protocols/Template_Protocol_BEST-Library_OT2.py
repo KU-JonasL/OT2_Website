@@ -9,8 +9,9 @@
 
 #### Package loading ####
 from opentrons import protocol_api
-from pandas import pd
+import pandas as pd
 from math import *
+from io import StringIO
 
 
 ## User Input
@@ -21,37 +22,34 @@ csv_userinput = 1# User Input here
 csv_userdata = 1# User Data here
 
 
+## Reading User Input
+csv_input_temp = StringIO(csv_userinput)
+user_input = pd.read_csv(csv_input_temp)
 
-user_input = pd.read_csv("csv_userinput",header=0)# User Input here
-user = user_input['User'][0]
-Sample_Number=user_input['Sample Number'][0]
-Col_Number = int(ceil(Sample_Number/8))
-Input_Format = user_input['Input_Format'][0]
-Output_Format = user_input['Output_Format'][0]
+## Extracting naming
+naming = user_input['Naming'][0]
 
-if(bool("template\Template_CSV_LibraryInput.csv")==True): 
-    csv_raw = pd.DataFrame(pd.read_file("template\Template_CSV_LibraryInput.csv"))# Your User Data here
+## Sample number = No here, csv data take priority
+#Sample_Number= int(user_input['Sample Number'][0])
+#Col_Number = int(ceil(Sample_Number/8))
+
+## Inputformat & Outputformat = No here
+#Input_Format = user_input['Input_Format'][0]
+#Output_Format = user_input['Output_Format'][0]
 
 
+## Reading csv data
+csv_data_temp = StringIO(csv_userdata)
+user_data = pd.read_csv(csv_data_temp)
 
-#### Function to convert copied csv data into a 2D list. ####
-def csv_list_converter_BEST(csv_raw):
-    import csv
-    csv_data = csv_raw.splitlines()[1:]
-    csv_reader = csv.DictReader(csv_data)
-    Excel = [['Well','Input_Adaptor_Conc']]
-    for csv_row in csv_reader:
-        Info= [(int(csv_row['#'])-1), float(csv_row['Adaptor concentration (nM)'])] ## Remember first well is numbered "0", not "1"
-        Excel.append(Info)
-    return(Excel)
 
 
 #### METADATA ####
 metadata = {
-    'protocolName': 'RT Protocol BEST Library Build',
+    'protocolName': 'Protocol: BEST Library Build',
     'apiLevel': '2.13',
     'author': 'Jonas Greve Lauritsen <jonas.lauritsen@sund.ku.dk>',
-    'description': 'Automated (BEST) library build of DNA samples (csv-adjusting version). The user inputs csv data with 1) well positions and 2) adaptor conc. The columns need to be named "Well", and "Input_Adaptor_Conc" to be read correctly.'}
+    'description': f"{naming}'s Automated (BEST) library build of DNA samples (csv-adjusting version). Protocol generated at https://alberdilab-opentronsscripts.onrender.com"}
 
 
 #### Protocol script ####
@@ -90,13 +88,8 @@ def run(protocol: protocol_api.ProtocolContext):
 
     
     #### User data setup ####
-    ## Converts csv paste into a 2D list
-    Excel = csv_list_converter_BEST(csv_raw)
-    Excel = Excel[1:] ## Removes headers - Header indices are: [0] Well, & [1] Input_Adaptor_Conc
-
-
     ## Column setup
-    Col_number = int(ceil(len(Excel)/8)) ## Scales number of columns in used based on csv data (rounding up for full columns used).
+    Col_number = int(ceil(len(user_data)/8)) ## Scales number of columns in used based on csv data (rounding up for full columns used).
     col_name = ["A1","A2","A3","A4","A5","A6","A7","A8","A9","A10","A11","A12"] ## Column is named by top well.
 
 
@@ -147,13 +140,13 @@ def run(protocol: protocol_api.ProtocolContext):
     protocol.comment("STATUS: Adaptor Transfer Step Begun")
 
     ## Transferring Adaptors. The adaptor concentration is chosen based on the csv input using conditional logic.
-    for i in range(len(Excel)):
-        p10.pick_up_tip() ## tiprack_10_4.wells()[Excel[i][0]]
+    for i in range(len(user_data)):
+        p10.pick_up_tip()
 
-        if Excel[i][1] == 10: ## 10 mM adaptor transfer
-            p10.transfer(volume = 1.5, source = Adaptors_10mM, dest = Sample_plate.wells()[Excel[i][0]], mix_before = (2,4), mix_after = (1,10), new_tip = 'never')
-        if Excel[i][1] == 20: ## 20 mM adaptor transfer
-            p10.transfer(volume = 1.5, source = Adaptors_20mM, dest = Sample_plate.wells()[Excel[i][0]], mix_before = (2,4), mix_after = (1,10), new_tip = 'never')
+        if user_data['Adaptor concentration (nM)'][i] == 10: ## 10 mM adaptor transfer
+            p10.transfer(volume = 1.5, source = Adaptors_10mM, dest = Sample_plate.wells()[user_data[i][0]], mix_before = (2,4), mix_after = (1,10), new_tip = 'never')
+        if user_data['Adaptor concentration (nM)'][i] == 20: ## 20 mM adaptor transfer
+            p10.transfer(volume = 1.5, source = Adaptors_20mM, dest = Sample_plate.wells()[user_data[i][0]], mix_before = (2,4), mix_after = (1,10), new_tip = 'never')
 
         p10.return_tip()
 
@@ -165,7 +158,7 @@ def run(protocol: protocol_api.ProtocolContext):
     m20.flow_rate.aspirate = 3 ## µL/s 
     m20.flow_rate.dispense = 3 ## µL/s
 
-    ## Ligation Pipetting - Has been tested with 10-15% extra Ligation mix. (Some viscous solution is expected on the outside of the tips)
+    ## Ligation Pipetting
     for i in range(Col_number):
         ## Aspiration, mixing, and dispersion. Extra delays to allow viscous liquids to aspirate/dispense. Slow movements to limit adhesion.
         m20.pick_up_tip()

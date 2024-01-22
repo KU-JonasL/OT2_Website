@@ -10,30 +10,32 @@
 
 
 #### Package loading ####
-from opentrons import protocol_api
-from pandas import pd
+from opentrons import protocol_api, types
+import pandas as pd
 from math import *
+from io import StringIO
 
 
-## User Input
-
-
+#### User Input & Data ####
 csv_userinput = 1# User Input here
 
 csv_userdata = 1# User Data here
 
 
 
-user_input = pd.read_csv("csv_userinput",header=0)# User Input here
-user = user_input['User'][0]
-Sample_Number=user_input['Sample Number'][0]
+## Reading User Input
+csv_input_temp = StringIO(csv_userinput)
+user_input = pd.read_csv(csv_input_temp)
+
+## Extracting naming
+naming = user_input['Naming'][0]
+
+## Sample number = No here, csv data take priority
+Sample_Number=int(user_input['Sample Number'][0])
 Col_Number = int(ceil(Sample_Number/8))
-Input_Format = user_input['Input_Format'][0]
+
+## Inputformat & Outputformat
 Output_Format = user_input['Output_Format'][0]
-
-if(bool("template\Template_CSV_LibraryInput.csv")==True): 
-    csv_raw = pd.DataFrame(pd.read_file("template\Template_CSV_LibraryInput.csv"))# Your User Data here
-
 
 
 
@@ -42,34 +44,40 @@ metadata = {
     'protocolName': 'Protocol Nucleic Acid Extraction',
     'apiLevel': '2.13',
     'author': 'Jonas Lauritsen <jonas.lauritsen@sund.ku.dk>',
-    'description': 'Automated extraction of nucleic acids from samples. The user inputs the number of samples for purification.'}
+    'description': "f{naming}'s Automated extraction of nucleic acids from samples.Protocol generated at https://alberdilab-opentronsscripts.onrender.com"}
 
 #### Protocol Script ####
 def run(protocol: protocol_api.ProtocolContext):
     #### LABWARE SETUP ####
-
     ## Smart labware
     magnet_module = protocol.load_module('magnetic module',4)
 
-    ## Work plates
+    ## Input plate - OBS out deepwell plate is deeper.
     Extraction_plate = magnet_module.load_labware('thermoscientificnunc_96_wellplate_1300ul') ## Input plate with sample
-    Elution_plate = protocol.load_labware('biorad_96_wellplate_200ul_pcr',10) ## Output plate
-    reservoir = protocol.load_labware('deepwellreservoir12channel_12_reservoir_21000ul',1) ## Custom labware definition for the 22 mL reservoir
+    
+    ## Selecting output format - default is a PCR wellplate
+    if Output_Format == "PCRstrip":
+        Elution_plate = protocol.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul',10) # Output plate
+    elif Output_Format == "LVLSXS200":
+        Elution_plate = protocol.load_labware('LVLXSX200_wellplate_200ul',10) # Output plate
+    else:
+        Elution_plate = protocol.load_labware('biorad_96_wellplate_200ul_pcr',10) # Output plate
 
-    ## Inputs
+    ## Deepwell reservoir & Liquid Inputs
+    reservoir = protocol.load_labware('deepwellreservoir_12channel_21000ul',1)
     Beads = reservoir['A1']
     Ethanol1 = reservoir['A3']
     Ethanol2 = reservoir['A4']
     EBT = reservoir['A6']
 
-    ## Outputs / Waste
+    #### Waste ####
     Waste1 = reservoir['A12']    ## 1st Beads-supernatant waste
     Waste2 = reservoir['A11']    ## 2nd Beads-supernatant waste
     Waste3 = reservoir['A10']    ## 1st ethanol wash waste
     Waste4 = reservoir['A9']     ## 2nd ethanol wash waste
 
 
-    ## Tip racks (2x 10 µL, 2x 200 µl)
+    #### Tip racks (8x 200 µl) ####
     tiprack_200_1 = protocol.load_labware('opentrons_96_filtertiprack_200ul',7) ## Beads and discard
     tiprack_200_2 = protocol.load_labware('opentrons_96_filtertiprack_200ul',2) ## Discard Ethanol 1 and remove
     tiprack_200_3 = protocol.load_labware('opentrons_96_filtertiprack_200ul',5) ## Ethanol 1
@@ -79,18 +87,16 @@ def run(protocol: protocol_api.ProtocolContext):
     tiprack_200_7 = protocol.load_labware('opentrons_96_filtertiprack_200ul',9) ## Elution
     tiprack_200_8 = protocol.load_labware('opentrons_96_filtertiprack_200ul',11) ## Elution transfer
 
+
     #### PIPETTE SETUP ####
-    ## Loading pipettes
-    m200 = protocol.load_instrument('p300_multi_gen2', mount='left', tip_racks=([tiprack_200_1,tiprack_200_2,tiprack_200_3,tiprack_200_4,tiprack_200_5,tiprack_200_6,tiprack_200_7,tiprack_200_8])) #
-
-    #### Number of Columns to be used ####
-    Col_Number = int(ceil(Sample_Number/8))
+    m200 = protocol.load_instrument('p300_multi_gen2', mount='left', tip_racks=([tiprack_200_1,tiprack_200_2,tiprack_200_3,tiprack_200_4,tiprack_200_5,tiprack_200_6,tiprack_200_7,tiprack_200_8]))
 
 
-    #### reservoir Liquid Height ####
+    #### Reservoir Liquid Height ####
     Height = (31.5,28.8,25.9,23.1,20.2,17.4,14.5,11.7,8.8,6.0,3.1,0.8) ## Height above the reservoir to approximate liquid level.
     pos = 12-Col_Number
     Height = Height[pos:] ## Removes highest, unused heights.
+
 
     #### Function to resuspend-mix ####
     def Ethanol_Mix(Pipette, Vol, Loc, asp_height, dis_height, reps, Rate, Col):
@@ -109,7 +115,7 @@ def run(protocol: protocol_api.ProtocolContext):
 
 
     #### Sample-bead binding ####
-    ## Addition of Magnetic beads - slowed pipette included.
+    ## Addition of Magnetic beads - slowed pipetting
     protocol.comment("STATUS: Beads Transfer Begun")
     for i in range(Col_Number):
         Column = i*8 ## Gives the index of the first well in the column
@@ -124,7 +130,7 @@ def run(protocol: protocol_api.ProtocolContext):
         m200.move_to(location = Beads.top(), speed = 40)
 
         ## Beads Addition
-        m200.dispense(volume = 250, location = Extraction_plate.wells()[Column].bottom(z = 4.0), rate = 0.8)
+        m200.dispense(volume = 220, location = Extraction_plate.wells()[Column].bottom(z = 4.0), rate = 0.8)
         m200.mix(repetitions = 5, volume = 180, location = Extraction_plate.wells()[Column].bottom(z = 6.0), rate = 1.2)
         protocol.delay(5)
         m200.move_to(location = Extraction_plate.wells()[Column].top(), speed = 50)
@@ -147,12 +153,13 @@ def run(protocol: protocol_api.ProtocolContext):
         Column = i*8 ## Gives the index of the first well in the column
         m200.pick_up_tip()
 
+        ## Remove bead-supernatant 1
         m200.aspirate(volume = 200, location = Extraction_plate.wells()[Column].bottom(z = 3.4), rate = 0.7)
         m200.dispense(volume = 250, location = Waste1.top(z = 1), rate = 0.5) ## Extra dispense to blow out
         protocol.delay(seconds = 10) ## Droplets falling
         m200.move_to(location = Waste1.top().move(types.Point(x = 0, y = -5, z = 2))) ## flicker motion??
 
-
+        ## Remove bead-supernatant 2
         m200.aspirate(volume = 200, location = Extraction_plate.wells()[Column].bottom(z = 3.4), rate = 0.7)
         m200.dispense(volume = 200, location = Waste2.top(), rate = 0.6)
         protocol.delay(seconds = 5) ## Droplets falling.
@@ -190,7 +197,7 @@ def run(protocol: protocol_api.ProtocolContext):
 
         ## Engaging Magnet
         magnet_module.engage(height_from_base = 12)
-        protocol.delay(minutes = 2) ## check time needed
+        protocol.delay(minutes = 2)
 
         ## Removing Ethanol
         for i in range(Col_Number):
@@ -216,14 +223,14 @@ def run(protocol: protocol_api.ProtocolContext):
     protocol.comment("STATUS: EBT Buffer Transfer begun")
     for i in range(Col_Number):
         Column = i*8 #Gives the index for the first well in the column
-        m200.transfer(volume = 50, source  = EBT, dest = Extraction_plate.wells()[Column].bottom(z = 3.4), rate = 1, new = 'always', mix_after = (5,35), trash = False)
+        m200.transfer(volume = 50, source  = EBT, dest = Extraction_plate.wells()[Column].bottom(z = 3.4), rate = 1, new_tip = 'always', mix_after = (5,35), trash = False)
 
     ## Incubation of Extraction plate
     protocol.pause('ACTION: Seal the Extraction plate and spin it down shortly. Incubate the extraction plate: 5 mins, 25*C, 1500 rpm. Spin the plate down. Press RESUME, when the Extraction plate has been returned (without seal) to the magnet module.')
 
     ## Engaging Magnet. 3 mins wait for beads withdrawal
-    magnet_module.engage(height_from_base = 12) ## doublecheck
-    protocol.delay(minutes = 3) ## doublecheck
+    magnet_module.engage(height_from_base = 12)
+    protocol.delay(minutes = 3)
 
     ## Transferring extracted nucleic acids to a new plate (purified plate). Transfer is sat higher to remove all.
     protocol.comment("STATUS: Transfer of Eluted Extracted Samples")

@@ -9,9 +9,9 @@
 
 #### Package loading ####
 from opentrons import protocol_api
-from pandas import pd
+import pandas as pd
 from math import *
-
+from io import StringIO
 
 ## User Input
 
@@ -21,17 +21,25 @@ csv_userinput = 1# User Input here
 csv_userdata = 1# User Data here
 
 
+## Reading User Input
+csv_input_temp = StringIO(csv_userinput)
+user_input = pd.read_csv(csv_input_temp)
 
-user_input = pd.read_csv("csv_userinput",header=0)# User Input here
-user = user_input['User'][0]
+## Extracting naming
+naming = user_input['Naming'][0]
+
+## Sample number = No here, csv data take priority
 Sample_Number=user_input['Sample Number'][0]
 Col_Number = int(ceil(Sample_Number/8))
+
+## Inputformat & Outputformat = No here
 Input_Format = user_input['Input_Format'][0]
-Output_Format = user_input['Output_Format'][0]
+#Output_Format = user_input['Output_Format'][0]
 
-if(bool("template\Template_CSV_LibraryInput.csv")==True): 
-    csv_raw = pd.DataFrame(pd.read_file("template\Template_CSV_LibraryInput.csv"))# Your User Data here
 
+## Reading csv data
+csv_data_temp = StringIO(csv_userdata)
+user_data = pd.read_csv(csv_data_temp)
 
 
 
@@ -40,7 +48,7 @@ metadata = {
     'protocolName': 'Protocol qPCR Setup',
     'apiLevel': '2.13',
     'author': 'Jonas Lauritsen <jonas.lauritsen@sund.ku.dk>',
-    'description': 'Automated transfer for Master Mix + DNA Libraries for qPCR.'}
+    'description': f"{naming}'s Automated transfer for Master Mix + DNA Libraries for qPCR. Protocol generated at https://alberdilab-opentronsscripts.onrender.com"}
 
 #### Protocol Script ####
 def run(protocol: protocol_api.ProtocolContext):
@@ -53,13 +61,15 @@ def run(protocol: protocol_api.ProtocolContext):
 
     ## Samples and sample format (Dilutions done prior)
     Temp_Module_Sample = protocol.load_module('temperature module', 7)
-    if Input_Format == "Strip":
+    if Input_Format == "PCRstrip":
         Sample_Plate = Temp_Module_Sample.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul') ## Generic PCR strip should approximate our types. Low volumes could be problematic.
         Sample_Height = 1.0
 
     if Input_Format == "Plate":
         Sample_Plate = Temp_Module_Sample.load_labware('biorad_96_wellplate_200ul_pcr') ## Biorad plate is the closest to our plate type.
         Sample_Height = 1.0
+
+
 
     ## Master Mix
     MasterMix = protocol.load_labware('thermoscientificnunc_96_wellplate_1300ul', 4).wells_by_name()["A1"] ## MasterMix to be prepared in advance and placed in this column.

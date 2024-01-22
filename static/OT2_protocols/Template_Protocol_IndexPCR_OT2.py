@@ -9,9 +9,9 @@
 
 #### Package loading ####
 from opentrons import protocol_api
-from pandas import pd
+import pandas as pd
 from math import *
-
+from io import StringIO
 
 ## User Input
 
@@ -22,15 +22,25 @@ csv_userdata = 1# User Data here
 
 
 
-user_input = pd.read_csv("csv_userinput",header=0)# User Input here
-user = user_input['User'][0]
-Sample_Number=user_input['Sample Number'][0]
-Col_Number = int(ceil(Sample_Number/8))
-Input_Format = user_input['Input_Format'][0]
-Output_Format = user_input['Output_Format'][0]
+## Reading User Input
+csv_input_temp = StringIO(csv_userinput)
+user_input = pd.read_csv(csv_input_temp)
 
-if(bool("template\Template_CSV_LibraryInput.csv")==True): 
-    csv_raw = pd.DataFrame(pd.read_file("template\Template_CSV_LibraryInput.csv"))# Your User Data here
+## Extracting naming
+naming = user_input['Naming'][0]
+
+## Sample number = No here, csv data take priority
+Sample_Number=int(user_input['Sample Number'][0])
+Col_Number = int(ceil(Sample_Number/8))
+
+## Inputformat & Outputformat = No here
+Input_Format = user_input['Input_Format'][0]
+#Output_Format = user_input['Output_Format'][0]
+
+
+## Reading csv data
+csv_data_temp = StringIO(csv_userdata)
+user_data = pd.read_csv(csv_data_temp)
 
 
 
@@ -39,7 +49,7 @@ metadata = {
     'protocolName': 'Protocol Index PCR Setup',
     'apiLevel': '2.13',
     'author': 'Jonas Lauritsen <jonas.lauritsen@sund.ku.dk>',
-    'description': 'Automated transfer for Index PCR: Master Mix, Primers Mix, and Sample-library material.'}
+    'description': f"{naming}'s transfer for Index PCR: Master Mix, Primers Mix, and Sample-library material. Protocol generated at https://alberdilab-opentronsscripts.onrender.com"}
 
 #### Protocol Script ####
 def run(protocol: protocol_api.ProtocolContext):
@@ -55,12 +65,13 @@ def run(protocol: protocol_api.ProtocolContext):
     Primer_plate = Temp_Module_Primer.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul')
 
 
-    ## Samples and sample input format
-    if Input_Format == "Strip":
-        Sample_Plate = protocol.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul',1) ## Generic PCR strip should approximate our types. Low volumes could be problematic.
-
-    if Input_Format == "Plate":
-        Sample_Plate = protocol.load_labware('biorad_96_wellplate_200ul_pcr',1) ## Biorad plate is the closest to our plate type.
+    ## Selecting input format
+    if Input_Format == "PCRstrip":
+        Sample_Plate = protocol.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul',10) # Output plate
+    elif Input_Format == "LVLSXS200":
+        Sample_Plate = protocol.load_labware('LVLXSX200_wellplate_200ul',10) # Output plate
+    else:
+        Sample_Plate = protocol.load_labware('biorad_96_wellplate_200ul_pcr',10) # Output plate
 
 
     ## Master Mix

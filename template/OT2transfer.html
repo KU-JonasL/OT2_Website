@@ -2,9 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Opentrons Scripts for {{naming}} </title>
-    <link href = "{{url_for('static', filename='styles/style.css')}}" rel = "stylesheet" />
+    <meta name = "author" content="Jonas Lauritsen" >
+    <meta name= "viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="The official pages for The Alberdi Lab's Opentrons Script">
+    <title>Get AlberdiLab Opentrons Script</title>
+    <link href="{{ url_for('static', filename='styles/style.css') }}" rel="stylesheet"/>
+    <link rel="icon" href="/static/img/alberdilab-110x110.png" type="image/x-icon">
 </head>
 
 
@@ -28,7 +31,7 @@
     <h2>Zip folder </h2>
     <p class = "center">
         <br>
-        Download <a href="{{get_opentrons_script}}" download="Opentrons Scripts">  {{naming}}'s zip folder</a> here.
+        Download <a href="{{get_opentrons_script}}" download="Opentrons Scripts">{{naming}}'s zip folder</a> here.
         <br>
     </p>
     <p>
