@@ -54,10 +54,10 @@ def get_OT2transfer():
                     ## Load and cleanup for the userdata
                     try:
                         # Try reading with semicolon as the delimiter
-                        temp_userdata_csv = pd.read_csv(temp_file_path, sep=',')
+                        temp_userdata_csv = pd.read_csv(temp_file_path, sep=';')
                     except pd.errors.ParserError:
                         # If parsing with semicolon fails, try reading with comma as the delimiter
-                        temp_userdata_csv = pd.read_csv(temp_file_path, sep=';')
+                        temp_userdata_csv = pd.read_csv(temp_file_path, sep=',')
 
                     ## Cleaning dataframe and making for string
                     temp_userdata_csv.dropna(subset=['SampleID'], inplace=True)
