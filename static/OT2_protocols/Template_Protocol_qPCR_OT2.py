@@ -14,8 +14,6 @@ from math import *
 from io import StringIO
 
 ## User Input
-
-
 csv_userinput = 1# User Input here
 
 csv_userdata = 1# User Data here
@@ -32,15 +30,9 @@ naming = user_input['Naming'][0]
 Sample_Number=user_input['Sample Number'][0]
 Col_Number = int(ceil(Sample_Number/8))
 
-## Inputformat & Outputformat = No here
+## Inputformat & Outputformat Output placements not incorporated
 Input_Format = user_input['Input_Format'][0]
-#Output_Format = user_input['Output_Format'][0]
-
-
-## Reading csv data
-csv_data_temp = StringIO(csv_userdata)
-user_data = pd.read_csv(csv_data_temp)
-
+Output_Format = user_input['Output_Format'][0]
 
 
 #### Meta Data ####
@@ -54,25 +46,35 @@ metadata = {
 def run(protocol: protocol_api.ProtocolContext):
 
     #### LABWARE SETUP ####
-    ## qPCR PCR plate
-    Temp_Module_qPCR = protocol.load_module('temperature module', 6)
-    qPCR_strips = Temp_Module_qPCR.load_labware('bioplastics_96_aluminumblock_100ul') ## qPCR strips - are shorter than the PCR tubes we use.
-
-
     ## Samples and sample format (Dilutions done prior)
     Temp_Module_Sample = protocol.load_module('temperature module', 7)
     if Input_Format == "PCRstrip":
         Sample_Plate = Temp_Module_Sample.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul') ## Generic PCR strip should approximate our types. Low volumes could be problematic.
         Sample_Height = 1.0
 
-    if Input_Format == "Plate":
+    elif Input_Format == "LVLSXS200":
+        Sample_Plate = Temp_Module_Sample.load_labware("LVLXSX200_wellplate_200ul")
+
+    else:
         Sample_Plate = Temp_Module_Sample.load_labware('biorad_96_wellplate_200ul_pcr') ## Biorad plate is the closest to our plate type.
         Sample_Height = 1.0
 
 
 
+    ## Huh? bioplastics_96_aluminumblock_100ul
+
+
+    ## qPCR PCR plate
+    Temp_Module_qPCR = protocol.load_module('temperature module', 6)
+    if Output_Format == "PCRplate":
+        qPCR_strips = Temp_Module_qPCR.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul') ## OBS Generic plate here no qPCR strip is uesd here
+    
+    else: ## Default to qPCR stripsCurrently no qPCR plate is used.
+        qPCR_strips = Temp_Module_qPCR.load_labware('bioplastics_96_aluminumblock_100ul') ## qPCR strips are shorter than the PCR tubes we use. Do we have this?
+
+
     ## Master Mix
-    MasterMix = protocol.load_labware('thermoscientificnunc_96_wellplate_1300ul', 4).wells_by_name()["A1"] ## MasterMix to be prepared in advance and placed in this column.
+    MasterMix = protocol.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul', 4) ## MasterMix to be prepared in advance and placed in this column.
 
 
     ## Tip racks
@@ -84,10 +86,6 @@ def run(protocol: protocol_api.ProtocolContext):
     ## Loading pipettes
     m20 = protocol.load_instrument('p20_multi_gen2', mount = 'right', tip_racks = [tiprack_10_1])
     m200 = protocol.load_instrument('p300_multi_gen2', mount = 'left',tip_racks = [tiprack_200_1])
-
-    m200.starting_tip = tiprack_200_1
-
-
 
 
     ############################### Lab Work Protocol ###############################
@@ -103,12 +101,18 @@ def run(protocol: protocol_api.ProtocolContext):
 
     #### Transfer MasterMix to the PCR plate ####
     protocol.comment("STATUS: Transfer MasterMix to PCR plate.")
-
-
     m200.pick_up_tip()
     for i in range(Col_Number):
         Col = i*8
-        m200.transfer(volume = 23, source = MasterMix.bottom(z = 3.4), dest = qPCR_strips.wells()[Col].bottom(1.3), mix_before = (2,20), rate = 0.6, blow_out = False, blowout_location = 'source well', new_tip = 'never')
+        
+        ## Sets the mastermix column (assuming 200 µL maximum), and transfers the remaning over to next column.
+        if i == 0: 
+            MMpos = "A1"
+        if i == 8: 
+            MMpos = "A2"
+            m200.transfer(volume = 30, source = MasterMix.wells_by_name()["A1"], dest =MasterMix.wells_by_name()[MMpos], rate = 0.8, new_tip = 'never')
+        
+        m200.transfer(volume = 23, source = MasterMix.wells_by_name()[MMpos], dest = qPCR_strips.wells()[Col].bottom(1.3), mix_before = (2,20), rate = 0.6, blow_out = False, blowout_location = 'source well', new_tip = 'never')
         ## Deep well plates we have less deep bottoms.
         ## Remember the qPCR tubes are shorter.
     m200.drop_tip()

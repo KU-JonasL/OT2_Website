@@ -14,8 +14,6 @@ from math import *
 from io import StringIO
 
 ## User Input
-
-
 csv_userinput = 1# User Input here
 
 csv_userdata = 1# User Data here
@@ -32,20 +30,17 @@ naming = user_input['Naming'][0]
 Sample_Number=int(user_input['Sample Number'][0])
 Col_Number = int(ceil(Sample_Number/8))
 
-## Inputformat & Outputformat = No here
-#Input_Format = user_input['Input_Format'][0]
+## Outputformat
 Output_Format = user_input['Output_Format'][0]
 
 
 ## Reading csv data
-#csv_data_temp = StringIO(csv_userdata)
-#user_data = pd.read_csv(csv_data_temp)
+csv_data_temp = StringIO(csv_userdata)
+user_data = pd.read_csv(csv_data_temp)
 
 
 
 #############################
-
-
 
 #### Meta Data ####
 metadata = {
@@ -72,15 +67,15 @@ def run(protocol: protocol_api.ProtocolContext):
         Purified_plate = protocol.load_labware('biorad_96_wellplate_200ul_pcr',10) # Output plate
 
 
-    ## Purification materials
-    Resevoir = protocol.load_labware('deepwellreservoir_12channel_21000ul',1) # Custom labware definition for the 22 mL reservoir
-    Beads = Resevoir['A1']
-    Ethanol1 = Resevoir['A3']
-    Ethanol2 = Resevoir['A4']
-    EBT = Resevoir['A6']
-    Waste1 = Resevoir['A12'] # Beads supernatant waste
-    Waste2 = Resevoir['A11'] # 1st ethanol wash waste
-    Waste3 = Resevoir['A10'] # 2nd ethanol wash waste
+    ## Purification reservoir and its content.
+    Reservoir = protocol.load_labware('deepwellreservoir_12channel_21000ul',1) # Custom labware definition for the 22 mL reservoir
+    Beads = Reservoir['A1']
+    Ethanol1 = Reservoir['A3']
+    Ethanol2 = Reservoir['A4']
+    Ebt = Reservoir['A6']
+    Waste1 = Reservoir['A12'] # Beads supernatant waste
+    Waste2 = Reservoir['A11'] # 1st ethanol wash waste
+    Waste3 = Reservoir['A10'] # 2nd ethanol wash waste
 
 
     ## Tip racks
@@ -127,6 +122,7 @@ def run(protocol: protocol_api.ProtocolContext):
         m200.mix(repetitions = 5, volume = 75, location = Beads)
         m200.aspirate(volume = 75, location = Beads, rate = 0.5)
         protocol.delay(5)
+
         m200.move_to(location = Beads.top(), speed = 10)
         m200.dispense(volume = 75, location = Library_plate.wells()[Column])
         m200.mix(repetitions = 6, volume = 90, location = Library_plate.wells()[Column])
@@ -173,7 +169,7 @@ def run(protocol: protocol_api.ProtocolContext):
             Column = i*8 # Gives the index for the first well in the column
             #m200.pick_up_tip(Ethanol_Tips.wells()[Column])
             m200.mix(repetitions = 2, volume = 200, location = Ethanol.bottom(z = Ethanol_Height[i]))
-            m200.aspirate(volume = 180, location = Ethanol.bottom(z = Ethanol_Height[i]),rate = 0.7) # Changed too 180 µL from 200 µL, as the plates risks flooding otherwise.
+            m200.aspirate(volume = 170, location = Ethanol.bottom(z = Ethanol_Height[i]),rate = 0.7) 
             m200.dispense(volume = 190, location = Library_plate.wells()[Column].top(z = 1.2), rate = 1) # Dispenses ethanol from 1.2 mm above the top of the well.
         m200.blow_out(location = Waste) # Blow out to remove potential droplets before returning.
         m200.return_tip()
@@ -185,7 +181,7 @@ def run(protocol: protocol_api.ProtocolContext):
             m200.aspirate(volume = 200, location = Library_plate.wells()[Column].bottom(z = 0.35), rate = 0.2) #
             m200.move_to(location = Library_plate.wells()[Column].top(z=2), speed =100)
             m200.dispense(volume = 250, location = Waste.top(), rate = 1)
-            m200.air_gap(70, 20) #take in excess, outside droplets to limit cross-contamination.
+            m200.air_gap(70, 20) #Take in excess/outside droplets to limit cross-contamination.
             m200.return_tip()
 
     ## Extra ethanol removal step to remove leftover ethanol before drying beads.
@@ -211,9 +207,10 @@ def run(protocol: protocol_api.ProtocolContext):
     for i in range(Col_Number):
         Column = i*8 #Gives the index for the first well in the column
         m200.pick_up_tip()
-        m200.aspirate(volume = 40, location = EBT, rate = 1)
-        m200.dispense(volume = 40, location = Library_plate.wells()[Column], rate = 1)
-        m200.mix(repetitions = 5, volume = 30, location = Library_plate.wells()[Column])
+        m200.transfer(volume = 40, source = Ebt, dest = Library_plate.wells()[Column], rate = 1, trash = False , new_tip = 'never', mix_after = (5,20))
+        #m200.aspirate(volume = 40, location = Ebt, rate = 1)
+        #m200.dispense(volume = 40, location = Library_plate.wells()[Column], rate = 1)
+        #m200.mix(repetitions = 5, volume = 30, location = Library_plate.wells()[Column])
         m200.dispense(volume = 40, location = Library_plate.wells()[Column], rate = 0.7)
         protocol.delay(5)
         m200.move_to(location = Library_plate.wells()[Column].top(), speed = 100)
@@ -233,8 +230,10 @@ def run(protocol: protocol_api.ProtocolContext):
         Column = i*8 #Gives the index for the first well in the column
         m200.transfer(volume = 50, source = Library_plate.wells()[Column].bottom(z = 0.2), dest = Purified_plate.wells()[Column], new_tip = 'always', trash = False, rate = 1)
 
+
     ## Deactivating magnet module
     magnet_module.disengage()
+
 
     ## Protocol finished
     protocol.set_rail_lights(False)

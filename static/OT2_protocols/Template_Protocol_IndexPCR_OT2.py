@@ -14,8 +14,6 @@ from math import *
 from io import StringIO
 
 ## User Input
-
-
 csv_userinput = 1# User Input here
 
 csv_userdata = 1# User Data here
@@ -35,12 +33,7 @@ Col_Number = int(ceil(Sample_Number/8))
 
 ## Inputformat & Outputformat = No here
 Input_Format = user_input['Input_Format'][0]
-#Output_Format = user_input['Output_Format'][0]
-
-
-## Reading csv data
-csv_data_temp = StringIO(csv_userdata)
-user_data = pd.read_csv(csv_data_temp)
+Output_Format = user_input['Output_Format'][0]
 
 
 
@@ -55,9 +48,21 @@ metadata = {
 def run(protocol: protocol_api.ProtocolContext):
 
     #### LABWARE SETUP ####
+    ## Selecting input format
+    if Input_Format == "PCRstrip":
+        Sample_Plate = protocol.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul',10)
+    elif Input_Format == "LVLSXS200":
+        Sample_Plate = protocol.load_labware('LVLXSX200_wellplate_200ul',10)
+    else:
+        Sample_Plate = protocol.load_labware('biorad_96_wellplate_200ul_pcr',10)
+
+
     ## Index PCR plate
     Temp_Module_PCR = protocol.load_module('temperature module',6)
-    iPCR_Plate = Temp_Module_PCR.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul') ## PCR plate
+    if Output_Format == "PCRstrip":
+        iPCR_Plate = Temp_Module_PCR.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul') ## PCR plate
+    else:
+        iPCR_Plate = Temp_Module_PCR.load_labware('biorad_96_wellplate_200ul_pcr')
 
 
     ## Primer plate (each well contain both forward and reverse primers)
@@ -65,22 +70,13 @@ def run(protocol: protocol_api.ProtocolContext):
     Primer_plate = Temp_Module_Primer.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul')
 
 
-    ## Selecting input format
-    if Input_Format == "PCRstrip":
-        Sample_Plate = protocol.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul',10) # Output plate
-    elif Input_Format == "LVLSXS200":
-        Sample_Plate = protocol.load_labware('LVLXSX200_wellplate_200ul',10) # Output plate
-    else:
-        Sample_Plate = protocol.load_labware('biorad_96_wellplate_200ul_pcr',10) # Output plate
-
-
     ## Master Mix
-    MasterMix = protocol.load_labware('thermoscientificnunc_96_wellplate_1300ul', 4).wells_by_name()["A1"] ## MasterMix to be prepared in advance
+    MasterMix = protocol.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul', 4) ## MasterMix to be prepared in advance
 
 
     ## Tip racks
-    tiprack_10_1 = protocol.load_labware('opentrons_96_filtertiprack_10ul',3) ## Primer transfer
-    tiprack_10_2 = protocol.load_labware('opentrons_96_filtertiprack_10ul',2) ## Sample Transfer
+    tiprack_10_1 = protocol.load_labware('opentrons_96_filtertiprack_10ul',3) ## Sample Transfer
+    tiprack_10_2 = protocol.load_labware('opentrons_96_filtertiprack_10ul',2) ## Primer transfer
     tiprack_200_1 = protocol.load_labware('opentrons_96_filtertiprack_200ul',5) ## MasterMix
 
 
@@ -99,10 +95,9 @@ def run(protocol: protocol_api.ProtocolContext):
     protocol.comment("STATUS: Index PCR setup begun")
     protocol.set_rail_lights(True)
 
-
     ## Activating Tempeature modules
-    #Temp_Module_PCR.set_temperature(celsius = 10)
-    #Temp_Module_Primer.set_temperature(celsius = 10)
+    Temp_Module_PCR.set_temperature(celsius = 10)
+    Temp_Module_Primer.set_temperature(celsius = 10)
 
 
     #### Transfer MasterMix to the PCR plate ####
@@ -111,7 +106,18 @@ def run(protocol: protocol_api.ProtocolContext):
     m200.pick_up_tip()
     for i in range(Col_Number):
         Col = i*8
-        m200.transfer(volume = 38, source = MasterMix.bottom(z = 3.4), dest = iPCR_Plate.wells()[Col].bottom(z = 1.2), mix_before = (2,30), rate = 0.6, blow_out = False, blowout_location = 'source well', new_tip = 'never')
+        
+        ## Sets the mastermix column (assuming 200 µL maximum), and transfers the remaning over to next column.
+        if i == 0: 
+            MMpos = "A1"
+        if i == 5: 
+            MMpos = "A2"
+            m200.transfer(volume = 30, source = MasterMix.wells_by_name()["A1"], dest =MasterMix.wells_by_name()[MMpos], rate = 0.8, new_tip = 'never')
+        if i == 10: 
+            MMpos = "A3"
+            m200.transfer(volume = 30, source = MasterMix.wells_by_name()["A2"], dest =MasterMix.wells_by_name()[MMpos], rate = 0.8, new_tip = 'never')
+        
+        m200.transfer(volume = 38, source = MasterMix.wells_by_name()[MMpos], dest = iPCR_Plate.wells()[Col].bottom(z = 1.2), mix_before = (2,30), rate = 0.6, blow_out = False, blowout_location = 'source well', new_tip = 'never')
         ## Deep well plates we have less deep bottoms.
     m200.drop_tip()
 
