@@ -55,13 +55,12 @@ def get_OT2transfer():
                     temp_userdata_csv = pd.read_csv(temp_file_path)
                     temp_userdata_csv.dropna(subset=['Sample ID'], inplace=True)
                     
-                    if len(temp_userdata_csv['Sample ID']) == int(samplenumber):
-                        csv_data_values = "\n".join([f"{', '.join(map(str, row))}" for row in temp_userdata_csv.values])
-                        csv_data_raw_str = f"{', '.join(temp_userdata_csv.columns)}\n{csv_data_values}"
-                        userdata = csv_data_raw_str.replace("nan", "")
+                    #if len(temp_userdata_csv['Sample ID']) == int(samplenumber):
+                    csv_data_values = "\n".join([f"{', '.join(map(str, row))}" for row in temp_userdata_csv.values])
+                    csv_data_raw_str = f"{', '.join(temp_userdata_csv.columns)}\n{csv_data_values}"
+                    userdata = csv_data_raw_str.replace("nan", "")
 
-                    else:
-                        return render_template("/csv-not-found.html")
+                    #else: return render_template("/csv-not-found.html")
                     ## Delete the temporary file
                     os.unlink(temp_file_path)
                 
