@@ -53,7 +53,7 @@ def get_OT2transfer():
                     
                     ## Load and cleanup for the userdata
                     temp_userdata_csv = pd.read_csv(temp_file_path)
-                    temp_userdata_csv.dropna(subset=['Sample'], inplace=True)
+                    temp_userdata_csv.dropna(subset=['Sample ID'], inplace=True)
                     csv_data_values = "\n".join([f"{', '.join(map(str, row))}" for row in temp_userdata_csv.values])
                     csv_data_raw_str = f"{', '.join(temp_userdata_csv.columns)}\n{csv_data_values}"
                     userdata = csv_data_raw_str.replace("nan", "")
@@ -157,7 +157,7 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
             ## Add SOP for extraction to zipfolder
             # file_path = os.path.join(app.root_path,'static','SOPs', 'SOP_Template_V1.0.0.docx')
             # static_sop_content = open(file_path, 'r').read()
-            # zipf.writestr('SOP_pdf.pdf', static_sop_content)
+            # zipf.writestr('SOP_{naming}_Extraction.pdf', static_sop_content)
 
 
         
@@ -182,17 +182,12 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
             modified_content3 = template_content3.replace("1# User Input here", f"'''{csv_input_raw_str}'''")
             modified_content3 = modified_content3.replace("1# User Data here", f"'''{userdata}'''")
 
-            # Write the modified content to temporary Python script files
+            ## Write the modified content to Python script files within zipfolder
             zipf.writestr(f'{naming}_fragmentation.py', modified_content1.encode())
             zipf.writestr(f'{naming}_library-building.py', modified_content2.encode())
             zipf.writestr(f'{naming}_library-purification.py', modified_content3.encode())
 
-            
-            ## Add 5mL eppendorf in OT2 15 rack to zipfolder
-            file_path = os.path.join(app.root_path,'static','custom_labware', 'opentronsrack_15_tuberack_5000ul.json')
-            static_pdf_content = open(file_path, 'r').read()
-            zipf.writestr('opentronsrack_15_tuberack_5000ul.json', static_pdf_content)
-
+            #### Custom labware
             ## Add Covaris plate to zipfolder
             file_path = os.path.join(app.root_path,'static','custom_labware', 'Covaris_96afatubet_wellplate_200ul.json')
             static_pdf_content = open(file_path, 'r').read()
@@ -202,6 +197,22 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
             file_path = os.path.join(app.root_path,'static','custom_labware', 'deepwellreservoir_12channel_21000ul.json')
             static_pdf_content = open(file_path, 'r').read()
             zipf.writestr('deepwellreservoir_12channel_21000ul.json', static_pdf_content)
+
+
+            ## Add SOP for Covaris fragmentation to zipfolder
+            # file_path = os.path.join(app.root_path,'static','SOPs', 'SOP_Template_V1.0.0.docx')
+            # static_sop_content = open(file_path, 'r').read()
+            # zipf.writestr('SOP_{naming}_fragmentation.pdf', static_sop_content)
+            ## Add SOP for Library Building to zipfolder
+            # file_path = os.path.join(app.root_path,'static','SOPs', 'SOP_Template_V1.0.0.docx')
+            # static_sop_content = open(file_path, 'r').read()
+            # zipf.writestr('SOP_{naming}_library-building.pdf', static_sop_content)
+            ## Add SOP for Library purification to zipfolder
+            # file_path = os.path.join(app.root_path,'static','SOPs', 'SOP_Template_V1.0.0.docx')
+            # static_sop_content = open(file_path, 'r').read()
+            # zipf.writestr('SOP_{naming}_library-purification.pdf', static_sop_content)
+
+
 
                 
 
@@ -215,6 +226,12 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
             
             # Write the modified content to temporary Python script files
             zipf.writestr(f'{naming}_qPCR.py', modified_content.encode())
+
+            ## Add SOP for qPCR to zipfolder
+            # file_path = os.path.join(app.root_path,'static','SOPs', 'SOP_Template_V1.0.0.docx')
+            # static_sop_content = open(file_path, 'r').read()
+            # zipf.writestr('SOP_{naming}_qPCR.pdf', static_sop_content)
+
 
 
         #### Index PCR ####
@@ -235,6 +252,22 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
             # Write the modified content to temporary Python script files
             zipf.writestr(f'{naming}_IndexPCR.py', modified_content1.encode())
             zipf.writestr(f'{naming}_Index-Purification.py', modified_content2.encode())
+
+            ## Add 21mL Deep well plate to zipfolder
+            file_path = os.path.join(app.root_path,'static','custom_labware', 'deepwellreservoir_12channel_21000ul.json')
+            static_pdf_content = open(file_path, 'r').read()
+            zipf.writestr('deepwellreservoir_12channel_21000ul.json', static_pdf_content)
+
+
+            ## Add SOP for IndexPCR to zipfolder
+            # file_path = os.path.join(app.root_path,'static','SOPs', 'SOP_Template_V1.0.0.docx')
+            # static_sop_content = open(file_path, 'r').read()
+            # zipf.writestr('SOP_{naming}_IndexPCR.pdf', static_sop_content)
+            ## Add SOP for Index purification to zipfolder
+            # file_path = os.path.join(app.root_path,'static','SOPs', 'SOP_Template_V1.0.0.docx')
+            # static_sop_content = open(file_path, 'r').read()
+            # zipf.writestr('SOP_{naming}_Index-Purification.pdf', static_sop_content)
+
 
 
         ## If there is no expected protocol selection
