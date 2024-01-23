@@ -29,14 +29,6 @@ user_input = pd.read_csv(csv_input_temp)
 ## Extracting naming
 naming = user_input['Naming'][0]
 
-## Sample number = No here, csv data take priority
-#Sample_Number= int(user_input['Sample Number'][0])
-#Col_Number = int(ceil(Sample_Number/8))
-
-## Inputformat & Outputformat = No here
-#Input_Format = user_input['Input_Format'][0]
-#Output_Format = user_input['Output_Format'][0]
-
 
 ## Reading csv data
 csv_data_temp = StringIO(csv_userdata)
@@ -143,9 +135,9 @@ def run(protocol: protocol_api.ProtocolContext):
     for i in range(len(user_data)):
         p10.pick_up_tip()
 
-        if user_data['Adaptor concentration (nM)'][i] == 10: ## 10 mM adaptor transfer
+        if user_data['Adaptor'][i] == 10: ## 10 mM adaptor transfer
             p10.transfer(volume = 1.5, source = Adaptors_10mM, dest = Sample_plate.wells()[user_data[i][0]], mix_before = (2,4), mix_after = (1,10), new_tip = 'never')
-        if user_data['Adaptor concentration (nM)'][i] == 20: ## 20 mM adaptor transfer
+        if user_data['Adaptor'][i] == 20: ## 20 mM adaptor transfer
             p10.transfer(volume = 1.5, source = Adaptors_20mM, dest = Sample_plate.wells()[user_data[i][0]], mix_before = (2,4), mix_after = (1,10), new_tip = 'never')
 
         p10.return_tip()

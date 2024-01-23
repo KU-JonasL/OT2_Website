@@ -105,8 +105,8 @@ def run(protocol: protocol_api.ProtocolContext):
 
         ## Find Sample volume and water volume for transfer.
         WellPosition = user_data['Well Position']
-        Sample_Input = user_data['DNA volume (ul) for Covaris'][i]
-        H2O_Input = ['Water volume (ul) for Covaris'][i]
+        Sample_Input = user_data['DNA ul'][i]
+        H2O_Input = ['Water ul'][i]
 
 
 
