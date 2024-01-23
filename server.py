@@ -52,7 +52,14 @@ def get_OT2transfer():
                     uploaded_file.save(temp_file_path)
                     
                     ## Load and cleanup for the userdata
-                    temp_userdata_csv = pd.read_csv(temp_file_path)
+                    try:
+                        # Try reading with semicolon as the delimiter
+                        temp_userdata_csv = pd.read_csv(temp_file_path, sep=',')
+                    except pd.errors.ParserError:
+                        # If parsing with semicolon fails, try reading with comma as the delimiter
+                        temp_userdata_csv = pd.read_csv(temp_file_path, sep=';')
+
+                    ## Cleaning dataframe and making for string
                     temp_userdata_csv.dropna(subset=['SampleID'], inplace=True)
                     csv_data_values = "\n".join([f"{', '.join(map(str, row))}" for row in temp_userdata_csv.values])
                     csv_data_raw_str = f"{', '.join(temp_userdata_csv.columns)}\n{csv_data_values}"
