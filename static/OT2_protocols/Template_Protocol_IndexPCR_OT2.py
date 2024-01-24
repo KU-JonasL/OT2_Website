@@ -85,9 +85,6 @@ def run(protocol: protocol_api.ProtocolContext):
     m20 = protocol.load_instrument('p20_multi_gen2', mount = 'right', tip_racks = [tiprack_10_1,tiprack_10_2])
     m200 = protocol.load_instrument('p300_multi_gen2', mount = 'left',tip_racks = [tiprack_200_1])
 
-    m200.starting_tip = tiprack_200_1
-
-
 
 
     ############################### Lab Work Protocol ###############################

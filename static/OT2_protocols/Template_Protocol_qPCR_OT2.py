@@ -59,19 +59,14 @@ def run(protocol: protocol_api.ProtocolContext):
         Sample_Plate = Temp_Module_Sample.load_labware('biorad_96_wellplate_200ul_pcr') ## Biorad plate is the closest to our plate type.
         Sample_Height = 1.0
 
-
-
-    ## Huh? bioplastics_96_aluminumblock_100ul
-
-
     ## qPCR PCR plate
     Temp_Module_qPCR = protocol.load_module('temperature module', 6)
     if Output_Format == "PCRplate":
         qPCR_strips = Temp_Module_qPCR.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul') ## OBS Generic plate here no qPCR strip is uesd here
     
     else: ## Default to qPCR stripsCurrently no qPCR plate is used.
-        qPCR_strips = Temp_Module_qPCR.load_labware('bioplastics_96_aluminumblock_100ul') ## qPCR strips are shorter than the PCR tubes we use. Do we have this?
-
+        qPCR_strips = Temp_Module_qPCR.load_labware('bioplastics_96_aluminumblock_100ul.json') ## qPCR strips are shorter than the PCR tubes we use. Do we have this?
+        
 
     ## Master Mix
     MasterMix = protocol.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul', 4) ## MasterMix to be prepared in advance and placed in this column.

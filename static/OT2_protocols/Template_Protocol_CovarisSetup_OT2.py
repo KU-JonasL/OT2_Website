@@ -58,7 +58,7 @@ def run(protocol: protocol_api.ProtocolContext):
 
     
     ## Covaris Plate - custom labware
-    Covaris_plate = protocol.load_labware('Covaris_96afatubet_wellplate_200ul', 3) 
+    Covaris_plate = protocol.load_labware('Covaris_96afatubet_wellplate_200ul.json', 3) 
     
 
     ## Water position - if needed you can pause and exchange water as needed.

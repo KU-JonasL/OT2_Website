@@ -45,6 +45,8 @@ def get_OT2transfer():
                 
                 ## Set uploaded file and secure name
                 uploaded_file = request.files['myFile']  # Access the file using the key
+                if uploaded_file.content_type != 'text/csv':
+                    return render_template("/csv-not-found.html")
                 uploaded_file.filename = secure_filename(uploaded_file.filename)
                 
                 ## Create a temporary file
@@ -68,7 +70,8 @@ def get_OT2transfer():
 
                     
                     ## Delete the temporary file
-                    os.unlink(temp_file_path)
+                    # os.unlink(temp_file_path)
+                    os.remove(temp_file_path)
                 
                 ## Create URL for zipfolder
                 zip_scripts_url = url_for('get_opentrons_script', protocol=protocol, user=user, samplenumber=samplenumber, inputformat=inputformat, outputformat=outputformat, userdata=userdata, naming = naming,_external=True, _scheme='https')
@@ -235,6 +238,12 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
             
             # Write the modified content to temporary Python script files
             zipf.writestr(f'{naming}_qPCR.py', modified_content.encode())
+
+            
+            ## Add qPCR strips to zipfolder
+            file_path = os.path.join(app.root_path,'static','custom_labware', 'bioplastics_96_aluminumblock_100ul.json')
+            static_pdf_content = open(file_path, 'r').read()
+            zipf.writestr('bioplastics_96_aluminumblock_100ul.json', static_pdf_content)
 
             ## Add SOP for qPCR to zipfolder
             # file_path = os.path.join(app.root_path,'static','SOPs', 'SOP_Template_V1.0.0.docx')

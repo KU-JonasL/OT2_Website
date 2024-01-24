@@ -55,7 +55,7 @@ metadata = {
 def run(protocol: protocol_api.ProtocolContext):
     #### LABWARE SETUP ####
     ## Placement of smart and dumb labware
-    magnet_module = protocol.load_module('magnetic_module',9)
+    magnet_module = protocol.load_module('magnetic module',9)
 
     ## Work plates
     if Input_Format == "PCRstrip":
@@ -90,7 +90,7 @@ def run(protocol: protocol_api.ProtocolContext):
     tiprack_200_4 = protocol.load_labware('opentrons_96_filtertiprack_200ul',3)
     tiprack_200_5 = protocol.load_labware('opentrons_96_filtertiprack_200ul',8)
     tiprack_200_6 = protocol.load_labware('opentrons_96_filtertiprack_200ul',9)
-    tiprack_200_7 = protocol.load_labware('opentrons_96_filtertiprack_10ul',6)
+    tiprack_200_7 = protocol.load_labware('opentrons_96_filtertiprack_2000ul',6)
 
     #### PIPETTE SETUP ####
     ## Loading pipettes
