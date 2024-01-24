@@ -27,11 +27,11 @@ user_input = pd.read_csv(csv_input_temp)
 naming = user_input['Naming'][0]
 
 ## Sample number = No here, csv data take priority
-Sample_Number=int(user_input['Sample Number'][0])
+Sample_Number=int(user_input['SampleNumber'][0])
 Col_Number = int(ceil(Sample_Number/8))
 
 ## Outputformat
-Output_Format = user_input['Output_Format'][0]
+Output_Format = user_input['OutputFormat'][0]
 
 
 ## Reading csv data

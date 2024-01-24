@@ -26,7 +26,7 @@ user_input = pd.read_csv(csv_input_temp)
 naming = user_input['Naming'][0]
 
 ## Inputformat
-Input_Format = user_input['Input_Format'][0]
+Input_Format = user_input['InputFormat'][0]
 
 ## Reading csv data
 csv_data_temp = StringIO(csv_userdata)

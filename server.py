@@ -64,7 +64,7 @@ def get_OT2transfer():
                     temp_userdata_csv.dropna(subset=['SampleID'], inplace=True)
                     csv_data_values = "\n".join([f"{', '.join(map(str, row))}" for row in temp_userdata_csv.values])
                     csv_data_raw_str = f"{', '.join(temp_userdata_csv.columns)}\n{csv_data_values}"
-                    userdata = csv_data_raw_str.replace("nan", "")
+                    userdata = csv_data_raw_str.replace("nan", "").replace(", ",",")
 
                     
                     ## Delete the temporary file
@@ -120,7 +120,7 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
     ## Prepare the inputs types for transfer
     csv_input_values = "\n".join([f"{', '.join(map(str, row))}" for row in csv_user_input.values])
     csv_input_raw_str = f"{', '.join(csv_user_input.columns)}\n{csv_input_values}"
-    csv_input_raw_str = csv_input_raw_str.replace("nan", "")
+    csv_input_raw_str = csv_input_raw_str.replace("nan", "").replace(", ",",")
 
 
     ## Naming generation for zipfile and zipfolde
