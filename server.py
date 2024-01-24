@@ -34,8 +34,6 @@ def get_OT2transfer():
         today = datetime.today().strftime('%Y%m%d')
         naming = user+"_"+protocol+"_"+today 
 
-        ## User Data redirect into a dataframe 
-        userinput = pd.DataFrame({'Protocol':[protocol],'User':[user],'SampleNumber':[samplenumber],'InputFormat':[inputformat],'OutputFormat':[outputformat],'Naming':[naming]})
 
         ## Looking for csv file contents.
         try:
@@ -87,12 +85,12 @@ def get_OT2transfer():
             ## Render the OT2transfer html page 
             return render_template(
                 "/OT2transfer.html",
-                protocol = userinput['Protocol'],
-                user = userinput['User'],
-                samplenumber = userinput['SampleNumber'],
-                inputformat = userinput['InputFormat'],
-                outputformat = userinput['OutputFormat'],
-                userdata = userdata,
+                protocol=protocol,
+                user=user, 
+                samplenumber=samplenumber, 
+                inputformat=inputformat, 
+                outputformat=outputformat, 
+                userdata=userdata,
                 naming = naming,
                 get_opentrons_script = zip_scripts_url,
                 )
@@ -113,10 +111,11 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
     'User':[user],
     'SampleNumber':[samplenumber],
     'InputFormat':[inputformat],
-    'OutputFormat':[outputformat]})
+    'OutputFormat':[outputformat],
+    'Naming':[naming]})
 
     ## Prepare the inputs types for transfer
-    csv_input_values = "\n".join([f"({', '.join(map(str, row))})" for row in csv_user_input.values])
+    csv_input_values = "\n".join([f"{', '.join(map(str, row))}" for row in csv_user_input.values])
     csv_input_raw_str = f"{', '.join(csv_user_input.columns)}\n{csv_input_values}"
     csv_input_raw_str = csv_input_raw_str.replace("nan", "")
 
