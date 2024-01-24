@@ -71,7 +71,7 @@ def get_OT2transfer():
                     os.unlink(temp_file_path)
                 
                 ## Create URL for zipfolder
-                zip_scripts_url = url_for('get_opentrons_script', protocol=protocol, user=user, samplenumber=samplenumber, inputformat=inputformat, outputformat=outputformat, userdata=userdata, _external=True, _scheme='https')
+                zip_scripts_url = url_for('get_opentrons_script', protocol=protocol, user=user, samplenumber=samplenumber, inputformat=inputformat, outputformat=outputformat, userdata=userdata, naming = naming,_external=True, _scheme='https')
 
 
             ## If there is no csv data file, but the protocol is not for library building
@@ -106,8 +106,8 @@ def get_OT2transfer():
 
 
 #/<path:user>/<path:protocol>/<path:samples>/<path:inputformat>/<path:outputformat>/<path:userdata>
-@app.route("/get_OT2_scripts/<user>/<protocol>/<samplenumber>/<inputformat>/<outputformat>/<userdata>", methods = ["GET","POST"])
-def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat, userdata):
+@app.route("/get_OT2_scripts/<user>/<protocol>/<samplenumber>/<inputformat>/<outputformat>/<userdata>/<naming>", methods = ["GET","POST"])
+def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat,naming, userdata):
 
     ## Creating a data frame of User Inputs
     csv_user_input =pd.DataFrame({'Protocol':[protocol],
