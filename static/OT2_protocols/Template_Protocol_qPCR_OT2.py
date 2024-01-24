@@ -65,7 +65,7 @@ def run(protocol: protocol_api.ProtocolContext):
         qPCR_strips = Temp_Module_qPCR.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul') ## OBS Generic plate here no qPCR strip is uesd here
     
     else: ## Default to qPCR stripsCurrently no qPCR plate is used.
-        qPCR_strips = Temp_Module_qPCR.load_labware('bioplastics_96_aluminumblock_100ul.json') ## qPCR strips are shorter than the PCR tubes we use. Do we have this?
+        qPCR_strips = Temp_Module_qPCR.load_labware('bioplastics_96_aluminumblock_100ul') ## qPCR strips are shorter than the PCR tubes we use. Do we have this?
         
 
     ## Master Mix

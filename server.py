@@ -201,9 +201,9 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
 
             #### Custom labware
             ## Add Covaris plate to zipfolder
-            file_path = os.path.join(app.root_path,'static','custom_labware', 'Covaris_96afatubet_wellplate_200ul.json')
+            file_path = os.path.join(app.root_path,'static','custom_labware', '96afatubetpxplate_96_wellplate_200ul.json')
             static_pdf_content = open(file_path, 'r').read()
-            zipf.writestr('Covaris_96afatubet_wellplate_200ul.json', static_pdf_content)
+            zipf.writestr('96afatubetpxplate_96_wellplate_200ul.json', static_pdf_content)
 
             ## Add 21mL Deep well plate to zipfolder
             file_path = os.path.join(app.root_path,'static','custom_labware', 'deepwellreservoir_12channel_21000ul.json')
