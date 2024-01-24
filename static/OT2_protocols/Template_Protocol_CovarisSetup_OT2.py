@@ -41,7 +41,7 @@ metadata = {
     'protocolName': 'Protocol Automated Covaris Setup',
     'apiLevel': '2.13',
     'author': 'Jonas Lauritsen <jonas.lauritsen@sund.ku.dk>',
-    'description': f"{naming}'sCovaris automated plate prepper with user CSV input. Protocol generated at https://alberdilab-opentronsscripts.onrender.com"}
+    'description': "Covaris automated plate prepper with user CSV input. Protocol generated at https://alberdilab-opentronsscripts.onrender.com"}
 
 
 #### Protocol Script ####

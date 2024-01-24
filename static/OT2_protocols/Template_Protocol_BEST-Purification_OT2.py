@@ -47,7 +47,7 @@ metadata = {
     'protocolName': 'Protocol BEST Library Purification',
     'apiLevel': '2.13',
     'author': 'Jonas Lauritsen <jonas.lauritsen@sund.ku.dk>',
-    'description': "{naming} Automated purification of a BEST library build. Protocol generated at https://alberdilab-opentronsscripts.onrender.com"}
+    'description': "Automated purification of a BEST library build. Protocol generated at https://alberdilab-opentronsscripts.onrender.com"}
 
 #### Protocol Script ####
 def run(protocol: protocol_api.ProtocolContext):

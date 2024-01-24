@@ -41,7 +41,7 @@ metadata = {
     'protocolName': 'Protocol: BEST Library Build',
     'apiLevel': '2.13',
     'author': 'Jonas Greve Lauritsen <jonas.lauritsen@sund.ku.dk>',
-    'description': f"{naming}'s Automated (BEST) library build of DNA samples (csv-adjusting version). Protocol generated at https://alberdilab-opentronsscripts.onrender.com"}
+    'description': "Automated (BEST) library build of DNA samples (csv-adjusting version). Protocol generated at https://alberdilab-opentronsscripts.onrender.com"}
 
 
 #### Protocol script ####
