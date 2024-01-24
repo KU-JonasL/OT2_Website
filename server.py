@@ -34,6 +34,9 @@ def get_OT2transfer():
         today = datetime.today().strftime('%Y%m%d')
         naming = user+"_"+protocol+"_"+today 
 
+        ## User Data redirect into a dataframe 
+        userinput = pd.DataFrame({'Protocol':[protocol],'User':[user],'SampleNumber':[samplenumber],'InputFormat':[inputformat],'OutputFormat':[outputformat],'Naming':[naming]})
+
 
         ## Looking for csv file contents.
         try:
@@ -85,12 +88,12 @@ def get_OT2transfer():
             ## Render the OT2transfer html page 
             return render_template(
                 "/OT2transfer.html",
-                protocol=protocol,
-                user=user, 
-                samplenumber=samplenumber, 
-                inputformat=inputformat, 
-                outputformat=outputformat, 
-                userdata=userdata,
+                protocol = userinput['Protocol'],
+                user = userinput['User'],
+                samplenumber = userinput['SampleNumber'],
+                inputformat = userinput['InputFormat'],
+                outputformat = userinput['OutputFormat'],
+                userdata = userdata,
                 naming = naming,
                 get_opentrons_script = zip_scripts_url,
                 )
