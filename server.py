@@ -69,8 +69,7 @@ def get_OT2transfer():
                     userdata = csv_data_raw_str.replace("nan", "").replace(", ",",")
 
                     
-                    ## Delete the temporary file
-                    # os.unlink(temp_file_path)
+                    ## Delete the temporary file path
                     os.remove(temp_file_path)
                 
                 ## Create URL for zipfolder
@@ -80,7 +79,7 @@ def get_OT2transfer():
             ## If there is no csv data file, but the protocol is not for library building
             elif bool(request.files['myFile']) == False and protocol != "Library":
                 userdata = "1"
-                zip_scripts_url = url_for('get_opentrons_script', protocol=protocol, user=user, samplenumber=samplenumber, inputformat=inputformat, outputformat=outputformat, userdata=userdata, _external=True, _scheme='https')
+                zip_scripts_url = url_for('get_opentrons_script', protocol=protocol, user=user, samplenumber=samplenumber, inputformat=inputformat, outputformat=outputformat, userdata=userdata, naming = naming,_external=True, _scheme='https')
 
 
             ## If there is no csv data file, and the protocol type is library - There need to be a user csv file for library building protocols            
