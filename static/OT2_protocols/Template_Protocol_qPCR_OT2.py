@@ -38,7 +38,8 @@ Output_Format = user_input['OutputFormat'][0]
 #### Meta Data ####
 metadata = {
     'protocolName': 'Protocol qPCR Setup',
-    'apiLevel': '2.13',
+    'apiLevel': '2.16',
+    'robotType': 'OT-2',    
     'author': 'Jonas Lauritsen <jonas.lauritsen@sund.ku.dk>',
     'description': "Automated transfer for Master Mix + DNA Libraries for qPCR. Protocol generated at https://alberdilab-opentronsscripts.onrender.com"}
 

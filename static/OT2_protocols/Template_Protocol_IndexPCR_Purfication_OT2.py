@@ -47,7 +47,8 @@ Output_Format = user_input['OutputFormat'][0]
 #### Meta Data ####
 metadata = {
     'protocolName': 'Purification of Index PCR product Build',
-    'apiLevel': '2.12',
+    'apiLevel': '2.16',
+    'robotType': 'OT-2',    
     'author': 'Jonas Lauritsen <jonas.lauritsen@sund.ku.dk>',
     'description': "Automated purification of Index PCR product builds. Protocol generated at https://alberdilab-opentronsscripts.onrender.com"}
 

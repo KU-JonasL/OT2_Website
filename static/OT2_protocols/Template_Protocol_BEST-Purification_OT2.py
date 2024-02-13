@@ -45,7 +45,8 @@ user_data = pd.read_csv(csv_data_temp)
 #### Meta Data ####
 metadata = {
     'protocolName': 'Protocol BEST Library Purification',
-    'apiLevel': '2.13',
+    'apiLevel': '2.16',
+    'robotType': 'OT-2',    
     'author': 'Jonas Lauritsen <jonas.lauritsen@sund.ku.dk>',
     'description': "Automated purification of a BEST library build. Protocol generated at https://alberdilab-opentronsscripts.onrender.com"}
 

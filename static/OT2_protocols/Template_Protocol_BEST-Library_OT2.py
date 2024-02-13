@@ -39,7 +39,8 @@ user_data = pd.read_csv(csv_data_temp)
 #### METADATA ####
 metadata = {
     'protocolName': 'Protocol BEST Library Build',
-    'apiLevel': '2.13',
+    'apiLevel': '2.16',
+    'robotType': 'OT-2',    
     'author': 'Jonas Greve Lauritsen <jonas.lauritsen@sund.ku.dk>',
     'description': "Automated (BEST) library build of DNA samples (csv-adjusting version). Protocol generated at https://alberdilab-opentronsscripts.onrender.com"}
 

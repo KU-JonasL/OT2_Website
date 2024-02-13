@@ -42,9 +42,10 @@ Output_Format = user_input['OutputFormat'][0]
 #### Meta Data ####
 metadata = {
     'protocolName': 'Protocol Nucleic Acid Extraction',
-    'apiLevel': '2.13',
+    'apiLevel': '2.16',
+    'robotType': 'OT-2',    
     'author': 'Jonas Lauritsen <jonas.lauritsen@sund.ku.dk>',
-    'description': "f{naming}'s Automated extraction of nucleic acids from samples.Protocol generated at https://alberdilab-opentronsscripts.onrender.com"}
+    'description': "TREX Automated extraction of nucleic acids from samples.Protocol generated at https://alberdilab-opentronsscripts.onrender.com"}
 
 #### Protocol Script ####
 def run(protocol: protocol_api.ProtocolContext):
@@ -138,7 +139,7 @@ def run(protocol: protocol_api.ProtocolContext):
         m200.return_tip()
 
     ## Incuabtion of the extraction plate
-    protocol.pause('ACTION: Seal the Extraction plate. Spin it down. Incubate the plate: 15 mins, 10 C, 1500 rpm. Spin it down. Press RESUME, when the etraction plate has been returned (without seal) to the magnet module.')
+    protocol.pause('ACTION: Seal the Extraction plate. Spin it down. Incubate the plate: 15 mins, 10 C, 1500 rpm. Spin it down. Press RESUME, when the extraction plate has been returned (without seal) to the magnet module.')
 
 
 

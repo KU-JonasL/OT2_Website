@@ -40,7 +40,8 @@ Output_Format = user_input['OutputFormat'][0]
 #### Meta Data ####
 metadata = {
     'protocolName': 'Protocol Index PCR Setup',
-    'apiLevel': '2.13',
+    'apiLevel': '2.16',
+    'robotType': 'OT-2',    
     'author': 'Jonas Lauritsen <jonas.lauritsen@sund.ku.dk>',
     'description': "Transfer for Index PCR: Master Mix, Primers Mix, and Sample-library material. Protocol generated at https://alberdilab-opentronsscripts.onrender.com"}
 

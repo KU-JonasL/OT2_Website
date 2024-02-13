@@ -39,7 +39,8 @@ user_data = pd.read_csv(csv_data_temp)
 #### Meta Data ####
 metadata = {
     'protocolName': 'Protocol Automated Covaris Setup',
-    'apiLevel': '2.13',
+    'apiLevel': '2.16',
+    'robotType': 'OT-2',    
     'author': 'Jonas Lauritsen <jonas.lauritsen@sund.ku.dk>',
     'description': "Covaris automated plate prepper with user CSV input. Protocol generated at https://alberdilab-opentronsscripts.onrender.com"}
 
@@ -58,7 +59,7 @@ def run(protocol: protocol_api.ProtocolContext):
 
     
     ## Covaris Plate - custom labware
-    Covaris_plate = protocol.load_labware('96afatubetpxplate_96_wellplate_200ul.json', 3) 
+    Covaris_plate = protocol.load_labware('96afatubetpxplate_96_wellplate_200ul', 3) 
     
 
     ## Water position - if needed you can pause and exchange water as needed.
@@ -93,10 +94,10 @@ def run(protocol: protocol_api.ProtocolContext):
     ## Loop for transfering samples and H2O. The samples are "cherrypicked" samples from the the user input.
     for i in range(len(user_data)):
 
-
-        if Counter < 71:
+        ## If more than 72 samples are present, a second is needed
+        if Counter < 72:
             H2O = H2O_1
-        if Counter >= 71:
+        if Counter >= 72:
             H2O = H2O_2
 
         ## Counting the progress
@@ -115,7 +116,7 @@ def run(protocol: protocol_api.ProtocolContext):
 
             ## Adding water first if water input volume is greater than 0.
             if H2O_Input > 0: # If command is here to prohibit picking up tips and disposing them without a transfer.
-                p20.transfer(volume = H2O_Input, source = H2O, dest = Covaris_plate.wells_by_name()[WellPosition], new_tip = 'always', trash = True) #Transfer pick up new tip
+                p20.transfer(volume = H2O_Input, source = H2O.bottom(z = 2.0), dest = Covaris_plate.wells_by_name()[WellPosition], new_tip = 'always', trash = True) #Transfer pick up new tip
 
             ## Adding sample (to the water).
             p50.transfer(volume = Sample_Input, source = Input_plate.wells_by_name()[WellPosition], dest = Covaris_plate.wells_by_name()[WellPosition], new_tip = 'Always', Trash = True, mix_after=(3,15), rate = 0.8)
@@ -126,7 +127,7 @@ def run(protocol: protocol_api.ProtocolContext):
 
             ## Aspirating H2O then sample, and dispense them together into the covaris plate. Both volume are aspirated together to save time.
             p50.pick_up_tip()
-            p50.aspirate(volume = H2O_Input, location = H2O) # First pickup
+            p50.aspirate(volume = H2O_Input, location = H2O.bottom(z = 2.0)) # First pickup
             p50.touch_tip(location = H2O) # Touching the side of the well to remove excess water.
             p50.aspirate(volume = Sample_Input, location = Input_plate.wells_by_name()[WellPosition]) # Second pickup
             p50.dispense(volume = 30, location = Covaris_plate.wells_by_name()[WellPosition]) # 30 µL dispense to empty completely
@@ -142,7 +143,7 @@ def run(protocol: protocol_api.ProtocolContext):
             p20.transfer(volume = Sample_Input, source = Input_plate.wells_by_name()[WellPosition], dest = Covaris_plate.wells_by_name()[WellPosition], new_tip = 'always', trash = True) #µL
 
             ## Dispensing H2O into the Covaris plate.
-            p50.transfer(volume = H2O_Input, source = H2O, dest = Covaris_plate.wells_by_name()[WellPosition], new_tip = 'Always', trash = True, mix_after = (3,15), rate = 0.8) #µL
+            p50.transfer(volume = H2O_Input, source = H2O.bottom(z = 2.0), dest = Covaris_plate.wells_by_name()[WellPosition], new_tip = 'Always', trash = True, mix_after = (3,15), rate = 0.8) #µL
 
 
     protocol.set_rail_lights(False)
