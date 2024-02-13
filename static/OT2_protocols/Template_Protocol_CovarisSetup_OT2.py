@@ -130,7 +130,7 @@ def run(protocol: protocol_api.ProtocolContext):
             p50.aspirate(volume = H2O_Input, location = H2O.bottom(z = 2.0)) # First pickup
             p50.touch_tip(location = H2O) # Touching the side of the well to remove excess water.
             p50.aspirate(volume = Sample_Input, location = Input_plate.wells_by_name()[WellPosition]) # Second pickup
-            p50.dispense(volume = 30, location = Covaris_plate.wells_by_name()[WellPosition]) # 30 µL dispense to empty completely
+            p50.dispense(volume = Sample_Input, location = Covaris_plate.wells_by_name()[WellPosition]) # 30 µL dispense to empty completely
             p50.mix(repetitions = 3, volume = 15, location = Covaris_plate.wells_by_name()[WellPosition], rate = 0.8)
 
             ## Transferring diluted samples to covaris plate

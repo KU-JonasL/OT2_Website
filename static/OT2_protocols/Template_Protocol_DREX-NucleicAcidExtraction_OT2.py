@@ -131,7 +131,7 @@ def run(protocol: protocol_api.ProtocolContext):
         m200.move_to(location = Beads.top(), speed = 40)
 
         ## Beads Addition
-        m200.dispense(volume = 220, location = Extraction_plate.wells()[Column].bottom(z = 4.0), rate = 0.8)
+        m200.dispense(volume = 200, location = Extraction_plate.wells()[Column].bottom(z = 4.0), rate = 0.8)
         m200.mix(repetitions = 5, volume = 180, location = Extraction_plate.wells()[Column].bottom(z = 6.0), rate = 1.2)
         protocol.delay(5)
         m200.move_to(location = Extraction_plate.wells()[Column].top(), speed = 50)
@@ -156,7 +156,7 @@ def run(protocol: protocol_api.ProtocolContext):
 
         ## Remove bead-supernatant 1
         m200.aspirate(volume = 200, location = Extraction_plate.wells()[Column].bottom(z = 3.4), rate = 0.7)
-        m200.dispense(volume = 250, location = Waste1.top(z = 1), rate = 0.5) ## Extra dispense to blow out
+        m200.dispense(volume = 200, location = Waste1.top(z = 1), rate = 0.5) ## Extra dispense to blow out
         protocol.delay(seconds = 10) ## Droplets falling
         m200.move_to(location = Waste1.top().move(types.Point(x = 0, y = -5, z = 2))) ## flicker motion??
 
@@ -192,7 +192,7 @@ def run(protocol: protocol_api.ProtocolContext):
             Column = i*8 ## Gives the index for the first well in the column
             m200.pick_up_tip()
             m200.aspirate(volume = 200, location = Ethanol.bottom(z = Height[i]), rate = 0.7)
-            m200.dispense(volume = 220, location = Extraction_plate.wells()[Column].bottom(z = 5.5), rate = 0.8)
+            m200.dispense(volume = 200, location = Extraction_plate.wells()[Column].bottom(z = 5.5), rate = 0.8)
             Ethanol_Mix(Pipette = m200, Vol = 180, Loc = Extraction_plate, asp_height = 4.0, dis_height = 6.0, reps = 5, Rate = 1.3, Col = Column) ## Custom function for better mix and resuspention.
             m200.return_tip()
 
@@ -205,7 +205,7 @@ def run(protocol: protocol_api.ProtocolContext):
             Column = i*8 ## Gives the index for the first well in the column
             m200.pick_up_tip()
             m200.aspirate(volume = 200, location = Extraction_plate.wells()[Column].bottom(z = 3.4), rate = 0.4)
-            m200.dispense(volume = 250, location = Waste.top(), rate = 0.7)
+            m200.dispense(volume = 200, location = Waste.top(), rate = 0.7)
             m200.air_gap(volume = 70) ## Takes in excess, outside droplets to limit cross-contamination.
             m200.return_tip()
 

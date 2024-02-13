@@ -127,7 +127,7 @@ def run(protocol: protocol_api.ProtocolContext):
         m200.move_to(location = Beads.top(), speed = 10)
         m200.dispense(volume = 75, location = Library_plate.wells()[Column])
         m200.mix(repetitions = 6, volume = 90, location = Library_plate.wells()[Column])
-        m200.dispense(volume = 100, location = Library_plate.wells()[Column], rate = 0.8) # Controlled 'blowout'
+        #m200.dispense(volume = 100, location = Library_plate.wells()[Column], rate = 0.8) # Controlled 'blowout'
         protocol.delay(5)
         m200.move_to(location = Library_plate.wells()[Column].top(), speed = 40)
         m200.return_tip()
@@ -171,7 +171,7 @@ def run(protocol: protocol_api.ProtocolContext):
             #m200.pick_up_tip(Ethanol_Tips.wells()[Column])
             m200.mix(repetitions = 2, volume = 200, location = Ethanol.bottom(z = Ethanol_Height[i]))
             m200.aspirate(volume = 170, location = Ethanol.bottom(z = Ethanol_Height[i]),rate = 0.7) 
-            m200.dispense(volume = 190, location = Library_plate.wells()[Column].top(z = 1.2), rate = 1) # Dispenses ethanol from 1.2 mm above the top of the well.
+            m200.dispense(volume = 170, location = Library_plate.wells()[Column].top(z = 1.2), rate = 1) # Dispenses ethanol from 1.2 mm above the top of the well.
         m200.blow_out(location = Waste) # Blow out to remove potential droplets before returning.
         m200.return_tip()
 
@@ -181,7 +181,7 @@ def run(protocol: protocol_api.ProtocolContext):
             m200.pick_up_tip(Ethanol_Tips.wells()[Column])
             m200.aspirate(volume = 200, location = Library_plate.wells()[Column].bottom(z = 0.35), rate = 0.2) #
             m200.move_to(location = Library_plate.wells()[Column].top(z=2), speed =100)
-            m200.dispense(volume = 250, location = Waste.top(), rate = 1)
+            m200.dispense(volume = 200, location = Waste.top(), rate = 1)
             m200.air_gap(70, 20) #Take in excess/outside droplets to limit cross-contamination.
             m200.return_tip()
 

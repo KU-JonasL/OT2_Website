@@ -165,7 +165,7 @@ def run(protocol: protocol_api.ProtocolContext):
 
         m20.dispense(volume = 6, location = Sample_plate.wells_by_name()[col_name[i]])
         m20.mix(repetitions = 3, volume = 10, location = Sample_plate.wells_by_name()[col_name[i]])
-        m20.dispense(volume = 3, location = Sample_plate.wells_by_name()[col_name[i]]) ## 'Controlled blowout'
+        #m20.dispense(volume = 3, location = Sample_plate.wells_by_name()[col_name[i]]) ## 'Controlled blowout'
         protocol.delay(5)
         m20.move_to(location = Sample_plate.wells_by_name()[col_name[i]].top(), speed = 3)
 
