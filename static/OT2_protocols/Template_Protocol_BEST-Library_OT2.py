@@ -134,12 +134,19 @@ def run(protocol: protocol_api.ProtocolContext):
 
     ## Transferring Adaptors. The adaptor concentration is chosen based on the csv input using conditional logic.
     for i in range(len(user_data)):
+        ## User data for adaptor selection
+        WellPosition = user_data['Well Position'][i]
+        AdaptorConc = int(user_data['Adaptor'][i])
+        
+        
         p10.pick_up_tip()
-
-        if user_data['Adaptor'][i] == 10: ## 10 mM adaptor transfer
-            p10.transfer(volume = 1.5, source = Adaptors_10mM, dest = Sample_plate.wells()[user_data[i][0]], mix_before = (2,4), mix_after = (1,10), new_tip = 'never')
-        if user_data['Adaptor'][i] == 20: ## 20 mM adaptor transfer
-            p10.transfer(volume = 1.5, source = Adaptors_20mM, dest = Sample_plate.wells()[user_data[i][0]], mix_before = (2,4), mix_after = (1,10), new_tip = 'never')
+	
+	
+        if AdaptorConc == 10: ## 10 mM adaptor transfer
+            p10.transfer(volume = 1.5, source = Adaptors_10mM, dest = Sample_plate.wells_by_name()[WellPosition], mix_before = (2,4), mix_after = (1,10), new_tip = 'never')
+            
+        if AdaptorConc == 20: ## 20 mM adaptor transfer
+            p10.transfer(volume = 1.5, source = Adaptors_20mM, dest = Sample_plate.wells_by_name()[WellPosition], mix_before = (2,4), mix_after = (1,10), new_tip = 'never')
 
         p10.return_tip()
 
