@@ -83,8 +83,7 @@ def run(protocol: protocol_api.ProtocolContext):
     #### User data setup ####
     ## Column setup
     Col_number = int(ceil(len(user_data)/8)) ## Scales number of columns in used based on csv data (rounding up for full columns used).
-    col_name = ["A1","A2","A3","A4","A5","A6","A7","A8","A9","A10","A11","A12"] ## Column is named by top well.
-
+    
 
     ## Ligation height setup - to limit viscous solution on the outside of the tips.
     Ligation_height = [1.75, 1.6, 1.45, 1.30, 1.15, 1, 0.85, 0.70, 0.55, 0.4, 0.25, 0.10] ## List with volume height for 12 transfers and descending.
@@ -114,7 +113,8 @@ def run(protocol: protocol_api.ProtocolContext):
 
     ## Transfering End Repair Mix
     for i in range(Col_number):
-        m20.transfer(volume = 5.85, source = End_Repair_Mix, dest = Sample_plate.wells_by_name()[col_name[i]], mix_before = (2,10), mix_after = (5,10), new_tip = 'always', trash = False)
+        Column= i*8
+        m20.transfer(volume = 5.85, source = End_Repair_Mix, dest = Sample_plate.wells()[Column], mix_before = (2,10), mix_after = (5,10), new_tip = 'always', trash = False)
 
 
     ## End Repair Incubation
@@ -161,6 +161,7 @@ def run(protocol: protocol_api.ProtocolContext):
     ## Ligation Pipetting
     for i in range(Col_number):
         ## Aspiration, mixing, and dispersion. Extra delays to allow viscous liquids to aspirate/dispense. Slow movements to limit adhesion.
+        Column= i * 8
         m20.pick_up_tip()
 
         m20.move_to(location = Ligation_Mix.top())
@@ -170,11 +171,10 @@ def run(protocol: protocol_api.ProtocolContext):
         protocol.delay(10)
         m20.move_to(location = Ligation_Mix.top(), speed = 3)
 
-        m20.dispense(volume = 6, location = Sample_plate.wells_by_name()[col_name[i]])
-        m20.mix(repetitions = 3, volume = 10, location = Sample_plate.wells_by_name()[col_name[i]])
-        #m20.dispense(volume = 3, location = Sample_plate.wells_by_name()[col_name[i]]) ## 'Controlled blowout'
+        m20.dispense(volume = 6, location = Sample_plate.wells()[Column])
+        m20.mix(repetitions = 3, volume = 10, location = Sample_plate.wells()[Column])
         protocol.delay(5)
-        m20.move_to(location = Sample_plate.wells_by_name()[col_name[i]].top(), speed = 3)
+        m20.move_to(location = Sample_plate.wells()[Column].top(), speed = 3)
 
         m20.return_tip()
 
@@ -201,7 +201,8 @@ def run(protocol: protocol_api.ProtocolContext):
 
     ## Fill-in Reaction pipetting
     for i in range(Col_number):
-        m20.transfer(volume = 7.5, source = Nick_Fill_In_Mix, dest = Sample_plate.wells_by_name()[col_name[i]], mix_before=(2,10), mix_after=(5,10), new_tip='always', trash = False)
+        Column= i*8
+        m20.transfer(volume = 7.5, source = Nick_Fill_In_Mix, dest = Sample_plate.wells_by_name()[Column], mix_before=(2,10), mix_after=(5,10), new_tip='always', trash = False)
 
     ## Fill-In Incubation
     protocol.comment("STATUS: Fill-In Incubation Step Begun")
