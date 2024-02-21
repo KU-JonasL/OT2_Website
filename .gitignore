@@ -1,8 +1,0 @@
-.venv
-.env
-Test.py
-/user_data
-.vscode
-template\Template_CSV_LibraryInput.xlsx
-template\Template_CSV_LibraryInput.csv
-/output_files
