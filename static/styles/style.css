@@ -38,10 +38,14 @@ a:hover, a:active {
     text-align: center;
 }
 
+
+
+/* Skjul alle valgmuligheder som standard */
 optgroup {
     display: none;
 }
 
+/* Vis valgmuligheder baseret på det valgte protocol */
 #protocol[value="Extraction"] ~ #inputformat optgroup[label="DNA/RNA Extraction"],
 #protocol[value="Library"] ~ #inputformat optgroup[label="Library Building"],
 #protocol[value="qPCR"] ~ #inputformat optgroup[label="qPCR"],
