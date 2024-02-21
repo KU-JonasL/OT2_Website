@@ -202,7 +202,7 @@ def run(protocol: protocol_api.ProtocolContext):
     ## Fill-in Reaction pipetting
     for i in range(Col_number):
         Column= i*8
-        m20.transfer(volume = 7.5, source = Nick_Fill_In_Mix, dest = Sample_plate.wells_by_name()[Column], mix_before=(2,10), mix_after=(5,10), new_tip='always', trash = False)
+        m20.transfer(volume = 7.5, source = Nick_Fill_In_Mix, dest = Sample_plate.wells()[Column], mix_before=(2,10), mix_after=(5,10), new_tip='always', trash = False)
 
     ## Fill-In Incubation
     protocol.comment("STATUS: Fill-In Incubation Step Begun")
