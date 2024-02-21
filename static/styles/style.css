@@ -37,22 +37,3 @@ a:hover, a:active {
 .center {
     text-align: center;
 }
-
-
-
-/* Skjul alle valgmuligheder som standard */
-optgroup {
-    display: none;
-}
-
-/* Vis valgmuligheder baseret på det valgte protocol */
-#protocol[value="Extraction"] ~ #inputformat optgroup[label="DNA/RNA Extraction"],
-#protocol[value="Library"] ~ #inputformat optgroup[label="Library Building"],
-#protocol[value="qPCR"] ~ #inputformat optgroup[label="qPCR"],
-#protocol[value="IndexPCR"] ~ #inputformat optgroup[label="Index PCR"],
-#protocol[value="Extraction"] ~ #outputformat optgroup[label="DNA/RNA Extraction"],
-#protocol[value="Library"] ~ #outputformat optgroup[label="Library Building"],
-#protocol[value="qPCR"] ~ #outputformat optgroup[label="qPCR"],
-#protocol[value="IndexPCR"] ~ #outputformat optgroup[label="Index PCR"] {
-    display: block;
-}
