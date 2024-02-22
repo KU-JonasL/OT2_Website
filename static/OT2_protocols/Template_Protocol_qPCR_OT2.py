@@ -105,7 +105,7 @@ def run(protocol: protocol_api.ProtocolContext):
         if i == 0: 
             MMpos = "A1"
         if i == 8: 
-            MMpos = "A2"
+            MMpos = "A4"
             m200.transfer(volume = 30, source = MasterMix.wells_by_name()["A1"], dest =MasterMix.wells_by_name()[MMpos], rate = 0.8, new_tip = 'never')
         
         m200.transfer(volume = 23, source = MasterMix.wells_by_name()[MMpos], dest = qPCR_strips.wells()[Col].bottom(1.3), mix_before = (2,20), rate = 0.6, blow_out = False, blowout_location = 'source well', new_tip = 'never')

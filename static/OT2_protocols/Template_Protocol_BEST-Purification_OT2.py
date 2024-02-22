@@ -209,10 +209,6 @@ def run(protocol: protocol_api.ProtocolContext):
         Column = i*8 #Gives the index for the first well in the column
         m200.pick_up_tip()
         m200.transfer(volume = 40, source = Ebt, dest = Library_plate.wells()[Column], rate = 1, trash = False , new_tip = 'never', mix_after = (5,20))
-        #m200.aspirate(volume = 40, location = Ebt, rate = 1)
-        #m200.dispense(volume = 40, location = Library_plate.wells()[Column], rate = 1)
-        #m200.mix(repetitions = 5, volume = 30, location = Library_plate.wells()[Column])
-        m200.dispense(volume = 40, location = Library_plate.wells()[Column], rate = 0.7)
         protocol.delay(5)
         m200.move_to(location = Library_plate.wells()[Column].top(), speed = 100)
         m200.return_tip()
@@ -229,7 +225,7 @@ def run(protocol: protocol_api.ProtocolContext):
     protocol.comment("STATUS: Transfer of Purified Library")
     for i in range(Col_Number):
         Column = i*8 #Gives the index for the first well in the column
-        m200.transfer(volume = 50, source = Library_plate.wells()[Column].bottom(z = 0.2), dest = Purified_plate.wells()[Column], new_tip = 'always', trash = False, rate = 1)
+        m200.transfer(volume = 50, source = Library_plate.wells()[Column].bottom(z = 0.2), dest = Purified_plate.wells()[Column], new_tip = 'always', trash = False, rate = 0.7)
 
 
     ## Deactivating magnet module
