@@ -6,7 +6,6 @@
 
 ##################################
 
-
 #### Package loading ####
 from opentrons import protocol_api
 import pandas as pd
@@ -51,19 +50,22 @@ def run(protocol: protocol_api.ProtocolContext):
     #### LABWARE SETUP ####
     ## Selecting input format
     if Input_Format == "PCRstrip":
-        Sample_Plate = protocol.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul',10)
+        Sample_Plate = protocol.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul',1)
     elif Input_Format == "LVLSXS200":
-        Sample_Plate = protocol.load_labware('LVLXSX200_wellplate_200ul',10)
+        Sample_Plate = protocol.load_labware('LVLXSX200_wellplate_200ul',1)
     else:
-        Sample_Plate = protocol.load_labware('biorad_96_wellplate_200ul_pcr',10)
+        Sample_Plate = protocol.load_labware('biorad_96_wellplate_200ul_pcr',1)
 
 
-    ## Index PCR plate
+    ## Index PCR plate - currently onlt piped to strips
     Temp_Module_PCR = protocol.load_module('temperature module',6)
-    if Output_Format == "PCRstrip":
-        iPCR_Plate = Temp_Module_PCR.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul') ## PCR plate
-    else:
-        iPCR_Plate = Temp_Module_PCR.load_labware('biorad_96_wellplate_200ul_pcr')
+    iPCR_Plate = Temp_Module_PCR.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul') ## PCR plate
+    
+    ## For future setup, if sample format for PCR is universal.
+    # if Output_Format == "PCRstrip":
+    #     iPCR_Plate = Temp_Module_PCR.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul') ## PCR plate
+    # else:
+    #     iPCR_Plate = Temp_Module_PCR.load_labware('biorad_96_wellplate_200ul_pcr')
 
 
     ## Primer plate (each well contain both forward and reverse primers)
@@ -110,10 +112,10 @@ def run(protocol: protocol_api.ProtocolContext):
             MMpos = "A1"
         if i == 5: 
             MMpos = "A2"
-            m200.transfer(volume = 30, source = MasterMix.wells_by_name()["A1"], dest =MasterMix.wells_by_name()[MMpos], rate = 0.8, new_tip = 'never')
+            m200.transfer(volume = 30, source = MasterMix.wells_by_name()["A1"], dest =MasterMix.wells_by_name()[MMpos], rate = 0.8, new_tip = 'never') ## Transfer leftover- mastermix
         if i == 10: 
             MMpos = "A3"
-            m200.transfer(volume = 30, source = MasterMix.wells_by_name()["A2"], dest =MasterMix.wells_by_name()[MMpos], rate = 0.8, new_tip = 'never')
+            m200.transfer(volume = 30, source = MasterMix.wells_by_name()["A2"], dest =MasterMix.wells_by_name()[MMpos], rate = 0.8, new_tip = 'never') ## Transfer leftover- mastermix
         
         m200.transfer(volume = 38, source = MasterMix.wells_by_name()[MMpos], dest = iPCR_Plate.wells()[Col].bottom(z = 1.2), mix_before = (2,30), rate = 0.6, blow_out = False, blowout_location = 'source well', new_tip = 'never')
         ## Deep well plates we have less deep bottoms.
@@ -124,14 +126,14 @@ def run(protocol: protocol_api.ProtocolContext):
     protocol.comment("STATUS: Transfering Index PCR primer.")
     for i in range(Col_Number):
         Col = i*8
-        m20.transfer(volume = 2, source = Primer_plate.wells()[Col], dest = iPCR_Plate.wells()[Col].bottom(z = 1.2), mix_after = (2,5), rate = 0.6, new_tip = 'Always', trash = True)
+        m20.transfer(volume = 2, source = Primer_plate.wells()[Col], dest = iPCR_Plate.wells()[Col].bottom(z = 1.2), mix_after = (2,5), rate = 0.6, new_tip = 'Always', trash = False)
 
 
     #### Transfer diluted sample-library to index PCR strips - obs for
     protocol.comment("STATUS: Transfering Diluted Samples to Index PCR strips")
     for i in range (Col_Number):
         Col = i*8
-        m20.transfer(volume = 10, source = Sample_Plate.wells()[Col].bottom(z = 1.2), dest = iPCR_Plate.wells()[Col].bottom(z = 1.2), mix_before = (2,5), mix_after = (2,10), rate = 0.6, new_tip = 'Always', trash = True)
+        m20.transfer(volume = 10, source = Sample_Plate.wells()[Col].bottom(z = 1.2), dest = iPCR_Plate.wells()[Col].bottom(z = 1.2), mix_before = (2,5), mix_after = (2,10), rate = 0.6, new_tip = 'Always', trash = False)
 
 
     ## Protocol complete

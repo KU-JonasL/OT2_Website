@@ -12,6 +12,11 @@
 ############################
 
 
+##### OBS this protocol has not been verified, and is in it pre-test state. 
+##### It is built around the purification script for the library build, but certain things need to be examined before a release trial is conducted.
+##### This includes a perspective on the ethanol 2nd removal step (using extra tips).
+
+
 #### Package loading ####
 from opentrons import protocol_api
 import pandas as pd
@@ -122,14 +127,13 @@ def run(protocol: protocol_api.ProtocolContext):
         m200.pick_up_tip()
         m200.move_to(location = Beads.top())
         m200.move_to(location = Beads.bottom(), speed = 40)
-        m200.mix(repetitions = 5, volume = 75, location = Beads)
-        m200.aspirate(volume = 60, location = Beads, rate = 0.5)
+        m200.mix(repetitions = 5, volume = 75, location = Beads.bottom())
+        m200.aspirate(volume = 60, location = Beads.bottom(), rate = 0.5)
         protocol.delay(5)
 
         m200.move_to(location = Beads.top(), speed = 10)
         m200.dispense(volume = 60, location = Sample_Plate.wells()[Column])
         m200.mix(repetitions = 6, volume = 90, location = Sample_Plate.wells()[Column])
-        #m200.dispense(volume = 60, location = Sample_Plate.wells()[Column], rate = 0.8) # Controlled 'blowout'
         protocol.delay(5)
         m200.move_to(location = Sample_Plate.wells()[Column].top(), speed = 40)
         m200.return_tip()
@@ -170,7 +174,6 @@ def run(protocol: protocol_api.ProtocolContext):
         m200.pick_up_tip(Ethanol_Tips.wells_by_name()['A1']) # Using 1 set of tips for all rows
         for i in range(Col_Number):
             Column = i*8 # Gives the index for the first well in the column
-            #m200.pick_up_tip(Ethanol_Tips.wells()[Column])
             m200.mix(repetitions = 2, volume = 200, location = Ethanol.bottom(z = Ethanol_Height[i]))
             m200.aspirate(volume = 170, location = Ethanol.bottom(z = Ethanol_Height[i]),rate = 0.7) 
             m200.dispense(volume = 170, location = Sample_Plate.wells()[Column].top(z = 1.2), rate = 1) # Dispenses ethanol from 1.2 mm above the top of the well.
@@ -210,7 +213,7 @@ def run(protocol: protocol_api.ProtocolContext):
     for i in range(Col_Number):
         Column = i*8 #Gives the index for the first well in the column
         m200.pick_up_tip()
-        m200.transfer(volume = 35, source = Ebt, dest = Sample_Plate.wells()[Column], rate = 1, trash = False , new_tip = 'never', mix_after = (5,20), rate = 0.8)
+        m200.transfer(volume = 35, source = Ebt, dest = Sample_Plate.wells()[Column], trash = False , new_tip = 'never', mix_after = (5,20), rate = 1)
         protocol.delay(5)
         m200.move_to(location = Sample_Plate.wells()[Column].top(), speed = 100)
         m200.return_tip()
@@ -227,7 +230,7 @@ def run(protocol: protocol_api.ProtocolContext):
     protocol.comment("STATUS: Transfer of Index PCR product")
     for i in range(Col_Number):
         Column = i*8 #Gives the index for the first well in the column
-        m200.transfer(volume = 50, source = Sample_Plate.wells()[Column].bottom(z = 0.2), dest = Purified_plate.wells()[Column], new_tip = 'always', trash = False, rate = 1)
+        m200.transfer(volume = 50, source = Sample_Plate.wells()[Column].bottom(z = 0.2), dest = Purified_plate.wells()[Column], new_tip = 'always', trash = False, rate = 0.4)
 
 
     ## Deactivating magnet module
