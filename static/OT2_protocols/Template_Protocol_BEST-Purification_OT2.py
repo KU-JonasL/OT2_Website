@@ -102,7 +102,7 @@ def run(protocol: protocol_api.ProtocolContext):
 
 
     #### Selecting Reservoir Ethanol height ####
-    Ethanol_Height = (31.7,28.9,26.0,23.2,20.3,17.5,14.6,11.8,8.9,6.1,3.2,0.7) 
+    Ethanol_Height = (31.7,28.9,26.0,23.2,20.3,17.5,14.6,11.8,8.9,6.1,3.2,0.8) 
     pos = 12-Col_Number
     Ethanol_Height = Ethanol_Height[pos:] # Removes highest, unused heights.
 
@@ -136,15 +136,15 @@ def run(protocol: protocol_api.ProtocolContext):
     protocol.delay(minutes = 5)
 
     ## Engaging magnetic module. 5 mins wait for beads attraction
-    magnet_module.engage(height_from_base = 14)
+    magnet_module.engage(height_from_base = 10)
     protocol.delay(minutes = 5)
 
-    ## Discarding supernatant - to be tested: pipette positioning.
+    ## Discarding supernatant.
     protocol.comment("STATUS: Discarding Supernatant")
     for i in range(Col_Number):
         Column = i*8 #Gives the index of the first well in the column
         m200.pick_up_tip()
-        m200.transfer(volume = 150, source = Library_plate.wells()[Column].bottom(z = 0.3), dest = Waste1.top(), new_tip = 'never', rate=0.5) #
+        m200.transfer(volume = 150, source = Library_plate.wells()[Column].bottom(z = 1.2), dest = Waste1.top(), new_tip = 'never', rate=0.5) #
         m200.air_gap(40,20)
         m200.return_tip()
 
@@ -165,10 +165,11 @@ def run(protocol: protocol_api.ProtocolContext):
 
         ## Adding Ethanol.
         m200.pick_up_tip(Ethanol_Tips.wells_by_name()['A1']) # Using 1 set of tips for all rows
+        m200.mix(repetitions = 3, volume = 200, location = Ethanol.bottom(z = Ethanol_Height[(len(Ethanol_Height)-2)])) # One round of mixing
+
         for i in range(Col_Number):
             Column = i*8 # Gives the index for the first well in the column
-            m200.mix(repetitions = 2, volume = 200, location = Ethanol.bottom(z = Ethanol_Height[i]))
-            m200.aspirate(volume = 170, location = Ethanol.bottom(z = Ethanol_Height[i]),rate = 0.7) 
+            m200.aspirate(volume = 170, location = Ethanol.bottom(z = Ethanol_Height[i]), rate = 0.7) 
             m200.dispense(volume = 170, location = Library_plate.wells()[Column].top(z = 1.2), rate = 1) # Dispenses ethanol from 1.2 mm above the top of the well.
         m200.blow_out(location = Waste) # Blow out to remove potential droplets before returning.
         m200.return_tip()
@@ -177,7 +178,7 @@ def run(protocol: protocol_api.ProtocolContext):
         for i in range(Col_Number):
             Column = i*8 # Gives the index for the first well in the column
             m200.pick_up_tip(Ethanol_Tips.wells()[Column])
-            m200.aspirate(volume = 200, location = Library_plate.wells()[Column].bottom(z = 0.35), rate = 0.2) #
+            m200.aspirate(volume = 200, location = Library_plate.wells()[Column].bottom(z = 1.2), rate = 0.5)
             m200.move_to(location = Library_plate.wells()[Column].top(z=2), speed =100)
             m200.dispense(volume = 200, location = Waste.top(), rate = 1)
             m200.air_gap(70, 20) #Take in excess/outside droplets to limit cross-contamination.
@@ -187,16 +188,13 @@ def run(protocol: protocol_api.ProtocolContext):
     for i in range(Col_Number):
         Column = i*8
         m20.pick_up_tip()
-        m20.aspirate(volume = 10, location = Library_plate.wells()[Column].bottom(z = -0), rate = 0.6)
+        m20.aspirate(volume = 10, location = Library_plate.wells()[Column].bottom(z = 0.8), rate = 0.6)
         m20.return_tip()
-        # z = 0 is at the bottom of the labware - here we use a well plate that is slightly deeper than the specified labaware, but be extra careful if changed.
 
 
     ## Drying beads (5 mins)
     protocol.comment("STATUS: Drying Beads - time autoadjusted based on number of columns")
     protocol.delay(seconds = BeadsTime) #Times to be verified given m20 step.
-
-    #protocol.pause("Check ethanol level") # Used for testing residual ethnol levels
 
     ## Disengaging magnet
     magnet_module.disengage()
@@ -216,14 +214,14 @@ def run(protocol: protocol_api.ProtocolContext):
     protocol.pause('ACTION: Seal library plate and spin it down shortly. Incubate the library plate for 10 min at 37*C. Press RESUME, when library plate has been returned (without seal) to the magnet module.')
 
     ## Engaging Magnet. 5 mins wait for beads withdrawal
-    magnet_module.engage(height_from_base = 14)
+    magnet_module.engage(height_from_base = 10)
     protocol.delay(minutes = 5)
 
     ## Transferring purified library to a new plate (purified plate). Transfer is sat higher to remove all.
     protocol.comment("STATUS: Transfer of Purified Library")
     for i in range(Col_Number):
         Column = i*8 #Gives the index for the first well in the column
-        m200.transfer(volume = 50, source = Library_plate.wells()[Column].bottom(z = 0.2), dest = Purified_plate.wells()[Column], new_tip = 'always', trash = False, rate = 0.7)
+        m200.transfer(volume = 50, source = Library_plate.wells()[Column].bottom(z = 1.0), dest = Purified_plate.wells()[Column], new_tip = 'always', trash = False, rate = 0.7)
 
 
     ## Deactivating magnet module
