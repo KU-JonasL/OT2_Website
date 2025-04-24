@@ -68,8 +68,10 @@ def run(protocol: protocol_api.ProtocolContext):
     ## Mastermix Setup
     cold_plate = cold_module.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul')
     End_Repair_Mix = cold_plate.wells_by_name()["A1"]
-    Adaptors_10mM = cold_plate.wells_by_name()["A4"]
-    Adaptors_20mM = cold_plate.wells_by_name()["C4"]
+    Adaptors_2mM = cold_plate.wells_by_name()["A4"]
+    Adaptors_5mM = cold_plate.wells_by_name()["C4"]
+    Adaptors_10mM = cold_plate.wells_by_name()["E4"]
+    Adaptors_20mM = cold_plate.wells_by_name()["G4"]
     Ligation_Mix = cold_plate.wells_by_name()["A7"]
     Nick_Fill_In_Mix = cold_plate.wells_by_name()["A10"]
 
@@ -141,6 +143,11 @@ def run(protocol: protocol_api.ProtocolContext):
         
         p10.pick_up_tip()
 	
+        if AdaptorConc == 2: ## 2 mM adaptor transfer
+            p10.transfer(volume = 1.5, source = Adaptors_2mM, dest = Sample_plate.wells_by_name()[WellPosition], mix_before = (2,4), mix_after = (1,10), new_tip = 'never')
+
+        if AdaptorConc == 5: ## 5 mM adaptor transfer
+            p10.transfer(volume = 1.5, source = Adaptors_5mM, dest = Sample_plate.wells_by_name()[WellPosition], mix_before = (2,4), mix_after = (1,10), new_tip = 'never')
 	
         if AdaptorConc == 10: ## 10 mM adaptor transfer
             p10.transfer(volume = 1.5, source = Adaptors_10mM, dest = Sample_plate.wells_by_name()[WellPosition], mix_before = (2,4), mix_after = (1,10), new_tip = 'never')
