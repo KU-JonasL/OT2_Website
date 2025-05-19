@@ -63,11 +63,17 @@ def get_OT2transfer():
                         temp_userdata_csv = pd.read_csv(temp_file_path, sep=',')
 
                     ## Cleaning dataframe and making for string
+                    
+                    if isinstance(temp_userdata_csv, str):
+                        # Already a string — skip cleaning
+                        userdata = temp_userdata_csv
+                    
                     if isinstance(temp_userdata_csv, pd.DataFrame) and 'SampleID' in temp_userdata_csv.columns:
                         temp_userdata_csv.dropna(subset=['SampleID'], inplace=True)
                         csv_data_values = "\n".join([f"{', '.join(map(str, row))}" for row in temp_userdata_csv.values])
                         csv_data_raw_str = f"{', '.join(temp_userdata_csv.columns)}\n{csv_data_values}"
                         userdata = csv_data_raw_str.replace("nan", "").replace(", ",",")
+                    
                     else:
                         return render_template("/csv-not-found.html")  # Or customize this error
 
