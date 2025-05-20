@@ -54,6 +54,8 @@ def get_OT2transfer():
                     temp_file_path = temp_file.name
                     uploaded_file.save(temp_file_path)
                     
+                    ## Random change here
+
                     ## Load and cleanup for the userdata
                     try:
                         # Try reading with semicolon as the delimiter
@@ -62,21 +64,19 @@ def get_OT2transfer():
                         # If parsing with semicolon fails, try reading with comma as the delimiter
                         temp_userdata_csv = pd.read_csv(temp_file_path, sep=',')
 
-                    if isinstance(temp_userdata_csv, pd.DataFrame):
-                        if 'SampleID' in temp_userdata_csv.columns:
-                            temp_userdata_csv.dropna(subset=['SampleID'], inplace=True)
-                            csv_data_values = "\n".join([f"{', '.join(map(str, row))}" for row in temp_userdata_csv.values])
-                            csv_data_raw_str = f"{', '.join(temp_userdata_csv.columns)}\n{csv_data_values}"
-                            userdata = csv_data_raw_str.replace("nan", "").replace(", ", ",")
-                        else:
-                            # The DataFrame exists but is missing the required column
-                            return render_template("/csv-not-found.html")
-                    elif isinstance(temp_userdata_csv, str):
-                        # Already a string — assume it's been processed
-                        userdata = temp_userdata_csv
-                    else:
+                    #if isinstance(temp_userdata_csv, pd.DataFrame):
+                    temp_userdata_csv.dropna(subset=['SampleID'], inplace=True) 
+                    csv_data_values = "\n".join([f"{', '.join(map(str, row))}" for row in temp_userdata_csv.values])
+                    csv_data_raw_str = f"{', '.join(temp_userdata_csv.columns)}\n{csv_data_values}"
+                    userdata = csv_data_raw_str.replace("nan", "").replace(", ", ",")
+
+                    #elif isinstance(temp_userdata_csv, str):
+                    ## Already a string — assume it's been processed
+                    #userdata = temp_userdata_csv
+                    
+                    #else:
                         # Unexpected data type
-                        return render_template("/csv-not-found.html")
+                    #    return render_template("/csv-not-found.html")
 
                     # ## Cleaning dataframe and making for string
                     
