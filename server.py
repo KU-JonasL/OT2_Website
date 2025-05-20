@@ -58,14 +58,14 @@ def get_OT2transfer():
 
 
                     try:
-                        df = pd.read_csv(temp_file_path, sep=',')
-                        if df.shape[1] == 1:
+                        temp_userdata_csv = pd.read_csv(temp_file_path, sep=',')
+                        if temp_userdata_csv.shape[1] == 1:
                             # Retry with semicolon if only one column found
-                            df = pd.read_csv(temp_file_path, sep=';')
+                            temp_userdata_csv = pd.read_csv(temp_file_path, sep=';')
                     except Exception:
                         # Fallback: read as raw and try splitting manually
-                        df = pd.read_csv(temp_file_path, header=None)
-                        df = df[0].str.split(',', expand=True)
+                        temp_userdata_csv = pd.read_csv(temp_file_path, header=None)
+                        temp_userdata_csv = temp_userdata_csv[0].str.split(',', expand=True)
                     
 
 
