@@ -162,11 +162,11 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
         ## LVL SXS200 plate
         if inputformat == "LVLSXS200" or outputformat == "LVLSXS200":
             ## Open the file using the generated URL
-            file_path = os.path.join(app.root_path,'static','custom_labware', 'LVLXSX200_wellplate_200ul.json')
+            file_path = os.path.join(app.root_path,'static','custom_labware', 'lvl_96_wellplate_200ul.json')
             #static_url = url_for('static', filename=file_path)
             try:
                static_pdf_content = open(file_path, 'r').read()
-               zipf.writestr('LVLXSX200_wellplate_200ul.json', static_pdf_content)
+               zipf.writestr('lvl_96_wellplate_200ul.json', static_pdf_content)
 
             except FileNotFoundError:
                return "Error: File not found"

@@ -53,7 +53,7 @@ def run(protocol: protocol_api.ProtocolContext):
     if Input_Format == 'PCRstrip':
         Input_plate = protocol.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul', 2) ## PCR tubes/strips
     elif Input_Format == 'LVLSXS200': 
-        Input_plate = protocol.load_labware('LVLXSX200_wellplate_200ul', 2) ## LVL SXS 200 tubes (200 µL tubes)
+        Input_plate = protocol.load_labware('lvl_96_wellplate_200ul', 2) ## LVL SXS 200 tubes (200 µL tubes)
     else:
         Input_plate = protocol.load_labware('biorad_96_wellplate_200ul_pcr', 2) ## Plate
 

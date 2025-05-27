@@ -60,7 +60,7 @@ def run(protocol: protocol_api.ProtocolContext):
     if Output_Format == "PCRstrip":
         Elution_plate = protocol.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul',10) # Output plate
     elif Output_Format == "LVLSXS200":
-        Elution_plate = protocol.load_labware('LVLXSX200_wellplate_200ul',10) # Output plate
+        Elution_plate = protocol.load_labware('lvl_96_wellplate_200ul',10) # Output plate
     else:
         Elution_plate = protocol.load_labware('biorad_96_wellplate_200ul_pcr',10) # Output plate
 
