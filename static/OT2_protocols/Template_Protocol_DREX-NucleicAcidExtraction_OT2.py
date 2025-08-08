@@ -45,7 +45,7 @@ metadata = {
     'apiLevel': '2.22',
     'robotType': 'OT-2',    
     'author': 'Jonas Lauritsen <jonas.lauritsen@sund.ku.dk>',
-    'description': "TREX Automated extraction of nucleic acids from samples.Protocol generated at https://alberdilab-opentronsscripts.onrender.com"}
+    'description': "DREX2 Automated extraction of nucleic acids from samples. Protocol generated at https://alberdilab-opentronsscripts.onrender.com"}
 
 #### Protocol Script ####
 def run(protocol: protocol_api.ProtocolContext):
