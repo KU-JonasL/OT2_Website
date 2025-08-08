@@ -170,7 +170,7 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
 
             except FileNotFoundError:
                return "Error: File not found"
-
+        
 
         ###### Read the content of the TEMPLATE.py and loading it in a modified OT2 protocol ######
         #### DNA Extraction
@@ -193,7 +193,7 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
             ## Add SOP for extraction to zipfolder
             file_path = os.path.join(app.root_path,'static','SOPs', 'SOP_Template_V1.1.pdf')
             static_sop_content = open(file_path, 'r').read()
-            zipf.writestr('SOP_Template_V1.1.pdf', static_sop_content)
+            zipf.writestr('SOP_V1.1.pdf', static_sop_content)
 
 
         
@@ -238,7 +238,7 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
             ## Add SOP for extraction to zipfolder
             file_path = os.path.join(app.root_path,'static','SOPs', 'SOP_Template_V1.1.pdf')
             static_sop_content = open(file_path, 'r').read()
-            zipf.writestr('SOP_Template_V1.1.pdf', static_sop_content)
+            zipf.writestr('SOP_V1.1.pdf', static_sop_content)
 
 
 
@@ -264,7 +264,7 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
             ## Add SOP for extraction to zipfolder
             file_path = os.path.join(app.root_path,'static','SOPs', 'SOP_Template_V1.1.pdf')
             static_sop_content = open(file_path, 'r').read()
-            zipf.writestr('SOP_Template_V1.1.pdf', static_sop_content)
+            zipf.writestr('SOP_V1.1.pdf', static_sop_content)
 
 
 
@@ -296,7 +296,7 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
             ## Add SOP for extraction to zipfolder
             file_path = os.path.join(app.root_path,'static','SOPs', 'SOP_Template_V1.1.pdf')
             static_sop_content = open(file_path, 'r').read()
-            zipf.writestr('SOP_Template_V1.1.pdf', static_sop_content)
+            zipf.writestr('SOP_V1.1.pdf', static_sop_content)
 
 
 
