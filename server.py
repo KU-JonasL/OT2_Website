@@ -53,45 +53,45 @@ def get_OT2transfer():
                 with tempfile.NamedTemporaryFile(delete=False, suffix='.csv') as temp_file:
                     temp_file_path = temp_file.name
                     uploaded_file.save(temp_file_path)
-                    
+
                     ## Load and cleanup for the userdata
+
+
                     try:
-                        # Try reading with semicolon as the delimiter
-                        temp_userdata_csv = pd.read_csv(temp_file_path, sep=';')
-                    except pd.errors.ParserError:
-                        # If parsing with semicolon fails, try reading with comma as the delimiter
                         temp_userdata_csv = pd.read_csv(temp_file_path, sep=',')
+                        if temp_userdata_csv.shape[1] == 1:
+                            # Retry with semicolon if only one column found
+                            temp_userdata_csv = pd.read_csv(temp_file_path, sep=';')
+                    except Exception:
+                        # Fallback: read as raw and try splitting manually
+                        temp_userdata_csv = pd.read_csv(temp_file_path, header=None)
+                        temp_userdata_csv = temp_userdata_csv[0].str.split(',', expand=True)
+                    
 
-                    if isinstance(temp_userdata_csv, pd.DataFrame):
-                        if 'SampleID' in temp_userdata_csv.columns:
-                            temp_userdata_csv.dropna(subset=['SampleID'], inplace=True)
-                            csv_data_values = "\n".join([f"{', '.join(map(str, row))}" for row in temp_userdata_csv.values])
-                            csv_data_raw_str = f"{', '.join(temp_userdata_csv.columns)}\n{csv_data_values}"
-                            userdata = csv_data_raw_str.replace("nan", "").replace(", ", ",")
-                        else:
-                            # The DataFrame exists but is missing the required column
-                            return render_template("/csv-not-found.html")
-                    elif isinstance(temp_userdata_csv, str):
-                        # Already a string — assume it's been processed
-                        userdata = temp_userdata_csv
-                    else:
+
+
+
+                    #try:
+                        # Try reading with semicolon as the delimiter
+                    #    temp_userdata_csv = pd.read_csv(temp_file_path, sep=';')
+                    #except #pd.errors.ParserError:
+                        # If parsing with semicolon fails, try reading with comma as the delimiter
+                    #    temp_userdata_csv = pd.read_csv(temp_file_path, sep=',')
+
+                    #if isinstance(temp_userdata_csv, pd.DataFrame):
+                    temp_userdata_csv.dropna(subset=['SampleID'], inplace=True) 
+                    csv_data_values = "\n".join([f"{', '.join(map(str, row))}" for row in temp_userdata_csv.values])
+                    csv_data_raw_str = f"{', '.join(temp_userdata_csv.columns)}\n{csv_data_values}"
+                    userdata = csv_data_raw_str.replace("nan", "").replace(", ", ",")
+
+                    #elif isinstance(temp_userdata_csv, str):
+                    ## Already a string — assume it's been processed
+                    #userdata = temp_userdata_csv
+                    
+                    #else:
                         # Unexpected data type
-                        return render_template("/csv-not-found.html")
+                    #    return render_template("/csv-not-found.html")
 
-                    # ## Cleaning dataframe and making for string
-                    
-                    # if isinstance(temp_userdata_csv, str):
-                    #     # Already a string — skip cleaning
-                    #     userdata = temp_userdata_csv
-                    
-                    # else:
-                    #     temp_userdata_csv.dropna(subset=['SampleID'], inplace=True)
-                    #     csv_data_values = "\n".join([f"{', '.join(map(str, row))}" for row in temp_userdata_csv.values])
-                    #     csv_data_raw_str = f"{', '.join(temp_userdata_csv.columns)}\n{csv_data_values}"
-                    #     userdata = csv_data_raw_str.replace("nan", "").replace(", ",",")
-                        
-                    #     #else:
-                    #     #    return render_template("/csv-not-found.html")  # Or customize this error
 
                     
                     ## Delete the temporary file path
@@ -162,11 +162,11 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
         ## LVL SXS200 plate
         if inputformat == "LVLSXS200" or outputformat == "LVLSXS200":
             ## Open the file using the generated URL
-            file_path = os.path.join(app.root_path,'static','custom_labware', 'LVLXSX200_wellplate_200ul.json')
+            file_path = os.path.join(app.root_path,'static','custom_labware', 'lvl_96_wellplate_200ul.json')
             #static_url = url_for('static', filename=file_path)
             try:
                static_pdf_content = open(file_path, 'r').read()
-               zipf.writestr('LVLXSX200_wellplate_200ul.json', static_pdf_content)
+               zipf.writestr('lvl_96_wellplate_200ul.json', static_pdf_content)
 
             except FileNotFoundError:
                return "Error: File not found"
