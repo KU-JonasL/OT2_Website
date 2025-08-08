@@ -39,7 +39,7 @@ user_data = pd.read_csv(csv_data_temp)
 #### Meta Data ####
 metadata = {
     'protocolName': 'Protocol Automated Covaris Setup',
-    'apiLevel': '2.16',
+    'apiLevel': '2.22',
     'robotType': 'OT-2',    
     'author': 'Jonas Lauritsen <jonas.lauritsen@sund.ku.dk>',
     'description': "Covaris automated plate prepper with user CSV input. Protocol generated at https://alberdilab-opentronsscripts.onrender.com"}
@@ -67,6 +67,16 @@ def run(protocol: protocol_api.ProtocolContext):
     H2O_1 = Rack.wells_by_name()["A1"]
     H2O_2 = Rack.wells_by_name()["A2"] 
     
+
+    ## Load Liquid/ Well Labeling
+    ## Sample
+    Sample_Liquid = protocol.define_liquid(name = "Sample",description = "Green colored water for demo",display_color = "#00FF37")
+    Input_plate.load_liquid(wells = Input_plate.wells(), volume = 25, liquid = Sample_Liquid)
+
+    ## H2O
+    H2O_Liquid = protocol.define_liquid(name = "H2O",description = "H2O for normalisation",display_color = "#0015FF")
+    Rack.load_liquid(wells = ['A1','A2'], volume = 1800, liquid = H2O_Liquid)
+
 
     ## Tip racks (2x 10 µL, 2x 200 µl)
     tiprack_10_1 = protocol.load_labware('opentrons_96_filtertiprack_10ul',4)
@@ -109,6 +119,7 @@ def run(protocol: protocol_api.ProtocolContext):
         RandomPosition = user_data['Random Position'][i]
         Sample_Input = float(user_data['DNA ul'][i])
         H2O_Input = float(user_data['Water ul'][i])
+        Total_Input = (Sample_Input+H2O_Input)
 
 
 
@@ -131,7 +142,7 @@ def run(protocol: protocol_api.ProtocolContext):
             p50.aspirate(volume = H2O_Input, location = H2O.bottom(z = 2.0)) # First pickup
             p50.touch_tip(location = H2O) # Touching the side of the well to remove excess water.
             p50.aspirate(volume = Sample_Input, location = Input_plate.wells_by_name()[WellPosition]) # Second pickup
-            p50.dispense(volume = Sample_Input, location = Covaris_plate.wells_by_name()[RandomPosition]) # 30 µL dispense to empty completely
+            p50.dispense(volume = Total_Input, location = Covaris_plate.wells_by_name()[RandomPosition]) # 30 µL dispense to empty completely
             p50.mix(repetitions = 3, volume = 15, location = Covaris_plate.wells_by_name()[RandomPosition], rate = 0.8)
 
             ## Transferring diluted samples to covaris plate

@@ -38,7 +38,7 @@ Output_Format = user_input['OutputFormat'][0]
 #### Meta Data ####
 metadata = {
     'protocolName': 'Protocol qPCR Setup',
-    'apiLevel': '2.16',
+    'apiLevel': '2.22',
     'robotType': 'OT-2',    
     'author': 'Jonas Lauritsen <jonas.lauritsen@sund.ku.dk>',
     'description': "Automated transfer for Master Mix + DNA Libraries for qPCR. Protocol generated at https://alberdilab-opentronsscripts.onrender.com"}
@@ -50,14 +50,14 @@ def run(protocol: protocol_api.ProtocolContext):
     ## Samples and sample format (Dilutions done prior)
     Temp_Module_Sample = protocol.load_module('temperature module', 7)
     if Input_Format == "PCRstrip":
-        Sample_Plate = Temp_Module_Sample.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul') ## Generic PCR strip should approximate our types. Low volumes could be problematic.
+        Sample_plate = Temp_Module_Sample.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul') ## Generic PCR strip should approximate our types. Low volumes could be problematic.
         Sample_Height = 1.0
 
     elif Input_Format == "LVLSXS200":
-        Sample_Plate = Temp_Module_Sample.load_labware("LVLXSX200_wellplate_200ul")
+        Sample_plate = Temp_Module_Sample.load_labware("LVLXSX200_wellplate_200ul")
 
     else:
-        Sample_Plate = Temp_Module_Sample.load_labware('biorad_96_wellplate_200ul_pcr') ## Biorad plate is the closest to our plate type.
+        Sample_plate = Temp_Module_Sample.load_labware('biorad_96_wellplate_200ul_pcr') ## Biorad plate is the closest to our plate type.
         Sample_Height = 1.0
 
     ## qPCR PCR plate
@@ -71,6 +71,16 @@ def run(protocol: protocol_api.ProtocolContext):
 
     ## Master Mix
     MasterMix = protocol.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul', 4) ## MasterMix to be prepared in advance and placed in this column.
+
+
+    ## Load Liquid/ Well Labeling
+    ## Samples
+    Sample_Liquid = protocol.define_liquid(name = "Sample",description = "Library Sample",display_color = "#00FF37")
+    Sample_plate.load_liquid(wells = Sample_plate.wells(), volume = 20, liquid = Sample_Liquid)
+
+    ## MasterMix
+    MasterMix_Liquid = protocol.define_liquid(name = "Sample",description = "Library Sample",display_color = "#D000FF")
+    MasterMix.load_liquid(wells = MasterMix.wells(), volume = (Col_Number*23*1.1), liquid = MasterMix_Liquid)
 
 
     ## Tip racks
@@ -118,7 +128,7 @@ def run(protocol: protocol_api.ProtocolContext):
     protocol.comment("STATUS: Transfering Diluted Samples to qPCR strips.")
     for i in range(Col_Number):
         Col = i*8
-        m20.transfer(volume = 2, source = Sample_Plate.wells()[Col].bottom(z = Sample_Height), dest = qPCR_strips.wells()[Col].bottom(z = 1.3), mix_before = (2,5), mix_after = (1,10), rate = 0.6, new_tip = 'always', trash = True)
+        m20.transfer(volume = 2, source = Sample_plate.wells()[Col].bottom(z = Sample_Height), dest = qPCR_strips.wells()[Col].bottom(z = 1.3), mix_before = (2,5), mix_after = (1,10), rate = 0.6, new_tip = 'always', trash = True)
 
 
     ## Protocol complete

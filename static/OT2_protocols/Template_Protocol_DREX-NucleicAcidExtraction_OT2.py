@@ -42,7 +42,7 @@ Output_Format = user_input['OutputFormat'][0]
 #### Meta Data ####
 metadata = {
     'protocolName': 'Protocol Nucleic Acid Extraction',
-    'apiLevel': '2.16',
+    'apiLevel': '2.22',
     'robotType': 'OT-2',    
     'author': 'Jonas Lauritsen <jonas.lauritsen@sund.ku.dk>',
     'description': "TREX Automated extraction of nucleic acids from samples.Protocol generated at https://alberdilab-opentronsscripts.onrender.com"}
@@ -65,17 +65,35 @@ def run(protocol: protocol_api.ProtocolContext):
         Elution_plate = protocol.load_labware('biorad_96_wellplate_200ul_pcr',10) # Output plate
 
     ## Deepwell reservoir & Liquid Inputs
-    reservoir = protocol.load_labware('deepwellreservoir_12channel_21000ul',1)
-    Beads = reservoir['A1']
-    Ethanol1 = reservoir['A3']
-    Ethanol2 = reservoir['A4']
-    EBT = reservoir['A6']
+    Reservoir = protocol.load_labware('deepwellReservoir_12channel_21000ul',1)
+    Beads = Reservoir['A1']
+    Ethanol1 = Reservoir['A3']
+    Ethanol2 = Reservoir['A4']
+    EBT = Reservoir['A6']
 
     #### Waste ####
-    Waste1 = reservoir['A12']    ## 1st Beads-supernatant waste
-    Waste2 = reservoir['A11']    ## 2nd Beads-supernatant waste
-    Waste3 = reservoir['A10']    ## 1st ethanol wash waste
-    Waste4 = reservoir['A9']     ## 2nd ethanol wash waste
+    Waste1 = Reservoir['A12']    ## 1st Beads-supernatant waste
+    Waste2 = Reservoir['A11']    ## 2nd Beads-supernatant waste
+    Waste3 = Reservoir['A10']    ## 1st ethanol wash waste
+    Waste4 = Reservoir['A9']     ## 2nd ethanol wash waste
+
+
+    ## Load Liquid/ Well Labeling
+    ## Beads
+    Beads_Liquid = protocol.define_liquid(name = "Beads", description = "SPRI Beads",display_color = "#FF0000")
+    Reservoir.load_liquid(wells = 'A1', volume = (Col_Number*8*200*1.1) , liquid = Beads_Liquid)
+
+    ## Ethanol
+    Ethanol_Liquid = protocol.define_liquid(name = "Ethanol", description = "80 Ethanol",display_color = "#0008FF")
+    Reservoir.load_liquid(wells = ['A3','A4'], volume = (Col_Number*8*200*1.1), liquid = Ethanol_Liquid)
+
+    ## Elution Buffer Tween
+    EBT_Liquid = protocol.define_liquid(name = "EBT", description = "EBT solution",display_color = "#EAFF00")
+    Reservoir.load_liquid(wells = 'A6', volume = (Col_Number*8*50*1.1), liquid = EBT_Liquid)
+
+    ## Samples
+    Sample_Liquid = protocol.define_liquid(name = "Sample",description = "Sample",display_color = "#00FF37")
+    Extraction_plate.load_liquid(wells = Extraction_plate.wells(), volume = 200, liquid = Sample_Liquid)
 
 
     #### Tip racks (8x 200 µl) ####

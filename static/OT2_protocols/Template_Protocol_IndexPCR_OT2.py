@@ -39,7 +39,7 @@ Output_Format = user_input['OutputFormat'][0]
 #### Meta Data ####
 metadata = {
     'protocolName': 'Protocol Index PCR Setup',
-    'apiLevel': '2.16',
+    'apiLevel': '2.22',
     'robotType': 'OT-2',    
     'author': 'Jonas Lauritsen <jonas.lauritsen@sund.ku.dk>',
     'description': "Transfer for Index PCR: Master Mix, Primers Mix, and Sample-library material. Protocol generated at https://alberdilab-opentronsscripts.onrender.com"}
@@ -50,11 +50,11 @@ def run(protocol: protocol_api.ProtocolContext):
     #### LABWARE SETUP ####
     ## Selecting input format
     if Input_Format == "PCRstrip":
-        Sample_Plate = protocol.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul',1)
+        Sample_plate = protocol.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul',1)
     elif Input_Format == "LVLSXS200":
-        Sample_Plate = protocol.load_labware('LVLXSX200_wellplate_200ul',1)
+        Sample_plate = protocol.load_labware('LVLXSX200_wellplate_200ul',1)
     else:
-        Sample_Plate = protocol.load_labware('biorad_96_wellplate_200ul_pcr',1)
+        Sample_plate = protocol.load_labware('biorad_96_wellplate_200ul_pcr',1)
 
 
     ## Index PCR plate - currently onlt piped to strips
@@ -75,6 +75,20 @@ def run(protocol: protocol_api.ProtocolContext):
 
     ## Master Mix
     MasterMix = protocol.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul', 4) ## MasterMix to be prepared in advance
+
+
+    ## Load Liquid/ Well Labeling
+    ## Samples
+    Sample_Liquid = protocol.define_liquid(name = "Sample",description = "Library Sample",display_color = "#00FF37")
+    Sample_plate.load_liquid(wells = Sample_plate.wells(), volume = 20, liquid = Sample_Liquid)
+
+    ## MasterMix
+    MasterMix_Liquid = protocol.define_liquid(name = "Sample",description = "Library Sample",display_color = "#D000FF")
+    MasterMix.load_liquid(wells = MasterMix.wells(), volume = (Col_Number*30*1.1), liquid = MasterMix_Liquid)
+
+    ## PrimerMix
+    Primer_Liquid = protocol.define_liquid(name = "Sample",description = "Library Sample",display_color = "#00E1FF")
+    Primer_plate.load_liquid(wells = ['A1','B1','C1','D1','E1','F1','G1','H1'], volume = (Col_Number*10*1.1), liquid = Primer_Liquid)
 
 
     ## Tip racks
@@ -133,7 +147,7 @@ def run(protocol: protocol_api.ProtocolContext):
     protocol.comment("STATUS: Transfering Diluted Samples to Index PCR strips")
     for i in range (Col_Number):
         Col = i*8
-        m20.transfer(volume = 10, source = Sample_Plate.wells()[Col].bottom(z = 1.2), dest = iPCR_Plate.wells()[Col].bottom(z = 1.2), mix_before = (2,5), mix_after = (2,10), rate = 0.6, new_tip = 'Always', trash = False)
+        m20.transfer(volume = 10, source = Sample_plate.wells()[Col].bottom(z = 1.2), dest = iPCR_Plate.wells()[Col].bottom(z = 1.2), mix_before = (2,5), mix_after = (2,10), rate = 0.6, new_tip = 'Always', trash = False)
 
 
     ## Protocol complete

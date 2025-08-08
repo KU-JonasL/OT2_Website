@@ -45,7 +45,7 @@ user_data = pd.read_csv(csv_data_temp)
 #### Meta Data ####
 metadata = {
     'protocolName': 'Protocol BEST Library Purification',
-    'apiLevel': '2.16',
+    'apiLevel': '2.22',
     'robotType': 'OT-2',    
     'author': 'Jonas Lauritsen <jonas.lauritsen@sund.ku.dk>',
     'description': "Automated purification of a BEST library build. Protocol generated at https://alberdilab-opentronsscripts.onrender.com"}
@@ -77,6 +77,24 @@ def run(protocol: protocol_api.ProtocolContext):
     Waste1 = Reservoir['A12'] # Beads supernatant waste
     Waste2 = Reservoir['A11'] # 1st ethanol wash waste
     Waste3 = Reservoir['A10'] # 2nd ethanol wash waste
+
+
+    ## Load Liquid/ Well Labeling
+    ## Beads
+    Beads_Liquid = protocol.define_liquid(name = "Beads", description = "SPRI Beads",display_color = "#FF0000")
+    Reservoir.load_liquid(wells = 'A1', volume = (Col_Number*8*75*1.1) , liquid = Beads_Liquid)
+
+    ## Ethanol
+    Ethanol_Liquid = protocol.define_liquid(name = "Ethanol", description = "80 Ethanol",display_color = "#0008FF")
+    Reservoir.load_liquid(wells = ['A3','A4'], volume = (Col_Number*8*170*1.1), liquid = Ethanol_Liquid)
+
+    ## Elution Buffer Tween
+    EBT_Liquid = protocol.define_liquid(name = "EBT", description = "EBT solution",display_color = "#EAFF00")
+    Reservoir.load_liquid(wells = 'A6', volume = (Col_Number*8*40*1.1), liquid = EBT_Liquid)
+
+    ## Samples
+    Sample_Liquid = protocol.define_liquid(name = "Sample",description = "Library Sample",display_color = "#00FF37")
+    Library_plate.load_liquid(wells = Library_plate.wells(), volume = 50, liquid = Sample_Liquid)
 
 
     ## Tip racks

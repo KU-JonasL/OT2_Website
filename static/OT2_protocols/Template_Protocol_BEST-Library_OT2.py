@@ -39,7 +39,7 @@ user_data = pd.read_csv(csv_data_temp)
 #### METADATA ####
 metadata = {
     'protocolName': 'Protocol BEST Library Build',
-    'apiLevel': '2.16',
+    'apiLevel': '2.22',
     'robotType': 'OT-2',    
     'author': 'Jonas Greve Lauritsen <jonas.lauritsen@sund.ku.dk>',
     'description': "Automated (BEST) library build of DNA samples (csv-adjusting version). Protocol generated at https://alberdilab-opentronsscripts.onrender.com"}
@@ -74,6 +74,35 @@ def run(protocol: protocol_api.ProtocolContext):
     Adaptors_20mM = cold_plate.wells_by_name()["G4"]
     Ligation_Mix = cold_plate.wells_by_name()["A7"]
     Nick_Fill_In_Mix = cold_plate.wells_by_name()["A10"]
+
+    
+    ## Liquid/ Well Labeling
+    ## ER
+    ER_Liquid = protocol.define_liquid(name = "End Repair Mix", description = "End Repair Mix",display_color = "#0088FF")
+    cold_plate.load_liquid(wells = ['A1','B1','C1','D1','E1','F1','G1','H1'], volume = (Col_number*5.85*1.2), liquid = ER_Liquid)
+
+    ## Lig
+    Lig_Liquid = protocol.define_liquid(name = "Ligation Mix", description = "Ligation Mix",display_color = "#FFE100")
+    cold_plate.load_liquid(wells = ['A7','B7','C7','D7','E7','F7','G7','H7'], volume = (Col_number*6*1.2), liquid = Lig_Liquid)
+
+    ## FI
+    FI_Liquid = protocol.define_liquid(name = "Fill-In Mix",description = "Fill-In Mix",display_color = "#00EEFF")
+    cold_plate.load_liquid(wells = ['A1','B1','C1','D1','E1','F1','G1','H1'], volume = (Col_number*7.5*1.2), liquid = FI_Liquid)
+
+    ## Adaptors
+    Adaptor2mM_Liquid = protocol.define_liquid(name = "Adaptors_2mM", description = "",display_color = "#FAADD7")
+    cold_plate.load_liquid(wells = ['A4'], volume = 50, liquid = Adaptor2mM_Liquid)
+    Adaptor5mM_Liquid = protocol.define_liquid(name = "Adaptors_5mM", description = "",display_color = "#F9587D")
+    cold_plate.load_liquid(wells = ['C4'], volume = 50, liquid = Adaptor5mM_Liquid)
+    Adaptor10mM_Liquid = protocol.define_liquid(name = "Adaptors_10mM", description = "",display_color = "#FF002B")
+    cold_plate.load_liquid(wells = ['E4'], volume = 50, liquid = Adaptor10mM_Liquid)
+    Adaptor20mM_Liquid = protocol.define_liquid(name = "Adaptors_20mM", description = "",display_color = "#EE00FF")
+    cold_plate.load_liquid(wells = ['F4'], volume = 50, liquid = Adaptor20mM_Liquid)
+
+    ## Samples
+    Sample_Liquid = protocol.define_liquid(name = "Sample",description = "Library Sample",display_color = "#00FF37")
+    Sample_plate.load_liquid(wells = Sample_plate.wells(), volume = 50, liquid = Sample_Liquid)
+
 
 
     #### PIPETTE SETUP ####
