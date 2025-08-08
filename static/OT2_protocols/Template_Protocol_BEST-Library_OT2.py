@@ -49,6 +49,10 @@ metadata = {
 def run(protocol: protocol_api.ProtocolContext):
 
 
+       #### User data setup ####
+    ## Column setup
+    Col_number = int(ceil(len(user_data)/8)) ## Scales number of columns in used based on csv data (rounding up for full columns used).
+
     #### LABWARE SETUP ####
     ## Smart labware; thermocycler and temperature modules.
     thermo_module = protocol.load_module('thermocyclerModuleV2')
@@ -109,12 +113,7 @@ def run(protocol: protocol_api.ProtocolContext):
     m20 = protocol.load_instrument('p20_multi_gen2', mount = 'right', tip_racks = [tiprack_10_1,tiprack_10_2,tiprack_10_3])
     p10 = protocol.load_instrument('p10_single', mount = 'left', tip_racks = [tiprack_10_4])
 
-
-    
-    #### User data setup ####
-    ## Column setup
-    Col_number = int(ceil(len(user_data)/8)) ## Scales number of columns in used based on csv data (rounding up for full columns used).
-    
+   
 
     ## Ligation height setup - to limit viscous solution on the outside of the tips.
     Ligation_height = [1.75, 1.6, 1.45, 1.30, 1.15, 1, 0.85, 0.70, 0.55, 0.4, 0.25, 0.10] ## List with volume height for 12 transfers and descending.
