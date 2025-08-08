@@ -81,7 +81,7 @@ def run(protocol: protocol_api.ProtocolContext):
     ## Load Liquid/ Well Labeling
     ## Beads
     Beads_Liquid = protocol.define_liquid(name = "Beads", description = "SPRI Beads",display_color = "#FF0000")
-    Reservoir.load_liquid(wells = 'A1', volume = (Col_Number*8*200*1.1) , liquid = Beads_Liquid)
+    Reservoir.load_liquid(wells = ['A1'], volume = (Col_Number*8*200*1.1) , liquid = Beads_Liquid)
 
     ## Ethanol
     Ethanol_Liquid = protocol.define_liquid(name = "Ethanol", description = "80 Ethanol",display_color = "#0008FF")
@@ -89,7 +89,7 @@ def run(protocol: protocol_api.ProtocolContext):
 
     ## Elution Buffer Tween
     EBT_Liquid = protocol.define_liquid(name = "EBT", description = "EBT solution",display_color = "#EAFF00")
-    Reservoir.load_liquid(wells = 'A6', volume = (Col_Number*8*50*1.1), liquid = EBT_Liquid)
+    Reservoir.load_liquid(wells = ['A6'], volume = (Col_Number*8*50*1.1), liquid = EBT_Liquid)
 
     ## Samples
     Sample_Liquid = protocol.define_liquid(name = "Sample",description = "Sample",display_color = "#00FF37")

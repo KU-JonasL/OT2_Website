@@ -88,8 +88,26 @@ def run(protocol: protocol_api.ProtocolContext):
     Waste3 = Reservoir['A10'] # 2nd ethanol wash waste
 
 
+    ## Load Liquid/ Well Labeling
+    ## Beads
+    Beads_Liquid = protocol.define_liquid(name = "Beads", description = "SPRI Beads",display_color = "#FF0000")
+    Reservoir.load_liquid(wells = ['A1'], volume = (Col_Number*8*75*1.1) , liquid = Beads_Liquid)
+
+    ## Ethanol
+    Ethanol_Liquid = protocol.define_liquid(name = "Ethanol", description = "80 Ethanol",display_color = "#0008FF")
+    Reservoir.load_liquid(wells = ['A3','A4'], volume = (Col_Number*8*170*1.1), liquid = Ethanol_Liquid)
+
+    ## Elution Buffer Tween
+    EBT_Liquid = protocol.define_liquid(name = "EBT", description = "EBT solution",display_color = "#EAFF00")
+    Reservoir.load_liquid(wells = ['A6'], volume = (Col_Number*8*40*1.1), liquid = EBT_Liquid)
+
+    ## Samples
+    Sample_Liquid = protocol.define_liquid(name = "Sample",description = "Library Sample",display_color = "#00FF37")
+    Sample_Plate.load_liquid(wells = Sample_Plate.wells(), volume = 50, liquid = Sample_Liquid)
+
+
+
     ## Tip racks (2x 10 µL, 2x 200 µl)
-    
     tiprack_200_1 = protocol.load_labware('opentrons_96_filtertiprack_200ul',7)
     tiprack_200_2 = protocol.load_labware('opentrons_96_filtertiprack_200ul',5)
     tiprack_200_3 = protocol.load_labware('opentrons_96_filtertiprack_200ul',2)

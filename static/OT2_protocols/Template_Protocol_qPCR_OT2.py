@@ -54,7 +54,7 @@ def run(protocol: protocol_api.ProtocolContext):
         Sample_Height = 1.0
 
     elif Input_Format == "LVLSXS200":
-        Sample_plate = Temp_Module_Sample.load_labware("LVLXSX200_wellplate_200ul")
+        Sample_plate = Temp_Module_Sample.load_labware("lvl_96_wellplate_200ul")
 
     else:
         Sample_plate = Temp_Module_Sample.load_labware('biorad_96_wellplate_200ul_pcr') ## Biorad plate is the closest to our plate type.
