@@ -191,9 +191,9 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
             zipf.writestr('deepwellreservoir_12channel_21000ul.json', static_pdf_content)
 
             ## Add SOP for extraction to zipfolder
-            # file_path = os.path.join(app.root_path,'static','SOPs', 'SOP_Template_V1.0.0.docx')
-            # static_sop_content = open(file_path, 'r').read()
-            # zipf.writestr('SOP_{naming}_Extraction.pdf', static_sop_content)
+            file_path = os.path.join(app.root_path,'static','SOPs', 'SOP_Template_V1.1.pdf')
+            static_sop_content = open(file_path, 'r').read()
+            zipf.writestr('SOP_Template_V1.1.pdf', static_sop_content)
 
 
         
@@ -235,18 +235,10 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
             zipf.writestr('deepwellreservoir_12channel_21000ul.json', static_pdf_content)
 
 
-            ## Add SOP for Covaris fragmentation to zipfolder
-            # file_path = os.path.join(app.root_path,'static','SOPs', 'SOP_Template_V1.0.0.docx')
-            # static_sop_content = open(file_path, 'r').read()
-            # zipf.writestr('SOP_{naming}_fragmentation.pdf', static_sop_content)
-            ## Add SOP for Library Building to zipfolder
-            # file_path = os.path.join(app.root_path,'static','SOPs', 'SOP_Template_V1.0.0.docx')
-            # static_sop_content = open(file_path, 'r').read()
-            # zipf.writestr('SOP_{naming}_library-building.pdf', static_sop_content)
-            ## Add SOP for Library purification to zipfolder
-            # file_path = os.path.join(app.root_path,'static','SOPs', 'SOP_Template_V1.0.0.docx')
-            # static_sop_content = open(file_path, 'r').read()
-            # zipf.writestr('SOP_{naming}_library-purification.pdf', static_sop_content)
+            ## Add SOP for extraction to zipfolder
+            file_path = os.path.join(app.root_path,'static','SOPs', 'SOP_Template_V1.1.pdf')
+            static_sop_content = open(file_path, 'r').read()
+            zipf.writestr('SOP_Template_V1.1.pdf', static_sop_content)
 
 
 
@@ -269,10 +261,10 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
             static_pdf_content = open(file_path, 'r').read()
             zipf.writestr('bioplastics_96_aluminumblock_100ul.json', static_pdf_content)
 
-            ## Add SOP for qPCR to zipfolder
-            # file_path = os.path.join(app.root_path,'static','SOPs', 'SOP_Template_V1.0.0.docx')
-            # static_sop_content = open(file_path, 'r').read()
-            # zipf.writestr('SOP_{naming}_qPCR.pdf', static_sop_content)
+            ## Add SOP for extraction to zipfolder
+            file_path = os.path.join(app.root_path,'static','SOPs', 'SOP_Template_V1.1.pdf')
+            static_sop_content = open(file_path, 'r').read()
+            zipf.writestr('SOP_Template_V1.1.pdf', static_sop_content)
 
 
 
@@ -301,14 +293,10 @@ def get_opentrons_script(protocol, user, samplenumber, inputformat, outputformat
             zipf.writestr('deepwellreservoir_12channel_21000ul.json', static_pdf_content)
 
 
-            ## Add SOP for IndexPCR to zipfolder
-            # file_path = os.path.join(app.root_path,'static','SOPs', 'SOP_Template_V1.0.0.docx')
-            # static_sop_content = open(file_path, 'r').read()
-            # zipf.writestr('SOP_{naming}_IndexPCR.pdf', static_sop_content)
-            ## Add SOP for Index purification to zipfolder
-            # file_path = os.path.join(app.root_path,'static','SOPs', 'SOP_Template_V1.0.0.docx')
-            # static_sop_content = open(file_path, 'r').read()
-            # zipf.writestr('SOP_{naming}_Index-Purification.pdf', static_sop_content)
+            ## Add SOP for extraction to zipfolder
+            file_path = os.path.join(app.root_path,'static','SOPs', 'SOP_Template_V1.1.pdf')
+            static_sop_content = open(file_path, 'r').read()
+            zipf.writestr('SOP_Template_V1.1.pdf', static_sop_content)
 
 
 
