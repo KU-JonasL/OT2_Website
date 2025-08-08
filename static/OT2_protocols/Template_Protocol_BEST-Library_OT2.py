@@ -91,7 +91,7 @@ def run(protocol: protocol_api.ProtocolContext):
 
     ## FI
     FI_Liquid = protocol.define_liquid(name = "Fill-In Mix",description = "Fill-In Mix",display_color = "#00EEFF")
-    cold_plate.load_liquid(wells = ['A1','B1','C1','D1','E1','F1','G1','H1'], volume = (Col_number*7.5*1.2), liquid = FI_Liquid)
+    cold_plate.load_liquid(wells = ['A10','B10','C10','D10','E10','F10','G10','H10'], volume = (Col_number*7.5*1.2), liquid = FI_Liquid)
 
     ## Adaptors
     Adaptor2mM_Liquid = protocol.define_liquid(name = "Adaptors_2mM", description = "",display_color = "#FAADD7")
