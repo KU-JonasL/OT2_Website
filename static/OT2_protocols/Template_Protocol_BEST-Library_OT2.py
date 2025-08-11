@@ -51,7 +51,7 @@ def run(protocol: protocol_api.ProtocolContext):
 
        #### User data setup ####
     ## Column setup
-    Col_number = int(ceil(len(user_data)/8)) ## Scales number of columns in used based on csv data (rounding up for full columns used).
+    Col_Number = int(ceil(len(user_data)/8)) ## Scales number of columns in used based on csv data (rounding up for full columns used).
 
     #### LABWARE SETUP ####
     ## Smart labware; thermocycler and temperature modules.
@@ -83,15 +83,15 @@ def run(protocol: protocol_api.ProtocolContext):
     ## Liquid/ Well Labeling
     ## ER
     ER_Liquid = protocol.define_liquid(name = "End Repair Mix", description = "End Repair Mix",display_color = "#0088FF")
-    cold_plate.load_liquid(wells = ['A1','B1','C1','D1','E1','F1','G1','H1'], volume = (Col_number*5.85*1.2), liquid = ER_Liquid)
+    cold_plate.load_liquid(wells = ['A1','B1','C1','D1','E1','F1','G1','H1'], volume = (Col_Number*5.85*1.2), liquid = ER_Liquid)
 
     ## Lig
     Lig_Liquid = protocol.define_liquid(name = "Ligation Mix", description = "Ligation Mix",display_color = "#FFE100")
-    cold_plate.load_liquid(wells = ['A7','B7','C7','D7','E7','F7','G7','H7'], volume = (Col_number*6*1.2), liquid = Lig_Liquid)
+    cold_plate.load_liquid(wells = ['A7','B7','C7','D7','E7','F7','G7','H7'], volume = (Col_Number*6*1.2), liquid = Lig_Liquid)
 
     ## FI
     FI_Liquid = protocol.define_liquid(name = "Fill-In Mix",description = "Fill-In Mix",display_color = "#00EEFF")
-    cold_plate.load_liquid(wells = ['A10','B10','C10','D10','E10','F10','G10','H10'], volume = (Col_number*7.5*1.2), liquid = FI_Liquid)
+    cold_plate.load_liquid(wells = ['A10','B10','C10','D10','E10','F10','G10','H10'], volume = (Col_Number*7.5*1.2), liquid = FI_Liquid)
 
     ## Adaptors
     Adaptor2mM_Liquid = protocol.define_liquid(name = "Adaptors_2mM", description = "",display_color = "#FAADD7")
@@ -117,7 +117,7 @@ def run(protocol: protocol_api.ProtocolContext):
 
     ## Ligation height setup - to limit viscous solution on the outside of the tips.
     Ligation_height = [1.75, 1.6, 1.45, 1.30, 1.15, 1, 0.85, 0.70, 0.55, 0.4, 0.25, 0.10] ## List with volume height for 12 transfers and descending.
-    pos = 12-Col_number
+    pos = 12-Col_Number
     Ligation_height = Ligation_height[pos:] ## Removes highest, unused heights.
 
 
@@ -142,7 +142,7 @@ def run(protocol: protocol_api.ProtocolContext):
     protocol.comment("STATUS: End Repair Transfer Step Begun")
 
     ## Transfering End Repair Mix
-    for i in range(Col_number):
+    for i in range(Col_Number):
         Column= i*8
         m20.transfer(volume = 5.85, source = End_Repair_Mix, dest = Sample_plate.wells()[Column], mix_before = (2,10), mix_after = (5,10), new_tip = 'always', trash = False)
 
@@ -194,7 +194,7 @@ def run(protocol: protocol_api.ProtocolContext):
     m20.flow_rate.dispense = 3 ## µL/s
 
     ## Ligation Pipetting
-    for i in range(Col_number):
+    for i in range(Col_Number):
         ## Aspiration, mixing, and dispersion. Extra delays to allow viscous liquids to aspirate/dispense. Slow movements to limit adhesion.
         Column= i * 8
         m20.pick_up_tip()
@@ -235,7 +235,7 @@ def run(protocol: protocol_api.ProtocolContext):
     m20.flow_rate.dispense = 7.6 ## µL/s
 
     ## Fill-in Reaction pipetting
-    for i in range(Col_number):
+    for i in range(Col_Number):
         Column= i*8
         m20.transfer(volume = 7.5, source = Nick_Fill_In_Mix, dest = Sample_plate.wells()[Column], mix_before=(2,10), mix_after=(5,10), new_tip='always', trash = False)
 
